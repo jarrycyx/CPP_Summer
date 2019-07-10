@@ -6,46 +6,40 @@ import qt.cpp.ProcessingModel 1.0
 Page {
     width: 1280
     height: 720
-
     title: qsTr("Page 2")
-
     ProcessingModel{
         id: myProcessingModel
         objectName: "myProcessingModel"
     }
-
     function refreshView(){
         view.model=myProcessingModel.thisModel;
     }
-
-
-
     Rectangle {
         id: root
-
-        width: 500; height: 400
-
+        width: 1280; height: 720
         Component {
             id: dragDelegate
-
             MouseArea {
                 id: dragArea
-
-
                 property bool held: false
                 property bool released: false
                 property bool movedToTarget: false
                 property int indexOfThisDelegate: index
+                default property bool selected: ListView.isCurrentItem
 
                 anchors { left: parent.left; right: parent.right }
                 height: content.height
+
+                signal selectedIndexChange(int idx)
 
                 drag.target: held ? content : row
                 drag.axis: Drag.XAndYAxis
 
                 onPressed: {
                     held = true;
-                    released = false
+                    released = false;
+                    console.log("p");
+                    content.changeStatus(1);
                 }
                 onReleased: {
                     if (held) released=true;
@@ -58,18 +52,37 @@ Page {
                     }
                     else movedToTarget=false;
 
+                    console.log("r");
+                    view.currentIndex=indexOfThisDelegate;
+                    content.changeStatus(2);
+                }
+                onSelectedChanged: {
+                    content.selected=ListView.isCurrentItem;
+                    console.log(indexOfThisDelegate+" is "+selected);
+                }
+                hoverEnabled: true
+
+                onMouseXChanged: content.chaseLight(mouseX,-1)
+                onMouseYChanged: content.chaseLight(-1,mouseY)
+                onEntered: {
+                    console.log("en");
+                    content.changeStatus(3);
+                }
+                onExited: {
+                    console.log("ex");
+                    content.changeStatus(4);
                 }
 
                 LightBlock {
                     id: content
+                    height: 100
+                    width: 200
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                         verticalCenter: parent.verticalCenter
                     }
-                    //width: dragArea.width + 4;
-                    //height: column.implicitHeight + 4
 
-                    color: dragArea.held ? "#bbbbbb" : "#dddddd"
+                    color: "#f2f2f2"//dragArea.held ? "#bbbbbb" : "#dddddd"
                     Behavior on color {
                         ColorAnimation { duration: 100 }
                     }
@@ -84,13 +97,11 @@ Page {
                          when: dragArea.released&&dragArea.movedToTarget
                          ParentChange { target: content; parent: rect }
                     }]
-                    Column {
+                    childCont.children:  Column {
                         id: column
-                        anchors { fill: parent; margins: 2 }
-
+                        height: parent.height
+                        width: parent.width
                         Text {
-                            //anchors.margins: 10
-                            //verticalAlignment: Text.AlignHCenter
                             horizontalAlignment: Text.AlignHCenter
                             width: parent.width
                             height: 30
@@ -103,14 +114,11 @@ Page {
 
         ListView {
             id: view
-            width: 150
-            anchors.rightMargin: 302
-
+            width: 200
+            anchors.rightMargin: 1016
             anchors { fill: parent; margins: 2 }
-
             model: myProcessingModel.thisModel
             delegate: dragDelegate
-
             spacing: 4
             cacheBuffer: 50
         }

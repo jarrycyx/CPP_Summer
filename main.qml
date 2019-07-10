@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.2
+import QtGraphicalEffects 1.0
 
 
 ApplicationWindow {
@@ -10,6 +12,7 @@ ApplicationWindow {
     width: 1280
     height: 800
     title: qsTr("Stack")
+
 
 
     header: ToolBar {

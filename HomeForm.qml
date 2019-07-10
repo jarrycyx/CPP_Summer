@@ -117,6 +117,9 @@ Page {
             anchors.verticalCenter: parent
             hoverEnabled: true
 
+            onMouseXChanged: myLightBlock.chaseLight(mouseX,-1)
+            onMouseYChanged: myLightBlock.chaseLight(-1,mouseY)
+
             onPressed: {
                 console.log("p");
                 myLightBlock.changeStatus(1);
@@ -124,7 +127,7 @@ Page {
             onReleased: {
                 console.log("r");
                 myLightBlock.changeStatus(2);
-                //mouse.accepted = false;
+                myLightBlock.selected=true;
             }
             onEntered: {
                 console.log("en");
@@ -139,6 +142,7 @@ Page {
                 id: myLightBlock
                 objectName: "myLightBlock"
                 anchors.fill: parent
+                color: "#f2f2f2"
 
                 childCont.children :
                     Rectangle {
