@@ -7,8 +7,8 @@ ApplicationWindow {
     id: mainWindow
     objectName: "mainWindow"
     visible: true
-    width: 640
-    height: 480
+    width: 1280
+    height: 800
     title: qsTr("Stack")
 
 
@@ -63,6 +63,8 @@ ApplicationWindow {
 
     StackView {
         id: stackView
+        width: 1280
+        height: 960
         objectName: "stackView"
         initialItem: "HomeForm.qml"
         anchors.fill: parent

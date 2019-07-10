@@ -4,12 +4,15 @@ import QtQuick.Controls 2.5
 import qt.cpp.ProcessingModel 1.0
 import qt.cpp.QProcessClass 1.0
 
+import QtQuick.Layouts 1.13
+
 
 Page {
 
 
-    width: 600
-    height: 400
+    width: 1280
+    height: 720
+    //background: "#eeeeee"
     id: homePage
     objectName: "homePage"
     title: qsTr("Home")
@@ -82,6 +85,71 @@ Page {
         first.value: 0.25
     }
 
+    Switch {
+        id: element
+        x: 360
+        y: 176
+        text: qsTr("Switch")
+    }
+
+    Tumbler {
+        id: tumbler
+        x: 106
+        y: 91
+        model: 10
+    }
+
+
+    Rectangle{
+
+        width: 300
+        height: 500
+        x: 966
+        y: 197
+        color: "#eeeeee"
+        MouseArea {
+            id: button
+            x: 50
+            y: 150
+            width: 200
+            height: 200
+            anchors.horizontalCenter: parent
+            anchors.verticalCenter: parent
+            hoverEnabled: true
+
+            onPressed: {
+                console.log("p");
+                myLightBlock.changeStatus(1);
+            }
+            onReleased: {
+                console.log("r");
+                myLightBlock.changeStatus(2);
+                //mouse.accepted = false;
+            }
+            onEntered: {
+                console.log("en");
+                myLightBlock.changeStatus(3);
+            }
+            onExited: {
+                console.log("ex");
+                myLightBlock.changeStatus(4);
+            }
+
+            LightBlock{
+                id: myLightBlock
+                objectName: "myLightBlock"
+                anchors.fill: parent
+
+                childCont.children :
+                    Rectangle {
+                        height: 50
+                        width: 50
+                        color: "#bbbbbb"
+                    }
+            }
+
+        }
+}
 
 
     function slotQml1(){

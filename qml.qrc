@@ -7,5 +7,6 @@
         <file>qtquickcontrols2.conf</file>
         <file>newDialog.qml</file>
         <file>PetsModel.qml</file>
+        <file>LightBlock.qml</file>
     </qresource>
 </RCC>

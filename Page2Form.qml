@@ -4,8 +4,8 @@ import QtQuick.Controls 2.5
 import qt.cpp.ProcessingModel 1.0
 
 Page {
-    width: 600
-    height: 400
+    width: 1280
+    height: 720
 
     title: qsTr("Page 2")
 
@@ -60,14 +60,14 @@ Page {
 
                 }
 
-                Rectangle {
+                LightBlock {
                     id: content
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                         verticalCenter: parent.verticalCenter
                     }
-                    width: dragArea.width + 4;
-                    height: column.implicitHeight + 4
+                    //width: dragArea.width + 4;
+                    //height: column.implicitHeight + 4
 
                     color: dragArea.held ? "#bbbbbb" : "#dddddd"
                     Behavior on color {
