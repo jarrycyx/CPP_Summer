@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-
+import QtGraphicalEffects 1.12
 import qt.cpp.ProcessingModel 1.0
 
 Page {
@@ -44,7 +44,7 @@ Page {
                 onReleased: {
                     if (held) released=true;
                     held = false;
-                    if (dragArea.mouseX>250) {
+                    if (dragArea.mouseX>500) {
                         console.log(dragArea.mouseX+" "+indexOfThisDelegate+" "+myModel)
                         movedToTarget=true;
                         myProcessingModel.itemMove(indexOfThisDelegate);
@@ -75,14 +75,15 @@ Page {
 
                 LightBlock {
                     id: content
-                    height: 100
-                    width: 200
+                    height: 197
+                    width: 290
+                    outsideColor: "#00f2f2f2"
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                         verticalCenter: parent.verticalCenter
                     }
 
-                    color: "#f2f2f2"//dragArea.held ? "#bbbbbb" : "#dddddd"
+                    color: "#fdfdfd"//dragArea.held ? "#bbbbbb" : "#dddddd"
                     Behavior on color {
                         ColorAnimation { duration: 100 }
                     }
@@ -99,8 +100,8 @@ Page {
                     }]
                     childCont.children:  Column {
                         id: column
-                        height: parent.height
-                        width: parent.width
+                        anchors.fill: parent
+                        anchors.margins: 20
                         Text {
                             horizontalAlignment: Text.AlignHCenter
                             width: parent.width
@@ -109,32 +110,49 @@ Page {
                         }
                     }
                 }
+
             }
         }
 
-        ListView {
-            id: view
-            width: 200
-            anchors.rightMargin: 1016
-            anchors { fill: parent; margins: 2 }
-            model: myProcessingModel.thisModel
-            delegate: dragDelegate
-            spacing: 4
-            cacheBuffer: 50
+
+        RectangularGlow {
+           id: effect
+           anchors.fill: articlesRect
+           glowRadius: 10
+           spread: 0
+           color: "#66999999"
+           cornerRadius: rect.radius + glowRadius
         }
+
+        Rectangle {
+            id: articlesRect
+            width: 320
+            height: parent.height+50
+            color: "#f2f2f2"
+
+            ListView {
+                id: view
+                anchors{fill:parent; topMargin:80}
+                model: myProcessingModel.thisModel
+                delegate: dragDelegate
+                spacing: 9
+                cacheBuffer: 50
+            }
+            Rectangle {
+                width: 320
+                height: 80
+                color: "#f2f2f2"
+            }
+        }
+
+
 
         Row {
             id: row
-            x: 281
-            y: 8
+            x: 572
+            y: 59
             width: 200
             height: 298
-            Rectangle{
-                id: rect
-                color: "#eeeeee"
-                width: 200
-                height: 298
-            }
         }
     }
 

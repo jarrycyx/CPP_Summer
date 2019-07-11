@@ -8,5 +8,6 @@
         <file>newDialog.qml</file>
         <file>PetsModel.qml</file>
         <file>LightBlock.qml</file>
+        <file>Login.qml</file>
     </qresource>
 </RCC>

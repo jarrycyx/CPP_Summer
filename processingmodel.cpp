@@ -14,6 +14,8 @@ ProcessingModel::ProcessingModel(QObject *parent) : QObject(parent)
     myThisModel.append(new DataObject("Item 5", "yellow"));
     myThisModel.append(new DataObject("Item 6", "yellow"));
     myThisModel.append(new DataObject("Item 7", "yellow"));
+    myThisModel.append(new DataObject("Item 8", "yellow"));
+    myThisModel.append(new DataObject("Item 9", "yellow"));
     //myThisModel.removeAt(1);
 }
 

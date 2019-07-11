@@ -28,13 +28,16 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("myModel", QVariant::fromValue(dataList));
 
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url1(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
+                     &app, [url1](QObject *obj, const QUrl &objUrl) {
+        if (!obj && url1 == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
-    engine.load(url);
+    engine.load(url1);
+
+    const QUrl url2(QStringLiteral("qrc:/Login.qml"));
+    engine.load(url2);
 
 
     return app.exec();
