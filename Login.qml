@@ -3,13 +3,16 @@ import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
 
+import QtQuick.Controls.Universal 2.12
+
+import "./Components"
 
 ApplicationWindow {
     id: loginWindow
     objectName: "loginWindow"
     visible: true
-    width: 640
-    height: 480
+    width: 532
+    height: 383
     title: qsTr("Stack")
 
     ListModel {
@@ -50,6 +53,7 @@ ApplicationWindow {
                 content.changeStatus(1);
                 view.currentIndex=indexOfThisDelegate;
                 editName.focus=true;
+                editName.forceActiveFocus();
             }
             onReleased: {
                 held = false;
@@ -72,8 +76,8 @@ ApplicationWindow {
             LightBlock {
                 id: content
                 borderWidth: 3
-                height: 50
-                width: 300
+                height: 48
+                width: 444
                 //outsideColor: "#55f2f2f2"
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -103,33 +107,82 @@ ApplicationWindow {
                             text: qsTr("Text Edit")
                             anchors.fill: parent
                             anchors.margins: 5
+                            anchors.leftMargin: 10
+                            font{
+                                weight: Font.Light
+                                family: "Segoe UI"
+                                bold: false
+                            }
                         }
 
             }
 
         }
     }
-    ListView {
-        id: view
-        anchors{fill:parent; topMargin:80}
-        model: loginModel
-        delegate: loginDelegate
-        spacing: 9
-        cacheBuffer: 50
-    }
+    Rectangle{
+        height: 114
+        width: parent.width
+        y:110
+        ListView {
+            id: view
+            height: 114
+            model: loginModel
+            delegate: loginDelegate
+            anchors.fill: parent
+            spacing: 18
+            cacheBuffer: 50
+        }
 
-    TextEdit {
-        id: textEdit
-        x: 280
-        y: 21
-        width: 80
-        height: 20
-        text: qsTr("Text Edit")
-        font.pixelSize: 12
     }
 
 
-    
-    
-    
+    Button {
+        id: button
+        x: 275
+        y: 251
+        width: 213
+        height: 48
+        text: qsTr("Button")
+    }
+
+    Button {
+        id: button1
+        x: 44
+        y: 251
+        width: 213
+        height: 48
+        text: qsTr("Button")
+    }
+
+    Image {
+        id: borderImage
+        x: 44
+        y: 55
+        width: 232
+        height: 34
+        sourceSize.width: 232
+        sourceSize.height: 35
+        source: "Resources/logintext.svg"
+    }
+
+    Text {
+        id: element
+        x: 44
+        y: 317
+        width: 154
+        height: 28
+        color: Universal.accent
+        text: qsTr("Forget Password?")
+        font{
+          weight: Font.Light
+          family: "Segoe UI"
+          bold: false
+        }
+        font.pixelSize: 14
+    }
+
+
+
+
+
 }

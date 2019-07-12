@@ -1,13 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>HomeForm.qml</file>
-        <file>Page1Form.qml</file>
-        <file>Page2Form.qml</file>
+        <file>SenderPage.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>newDialog.qml</file>
-        <file>PetsModel.qml</file>
-        <file>LightBlock.qml</file>
         <file>Login.qml</file>
+        <file>Components/LightBlock.qml</file>
+        <file>Components/ArticleBlock.qml</file>
+        <file>Resources/passage_state_1.svg</file>
+        <file>Resources/passage_state_2.svg</file>
+        <file>Resources/Strings.qml</file>
+        <file>Resources/add.svg</file>
+        <file>Components/FramlessWindow.qml</file>
+        <file>Resources/logintext.svg</file>
+        <file>Resources/pen.ico</file>
+        <file>Resources/pen.png</file>
+        <file>Components/SenderEditor.qml</file>
     </qresource>
 </RCC>
