@@ -6,32 +6,29 @@
 #include <processingmodel.h>
 #include <qprocessclass.h>
 #include <QQmlContext>
-#include <myarticleobj.h>
+#include <cppobjs/myarticleobj.h>
+#include <loginpagehandler.h>
+#include <cppobjs/callremotemysqlthread.h>
+#include <QTimer>
+#include <senderpagehandler.h>
 
 int main(int argc, char *argv[])
 {
-    qDebug() << "currentPath:";
-
-
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<ProcessingModel>("qt.cpp.ProcessingModel", 1, 0, "ProcessingModel");
-    qmlRegisterType<QProcessClass>("qt.cpp.QProcessClass", 1, 0, "QProcessClass");
+    //qmlRegisterType<SenderPageHandler>("qt.cpp.QSenderPageHandler", 1, 0, "QSenderPageHandler");
 
     QQmlApplicationEngine engine;
 
-    const QUrl url1(QStringLiteral("qrc:/SenderPage.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url1](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url1 == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url1);
-
-    const QUrl url2(QStringLiteral("qrc:/Login.qml"));
-    engine.load(url2);
 
 
+
+    LoginPageHandler newLoginPage;
+    newLoginPage.startPage(&engine);
+
+    SenderPageHandler newSenderPage;
+    newSenderPage.startPage(&engine);
+    QObject::connect(&newLoginPage, SIGNAL(requireComplete(int, int)), &newSenderPage, SLOT(startLoadingData(int, int)));
 
 
     return app.exec();

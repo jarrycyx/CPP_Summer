@@ -12,120 +12,39 @@ ApplicationWindow {
     objectName: "loginWindow"
     visible: true
     width: 532
-    height: 383
+    height: 360
     title: qsTr("Stack")
 
     ListModel {
         id: loginModel
         objectName: "loginModel"
         ListElement {
-            name: "Polly"
-            type: "Parrot"
-            age: 12
-            size: "Small"
+            textInEdit: "sender1"
+            placeHolderText: "请输入用户名"
         }
         ListElement {
-            name: "Polly"
-            type: "Parrot"
-            age: 12
-            size: "Small"
+            textInEdit: "sender1"
+            placeHolderText: "请输入密码"
         }
     }
 
-    Component {
-        id: loginDelegate
 
-        MouseArea {
-            id: dragArea
-            property bool held: false
-            property bool movedToTarget: false
-            property int indexOfThisDelegate: index
-            default property bool selected: ListView.isCurrentItem
 
-            anchors { left: parent.left; right: parent.right }
-            height: content.height
-
-            signal selectedIndexChange(int idx)
-
-            onPressed: {
-                held = true;
-                console.log("p");
-                content.changeStatus(1);
-                view.currentIndex=indexOfThisDelegate;
-                editName.focus=true;
-                editName.forceActiveFocus();
-            }
-            onReleased: {
-                held = false;
-                content.changeStatus(2);
-            }
-            onSelectedChanged: {
-                content.selected=ListView.isCurrentItem;
-                console.log(indexOfThisDelegate+" is "+selected);
-            }
-            hoverEnabled: true
-            onEntered: {
-                console.log("en");
-                content.changeStatus(3);
-            }
-            onExited: {
-                console.log("ex");
-                content.changeStatus(4);
-            }
-
-            LightBlock {
-                id: content
-                borderWidth: 3
-                height: 48
-                width: 444
-                //outsideColor: "#55f2f2f2"
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-
-                color: "#fdfdfd"//dragArea.held ? "#bbbbbb" : "#dddddd"
-                Behavior on color {
-                    ColorAnimation { duration: 100 }
-                }
-                childCont.children:
-                        TextEdit {
-                            verticalAlignment: TextEdit.AlignVCenter
-                            id: editName
-                            onFocusChanged: {
-                                console.log("f");
-                                if (focus) {
-                                    held = true;
-                                    content.changeStatus(1);
-                                    view.currentIndex=indexOfThisDelegate;
-                                }
-                                else {
-                                    held = false;
-                                    content.changeStatus(2);
-                                }
-                            }
-                            text: qsTr("Text Edit")
-                            anchors.fill: parent
-                            anchors.margins: 5
-                            anchors.leftMargin: 10
-                            font{
-                                weight: Font.Light
-                                family: "Segoe UI"
-                                bold: false
-                            }
-                        }
-
-            }
-
-        }
-    }
     Rectangle{
+        EditLightBox{
+            id: loginDelegate
+        }
+
         height: 114
         width: parent.width
-        y:110
+        y:102
         ListView {
-            id: view
+            id: loginList
             height: 114
+            anchors.rightMargin: 0
+            anchors.bottomMargin: 0
+            anchors.leftMargin: 0
+            anchors.topMargin: 0
             model: loginModel
             delegate: loginDelegate
             anchors.fill: parent
@@ -138,47 +57,89 @@ ApplicationWindow {
 
     Button {
         id: button
-        x: 275
-        y: 251
+        x: 44
+        y: 234
         width: 213
         height: 48
-        text: qsTr("Button")
+        text: qsTr("登录")
+        onClicked: {
+            loginPageHandler.loginInit(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit);
+            busyIndicator.visible=true;
+        }
+        font.family: "DengXian"
     }
 
     Button {
         id: button1
-        x: 44
-        y: 251
+        x: 275
+        y: 234
         width: 213
         height: 48
-        text: qsTr("Button")
+        text: qsTr("注册")
+        font.family: "DengXian"
+        onClicked: {
+            loginPageHandler.signUp(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit);
+            busyIndicator.visible=true;
+        }
+    }
+
+    Connections{
+        target: loginPageHandler
+        onSendErrorMessage: {
+            console.log(errStr);
+            errText.text=errStr;
+            busyIndicator.visible = false;
+        }
+        onRequireComplete: {
+            busyIndicator.visible = false;
+            errText.visible = false;
+        }
     }
 
     Image {
         id: borderImage
         x: 44
-        y: 55
-        width: 232
-        height: 34
-        sourceSize.width: 232
-        sourceSize.height: 35
+        y: 40
+        width: 244
+        height: 40
+        sourceSize.width: 244
+        sourceSize.height: 40
         source: "Resources/logintext.svg"
     }
 
     Text {
         id: element
         x: 44
-        y: 317
+        y: 304
         width: 154
         height: 28
         color: Universal.accent
         text: qsTr("Forget Password?")
         font{
-          weight: Font.Light
-          family: "Segoe UI"
-          bold: false
+            family: "DengXian";
+            pixelSize: 14
         }
+    }
+
+    BusyIndicator {
+        id: busyIndicator
+        visible: false;
+        x: 448
+        y: 40
+        width: 40
+        height: 40
+    }
+
+    Text {
+        id: errText
+        x: 334
+        y: 304
+        width: 154
+        height: 28
+        color: "#E51400"
         font.pixelSize: 14
+        horizontalAlignment: Text.AlignRight
+        font.family: "DengXian"
     }
 
 

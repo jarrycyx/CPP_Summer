@@ -34,16 +34,20 @@ Component {
             if (held) released=true;
             held = false;
             if (dragArea.mouseX>500) {
-                console.log(dragArea.mouseX+" "+indexOfThisDelegate+" "+myModel)
+                //console.log(dragArea.mouseX+" "+indexOfThisDelegate+" "+myModel)
                 movedToTarget=true;
-                myProcessingModel.itemMove(indexOfThisDelegate);
-                refreshView();
+                senderPageHandler.itemMove(indexOfThisDelegate);
+                //console.log(indexOfThisDelegate+" removed "+senderArticlesList.model);
+                //senderArticlesList.model.remove(indexOfThisDelegate);
+                //senderArticlesList.model.pop();
             }
             else movedToTarget=false;
 
             console.log("r");
-            view.currentIndex=indexOfThisDelegate;
+            senderArticlesList.currentIndex=indexOfThisDelegate;
             content.changeStatus(2);
+            console.log(model.modelData.titleOfArticle+model.modelData.contentOfArticle);
+            newSenderEditor.editOrViewAnArticle(model.modelData);
         }
         onSelectedChanged: {
             content.selected=ListView.isCurrentItem;
@@ -85,7 +89,7 @@ Component {
                 }
             },State {
                  when: dragArea.released&&dragArea.movedToTarget
-                 ParentChange { target: content; parent: rect }
+                 //ParentChange { target: content; parent: rect }
             }]
             childCont.children:  [
                 Image {
@@ -100,28 +104,29 @@ Component {
                 },
                 Text{
                     id: titleText
-                    text: qsTr("新的文章需求")
+                    text: model.modelData.titleOfArticle
                     x: 21
-                    y: 123
+                    y: 127
                     width: 261
                     elide: Text.ElideRight
                     height: 14
                     color: stringsPool.textGray1
-                    font{
+                    font {
                         family: "DengXian"
                         pixelSize: 20
                     }
                 },
                 Text{
                     id: previewText
-                    text: qsTr("新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求")
+                    text: model.modelData.contentOfArticle//qsTr("新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求")
                     x: 21
                     y: 150
                     width: 261
                     height: 24
                     wrapMode: Text.WrapAnywhere
                     color: stringsPool.textGray3
-                    maximumLineCount: 2
+                    maximumLineCount: 1
+                    verticalAlignment: Text.AlignBottom
                     font{
                         weight: Font.Light
                         family: "DengXian"//pingfangFont.name

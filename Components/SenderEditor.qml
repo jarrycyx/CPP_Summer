@@ -9,6 +9,26 @@ import "../Resources"
 
 
 Rectangle {
+    property int mode: 0 //0: new 1:edit/view
+
+    function editOrViewAnArticle(articleObject){
+        mode=1;
+        blankText.visible=false;
+        visible=true;
+        console.log(articleObject.contentOfArticle);
+        titleEdit.text=articleObject.titleOfArticle;
+        contentEdit.text=articleObject.contentOfArticle;
+        element.text="修改翻译需求"
+    }
+
+    function addAnArticle(){
+        mode=0;
+        blankText.visible=false;
+        visible=true;
+        titleEdit.text="";
+        contentEdit.text="";
+        element.text="发布翻译需求"
+    }
 
     Strings{id: stringsPool}
 
@@ -20,7 +40,10 @@ Rectangle {
         height: 24
         text: qsTr("发布翻译需求")
         color: stringsPool.textGray1
-        font{family: "DengXian";pixelSize: 24}
+        font{
+            family: "DengXian";
+            pixelSize: 24
+        }
     }
 
     Rectangle {
@@ -132,8 +155,12 @@ Rectangle {
         y: parent.height-17-40
         height: 40
         width: 120
-        text: qsTr("选择负责人")
+        text: qsTr("上传")
         font{family: "DengXian"}
+        onClicked: {
+            if (parent.mode){}
+            else senderPageHandler.addAnArticle(titleEdit.text, contentEdit.text)
+        }
     }
 
     CheckBox {

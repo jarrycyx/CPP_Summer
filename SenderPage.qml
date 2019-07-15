@@ -1,27 +1,39 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtGraphicalEffects 1.12
-import qt.cpp.ProcessingModel 1.0
 
 import "./Components"
 import "./Resources"
 
 ApplicationWindow {
-    id: mainWindow
-    objectName: "mainWindow"
-    visible: true
+    id: senderWindow
+    objectName: "senderWindow"
+    visible: false
     width: 1280
     height: 800
     title: qsTr("Stack")
     Strings{id: stringsPool}
 
-    ProcessingModel{
-        id: myProcessingModel
-        objectName: "myProcessingModel"
+    Connections {
+        target: senderPageHandler
+        onRefreshQml: {
+            console.log("refresh");
+            thisBusyIndicator.visible = false;
+            senderArticlesList.model=senderPageHandler.thisModel;
+        }
+        onLoadArticlesComplete: {
+            thisBusyIndicator.visible = false;
+        }
     }
-    function refreshView(){
-        view.model=myProcessingModel.thisModel;
+
+    Connections{
+        target: loginPageHandler
+        onRequireComplete: {
+            if (flag==1) senderWindow.visible=true;
+        }
     }
+
+
     Rectangle {
         id: root
         anchors.fill: parent
@@ -44,9 +56,15 @@ ApplicationWindow {
             color: "#f2f2f2"
 
             ListView {
-                id: view
+                id: senderArticlesList
                 anchors{fill:parent; topMargin:122}
-                model: myProcessingModel.thisModel
+                model: senderPageHandler.thisModel
+                remove: Transition {
+                        ParallelAnimation {
+                            NumberAnimation { property: "opacity"; to: 0; duration: 1000 }
+                            NumberAnimation { properties: "x,y"; to: 100; duration: 1000 }
+                        }
+                    }
                 delegate: dragDelegate
                 spacing: 32.5
                 cacheBuffer: 50
@@ -93,7 +111,15 @@ ApplicationWindow {
                         y: 13
                         height: 22
                         text: qsTr("新的文章需求")
-                        font{family: "DengXian";pixelSize: 22}
+                        font{
+                            family: "DengXian";
+                            pixelSize: 22
+                        }
+                    }
+                    onClicked: {
+                        //blankText.visible=false;
+                        //newSenderEditor.visible=true;
+                        newSenderEditor.addAnArticle();
                     }
                 }
 
@@ -111,12 +137,42 @@ ApplicationWindow {
 
 
         }
+
         SenderEditor {
             x: articlesRect.width+30
             y: 30
-            width: mainWindow.width-x-30
-            height: mainWindow.height-60
+            id: newSenderEditor
+            visible: false
+            width: senderWindow.width-x-30
+            height: senderWindow.height-60
+        }
+
+        BusyIndicator {
+            id: thisBusyIndicator
+            y: (senderWindow.height-80)/2
+            x: (senderWindow.width-388-80)/2+388
+            //visible: false
+            width: 80
+            height: 80
+        }
+
+        Text {
+            id: blankText
+            y: (senderWindow.height-80)/2
+            x: (senderWindow.width-388-160)/2+388
+            text: "可以在左侧查看或添加翻译需求"
+            color: stringsPool.textGray2
+            width: 160
+            height: 80
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font{
+                family: "DengXian";
+                pixelSize: 16
+            }
         }
     }
+
+
 
 }

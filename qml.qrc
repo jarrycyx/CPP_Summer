@@ -14,5 +14,6 @@
         <file>Resources/pen.ico</file>
         <file>Resources/pen.png</file>
         <file>Components/SenderEditor.qml</file>
+        <file>Components/EditLightBox.qml</file>
     </qresource>
 </RCC>
