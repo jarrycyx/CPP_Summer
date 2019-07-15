@@ -34,9 +34,9 @@ Component {
             if (held) released=true;
             held = false;
             if (dragArea.mouseX>500) {
-                console.log(dragArea.mouseX+" "+indexOfThisDelegate+" "+myModel)
+                //console.log(dragArea.mouseX+" "+indexOfThisDelegate+" "+myModel)
                 movedToTarget=true;
-                myProcessingModel.itemMove(indexOfThisDelegate);
+                //senderPageHandler.itemMove(indexOfThisDelegate);
                 refreshView();
             }
             else movedToTarget=false;
@@ -100,21 +100,21 @@ Component {
                 },
                 Text{
                     id: titleText
-                    text: qsTr("新的文章需求")
+                    text: model.modelData.titleOfArticle
                     x: 21
                     y: 123
                     width: 261
                     elide: Text.ElideRight
                     height: 14
                     color: stringsPool.textGray1
-                    font{
+                    font {
                         family: "DengXian"
                         pixelSize: 20
                     }
                 },
                 Text{
                     id: previewText
-                    text: qsTr("新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求")
+                    text: model.modelData.contentOfArticle//qsTr("新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求新的文章需求")
                     x: 21
                     y: 150
                     width: 261
@@ -122,6 +122,7 @@ Component {
                     wrapMode: Text.WrapAnywhere
                     color: stringsPool.textGray3
                     maximumLineCount: 2
+                    verticalAlignment: Text.AlignBottom
                     font{
                         weight: Font.Light
                         family: "DengXian"//pingfangFont.name

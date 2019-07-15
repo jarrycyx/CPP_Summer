@@ -20,7 +20,10 @@ Rectangle {
         height: 24
         text: qsTr("发布翻译需求")
         color: stringsPool.textGray1
-        font{family: "DengXian";pixelSize: 24}
+        font{
+            family: "DengXian";
+            pixelSize: 24
+        }
     }
 
     Rectangle {

@@ -1,6 +1,8 @@
 QT += quick
 CONFIG += c++11
 
+QT += sql
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
@@ -16,11 +18,14 @@ QT += svg
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        dataobject.cpp \
+        cppobjs/callremotemysqlthread.cpp \
+        cppobjs/dataobject.cpp \
+        cppobjs/myarticleobj.cpp \
+        loginpagehandler.cpp \
         main.cpp \
-        myarticleobj.cpp \
         processingmodel.cpp \
-        qprocessclass.cpp
+        qprocessclass.cpp \
+        senderpagehandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,9 +43,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    dataobject.h \
-    myarticleobj.h \
+    cppobjs/callremotemysqlthread.h \
+    cppobjs/dataobject.h \
+    cppobjs/myarticleobj.h \
+    loginpagehandler.h \
     processingmodel.h \
-    qprocessclass.h
+    qprocessclass.h \
+    senderpagehandler.h
+
+INCLUDEPATH += $$PWD/cppobjs
+DEPENDPATH += $$PWD/cppobjs
 
 DISTFILES +=

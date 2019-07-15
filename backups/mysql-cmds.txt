@@ -1,0 +1,3 @@
+create table articles (`article_id` int unsigned auto_increment, `title` tinytext, `content` longtext, create_time datetime, primary key (`article_id`) ) engine=InnoDB DEFAULT CHARSET=utf8;
+
+insert into articles (title, content, create_time) values ("需要翻译的文章标题6", "需要翻译的文章内容6", NOW()); 

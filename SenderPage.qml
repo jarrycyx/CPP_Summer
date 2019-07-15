@@ -15,12 +15,15 @@ ApplicationWindow {
     title: qsTr("Stack")
     Strings{id: stringsPool}
 
-    ProcessingModel{
+
+    /*ProcessingModel{
         id: myProcessingModel
         objectName: "myProcessingModel"
-    }
+    }*/
+
+
     function refreshView(){
-        view.model=myProcessingModel.thisModel;
+        view.model=senderPageHandler.thisModel;
     }
     Rectangle {
         id: root
@@ -46,7 +49,7 @@ ApplicationWindow {
             ListView {
                 id: view
                 anchors{fill:parent; topMargin:122}
-                model: myProcessingModel.thisModel
+                model: senderPageHandler.thisModel
                 delegate: dragDelegate
                 spacing: 32.5
                 cacheBuffer: 50
@@ -93,7 +96,10 @@ ApplicationWindow {
                         y: 13
                         height: 22
                         text: qsTr("新的文章需求")
-                        font{family: "DengXian";pixelSize: 22}
+                        font{
+                            family: "DengXian";
+                            pixelSize: 22
+                        }
                     }
                 }
 
@@ -111,11 +117,29 @@ ApplicationWindow {
 
 
         }
+
         SenderEditor {
             x: articlesRect.width+30
             y: 30
+            visible: false
             width: mainWindow.width-x-30
             height: mainWindow.height-60
+        }
+
+        BusyIndicator {
+            id: busyIndicator
+            y: (mainWindow.height-80)/2
+            x: (mainWindow.width-388-80)/2+388
+            width: 80
+            height: 80
+        }
+    }
+
+    Connections {
+        target: senderPageHandler
+        onRefreshQml: {
+            busyIndicator.visible = false;
+            refreshView();
         }
     }
 
