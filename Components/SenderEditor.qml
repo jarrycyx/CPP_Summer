@@ -25,8 +25,8 @@ Rectangle {
         mode=0;
         blankText.visible=false;
         visible=true;
-        titleEdit.text="";
-        contentEdit.text="";
+        contentEdit.text="新文章的内容，是一大段需要翻译的不知道在说什么的文字。"+Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd");
+        titleEdit.text="新文章"+Qt.formatDateTime(new Date(), "yyyy-MM-dd");
         element.text="发布翻译需求"
     }
 
@@ -127,6 +127,8 @@ Rectangle {
              selectByMouse: true
              font{family: "DengXian";pixelSize: 17}
              property string placeholderText: "在此输入内容"
+
+
              Text {
                  text: contentEdit.placeholderText
                  color: stringsPool.textGray3

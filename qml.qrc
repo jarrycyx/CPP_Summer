@@ -15,5 +15,8 @@
         <file>Resources/pen.png</file>
         <file>Components/SenderEditor.qml</file>
         <file>Components/EditLightBox.qml</file>
+        <file>Resources/user-default.svg</file>
+        <file>Components/ChooseRegulatorDelegate.qml</file>
+        <file>ChooseRegulatorMiniPage.qml</file>
     </qresource>
 </RCC>

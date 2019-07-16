@@ -21,6 +21,7 @@ SOURCES += \
         cppobjs/callremotemysqlthread.cpp \
         cppobjs/dataobject.cpp \
         cppobjs/myarticleobj.cpp \
+        cppobjs/myuserobj.cpp \
         loginpagehandler.cpp \
         main.cpp \
         processingmodel.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     cppobjs/callremotemysqlthread.h \
     cppobjs/dataobject.h \
     cppobjs/myarticleobj.h \
+    cppobjs/myuserobj.h \
     loginpagehandler.h \
     processingmodel.h \
     qprocessclass.h \

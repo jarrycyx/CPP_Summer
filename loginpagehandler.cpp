@@ -49,7 +49,7 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd){
 
 
 void LoginPageHandler::loginInNewThread(QString name, QString pswd){
-    QThread::msleep(500);
+    //QThread::msleep(500);
     qDebug()<<name.toUtf8()<<pswd.toUtf8();
     query->exec(QString("select user_id,password from users where user_name=\"%1\";").arg(name));
     if (!query->first()) emit sendErrorMessage(QString::fromUtf8("用户不存在"));
@@ -59,7 +59,7 @@ void LoginPageHandler::loginInNewThread(QString name, QString pswd){
         qDebug() << userId << userPassword << userPassword.compare(pswd);
         if (userPassword.compare(pswd)==0) {
             emit LoginPageHandler::requireComplete(1, userId);
-            QThread::msleep(200);
+            //QThread::msleep(200);
         }
         else emit sendErrorMessage(QString::fromUtf8("用户名与密码不匹配"));
     }

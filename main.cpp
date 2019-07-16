@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
     newSenderPage.startPage(&engine);
     QObject::connect(&newLoginPage, SIGNAL(requireComplete(int, int)), &newSenderPage, SLOT(startLoadingData(int, int)));
 
-
     return app.exec();
 }
 

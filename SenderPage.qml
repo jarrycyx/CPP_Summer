@@ -20,6 +20,7 @@ ApplicationWindow {
             console.log("refresh");
             thisBusyIndicator.visible = false;
             senderArticlesList.model=senderPageHandler.thisModel;
+            otherArticlesList.model=senderPageHandler.otherModel;
         }
         onLoadArticlesComplete: {
             thisBusyIndicator.visible = false;
@@ -40,6 +41,8 @@ ApplicationWindow {
         ArticleBlock {
             id: dragDelegate
         }
+
+
         RectangularGlow {
             id: effect
             anchors.fill: articlesRect
@@ -55,49 +58,89 @@ ApplicationWindow {
             height: parent.height
             color: "#f2f2f2"
 
-            ListView {
-                id: senderArticlesList
-                anchors{fill:parent; topMargin:122}
-                model: senderPageHandler.thisModel
-                remove: Transition {
-                        ParallelAnimation {
-                            NumberAnimation { property: "opacity"; to: 0; duration: 1000 }
-                            NumberAnimation { properties: "x,y"; to: 100; duration: 1000 }
-                        }
-                    }
-                delegate: dragDelegate
-                spacing: 32.5
-                cacheBuffer: 50
-            }
-
             Rectangle {
                 color: "#f2f2f2"
                 x:0
                 y:0
+                z:0.5
                 width:388
-                height: 122
+                height: 77
             }
+
             Rectangle {
                 color: stringsPool.textGray3
                 x:41
                 y:76
+                z:0.5
                 width:305
                 height: 1
             }
 
-            Text{
-                text: qsTr("我发布的文章")
-                x: 41
-                y: 95
-                width: 261
-                height: 18
-                color: stringsPool.textGray1
-                font{family: "DengXian";pixelSize: 16}
+            ScrollView{
+                width: 388
+                height: parent.height-77
+                y: 77
+                ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                contentHeight: senderArticlesList.height + 47 + otherArticlesList.height + 47
+                //z:0.2
+
+                Text{
+                    text: qsTr("我发布的文章")
+                    x: 41
+                    y: 16
+                    //z:0.3
+                    width: 261
+                    height: 18
+                    color: stringsPool.textGray1
+                    font{family: "DengXian";pixelSize: 16}
+                }
+
+                ListView {
+                    property int flag: 1
+                    interactive: false
+                    id: senderArticlesList
+                    width: parent.width
+                    y: 47
+                    height: contentHeight + 40
+                    model: senderPageHandler.thisModel
+                    //populate: Transition {
+                    //        NumberAnimation { properties: "x,y"; duration: 1000 }
+                    //    }
+                    delegate: dragDelegate
+                    spacing: 32.5
+                    cacheBuffer: 50
+                }
+
+                Text{
+                    text: qsTr("其他文章")
+                    x: 41
+                    y: senderArticlesList.height + 16 + 30
+                    //z:0.3
+                    width: 261
+                    height: 18
+                    color: stringsPool.textGray1
+                    font{family: "DengXian"; pixelSize: 16}
+                }
+
+                ListView {
+                    property int flag: 2
+                    interactive: false
+                    id: otherArticlesList
+                    width: parent.width
+                    y: senderArticlesList.height + 47 + 30
+                    height: contentHeight+40
+                    model: senderPageHandler.otherModel
+                    delegate: dragDelegate
+                    spacing: 32.5
+                    cacheBuffer: 50
+                }
+
             }
 
-            Rectangle{
+            Rectangle {
                 x: 41
                 y: 21
+                z:1
                 width: 305
                 height: 48
                 color: "#f2f2f2"
@@ -135,7 +178,6 @@ ApplicationWindow {
                 }
             }
 
-
         }
 
         SenderEditor {
@@ -171,6 +213,8 @@ ApplicationWindow {
                 pixelSize: 16
             }
         }
+
+
     }
 
 

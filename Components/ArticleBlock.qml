@@ -34,17 +34,15 @@ Component {
             if (held) released=true;
             held = false;
             if (dragArea.mouseX>500) {
-                //console.log(dragArea.mouseX+" "+indexOfThisDelegate+" "+myModel)
                 movedToTarget=true;
                 senderPageHandler.itemMove(indexOfThisDelegate);
-                //console.log(indexOfThisDelegate+" removed "+senderArticlesList.model);
-                //senderArticlesList.model.remove(indexOfThisDelegate);
-                //senderArticlesList.model.pop();
             }
             else movedToTarget=false;
 
-            console.log("r");
+            console.log("r"+ListView.delegate+ListView.flag);
+
             senderArticlesList.currentIndex=indexOfThisDelegate;
+            otherArticlesList.currentIndex=indexOfThisDelegate;
             content.changeStatus(2);
             console.log(model.modelData.titleOfArticle+model.modelData.contentOfArticle);
             newSenderEditor.editOrViewAnArticle(model.modelData);

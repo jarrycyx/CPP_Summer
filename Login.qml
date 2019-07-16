@@ -93,6 +93,7 @@ ApplicationWindow {
         onRequireComplete: {
             busyIndicator.visible = false;
             errText.visible = false;
+            if (flag==1) loginWindow.close();
         }
     }
 
