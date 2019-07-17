@@ -45,7 +45,7 @@ Component {
             otherArticlesList.currentIndex=indexOfThisDelegate;
             content.changeStatus(2);
             console.log(model.modelData.titleOfArticle+model.modelData.contentOfArticle);
-            newSenderEditor.editOrViewAnArticle(model.modelData);
+            newSenderEditor.editOrViewAnArticle(model.modelData, indexOfThisDelegate);
         }
         onSelectedChanged: {
             content.selected=ListView.isCurrentItem;
@@ -102,7 +102,7 @@ Component {
                 },
                 Text{
                     id: titleText
-                    text: model.modelData.titleOfArticle
+                    text: model.modelData.titleOfArticle+"/"+model.modelData.statusCodeOfArticle
                     x: 21
                     y: 127
                     width: 261

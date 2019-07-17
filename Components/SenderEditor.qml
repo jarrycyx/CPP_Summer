@@ -10,15 +10,35 @@ import "../Resources"
 
 Rectangle {
     property int mode: 0 //0: new 1:edit/view
+    property int articleStatus: 0
+    property int indexInList: -1
+    id: senderEditorRect
 
-    function editOrViewAnArticle(articleObject){
+    function editOrViewAnArticle(articleObject, index){
         mode=1;
         blankText.visible=false;
         visible=true;
         console.log(articleObject.contentOfArticle);
         titleEdit.text=articleObject.titleOfArticle;
         contentEdit.text=articleObject.contentOfArticle;
+        articleStatus=articleObject.statusCodeOfArticle;
+        indexInList=index;
         element.text="修改翻译需求"
+
+        switch (senderEditorRect.articleStatus){
+        case 0:
+            button.text="发送";
+            button2.visible=true;
+            break;
+        case 100:
+            button.text="修改";
+            button2.visible=true;
+            break;
+        case 110:
+            button.text="修改";
+            button2.visible=false;
+            break;
+        }
     }
 
     function addAnArticle(){
@@ -28,6 +48,8 @@ Rectangle {
         contentEdit.text="新文章的内容，是一大段需要翻译的不知道在说什么的文字。"+Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd");
         titleEdit.text="新文章"+Qt.formatDateTime(new Date(), "yyyy-MM-dd");
         element.text="发布翻译需求"
+        senderEditorRect.articleStatus=0;
+        button.text="发布"
     }
 
     Strings{id: stringsPool}
@@ -160,9 +182,35 @@ Rectangle {
         text: qsTr("上传")
         font{family: "DengXian"}
         onClicked: {
-            if (parent.mode){}
-            else senderPageHandler.addAnArticle(titleEdit.text, contentEdit.text)
+            switch (senderEditorRect.articleStatus){
+            case 0:
+                senderPageHandler.addAnArticle(titleEdit.text, contentEdit.text);
+                senderEditorRect.articleStatus=100;
+                break;
+            case 100:
+            case 110:
+                senderPageHandler.editAnArticle(indexInList, titleEdit.text, contentEdit.text)
+                break;
+            }
         }
+    }
+
+    Button {
+        id: button2
+        x: 136
+        y: parent.height-17-40
+        width: 120
+        height: 40
+        text: qsTr("选择负责人")
+        font.family: "DengXian"
+        onClicked: {
+             switch (senderEditorRect.articleStatus){
+             case 0:
+             case 100:
+                 senderPageHandler.chooseRegulator(indexInList);
+                 break;
+             }
+         }
     }
 
     CheckBox {
@@ -173,6 +221,8 @@ Rectangle {
         text: qsTr("可被拆分")
         font{family: "DengXian"}
     }
+
+
 
 
 }

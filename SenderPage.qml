@@ -16,14 +16,17 @@ ApplicationWindow {
 
     Connections {
         target: senderPageHandler
-        onRefreshQml: {
+        //开始刷新QML
+        onStartRefreshQml: {
+            thisBusyIndicator.visible = true;
+        }
+        //QML刷新完成
+        onRefreshQmlComplete: {
             console.log("refresh");
             thisBusyIndicator.visible = false;
+            if (newSenderEditor.visible===false) blankText.visible=true;
             senderArticlesList.model=senderPageHandler.thisModel;
             otherArticlesList.model=senderPageHandler.otherModel;
-        }
-        onLoadArticlesComplete: {
-            thisBusyIndicator.visible = false;
         }
     }
 
@@ -163,6 +166,8 @@ ApplicationWindow {
                         //blankText.visible=false;
                         //newSenderEditor.visible=true;
                         newSenderEditor.addAnArticle();
+                        senderArticlesList.currentIndex=-1;
+                        otherArticlesList.currentIndex=-1;
                     }
                 }
 
@@ -200,6 +205,7 @@ ApplicationWindow {
 
         Text {
             id: blankText
+            visible: false
             y: (senderWindow.height-80)/2
             x: (senderWindow.width-388-160)/2+388
             text: "可以在左侧查看或添加翻译需求"

@@ -18,5 +18,6 @@
         <file>Resources/user-default.svg</file>
         <file>Components/ChooseRegulatorDelegate.qml</file>
         <file>ChooseRegulatorMiniPage.qml</file>
+        <file>Resources/refresh.svg</file>
     </qresource>
 </RCC>

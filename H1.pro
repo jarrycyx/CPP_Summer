@@ -24,8 +24,6 @@ SOURCES += \
         cppobjs/myuserobj.cpp \
         loginpagehandler.cpp \
         main.cpp \
-        processingmodel.cpp \
-        qprocessclass.cpp \
         senderpagehandler.cpp
 
 RESOURCES += qml.qrc
@@ -49,8 +47,6 @@ HEADERS += \
     cppobjs/myarticleobj.h \
     cppobjs/myuserobj.h \
     loginpagehandler.h \
-    processingmodel.h \
-    qprocessclass.h \
     senderpagehandler.h
 
 INCLUDEPATH += $$PWD/cppobjs

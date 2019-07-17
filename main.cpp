@@ -3,8 +3,6 @@
 #include <QtDebug>
 #include <QObject>
 #include <QQuickView>
-#include <processingmodel.h>
-#include <qprocessclass.h>
 #include <QQmlContext>
 #include <cppobjs/myarticleobj.h>
 #include <loginpagehandler.h>
@@ -16,19 +14,19 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    //qmlRegisterType<SenderPageHandler>("qt.cpp.QSenderPageHandler", 1, 0, "QSenderPageHandler");
-
     QQmlApplicationEngine engine;
 
+    LoginPageHandler newLoginPage; //创建登陆页面对象
+    newLoginPage.startPage(&engine);//渲染登录页面的主界面
 
-
-
-    LoginPageHandler newLoginPage;
-    newLoginPage.startPage(&engine);
-
-    SenderPageHandler newSenderPage;
+    //由于QML前台渲染部分程序与C++后台处理程序部分连接的需要，大部分页面的对象需要在主函数创建
+    SenderPageHandler newSenderPage;//创建“发送者”页面
     newSenderPage.startPage(&engine);
-    QObject::connect(&newLoginPage, SIGNAL(requireComplete(int, int)), &newSenderPage, SLOT(startLoadingData(int, int)));
+
+    //C++后台程序中，跨界面的信号与槽的连接
+    QObject::connect(&newLoginPage, SIGNAL(requireComplete(int, int)),
+                     &newSenderPage, SLOT(startLoadingData(int, int)));
+                    //登陆成功信号与开始加载数据信号的连接，可以部分冲淡同步读取数据带来的阻塞问题
 
     return app.exec();
 }
