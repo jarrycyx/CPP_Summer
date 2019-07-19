@@ -13,13 +13,16 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void addAnArticle(MyArticleObj* newArticle);
+    void editAnArticle(int index, QString title, QString content);
+    void deleteAnArticle(int index);
+
     MyArticleObj* getArticle(int idx);
 
     Q_INVOKABLE void removeOne();
 
-private:
+protected:
     QVector<MyArticleObj*> articles;
-    QHash<int, QByteArray> roleNames() const;
+    QHash<int, QByteArray> roleNames() const override;
 };
 
 #endif // ARTICLESLIST_H

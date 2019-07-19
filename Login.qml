@@ -40,7 +40,7 @@ ApplicationWindow {
         onSendErrorMessage: {
             console.log(errStr);
             errText.text=errStr;
-            errText.color="#E51400"
+            errText.color="#E51400";
         }
         onSendSuccessMessage: {
             console.log(successStr);

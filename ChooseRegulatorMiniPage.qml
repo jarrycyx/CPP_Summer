@@ -10,7 +10,11 @@ ApplicationWindow {
     objectName: "chooseRegulatorWindow"
     width: 450
     height: 500
-    Strings{id: stringsPool}
+
+    Strings{
+        id: stringsPool
+    }
+
     title: qsTr("选择负责人")
     visible: true
 
@@ -23,7 +27,7 @@ ApplicationWindow {
         id: chooseRegulatorList
         anchors.fill: parent
         delegate: chooseRegulatorDelegate
-        model: senderPageHandler.regulatorListModel
+        model: regulatorListModel
         cacheBuffer: 50
     }
 }

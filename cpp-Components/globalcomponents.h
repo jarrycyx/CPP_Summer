@@ -18,14 +18,21 @@ public:
     void uploadAllData();
     void startLoadingSenderArticleList(int userId);
 
+    void addSenderArticle(int sender, QString title, QString content);
+    void editSenderArticle(int index, QString title, QString content);
+    void deleteSenderArticle(int index);
+    void loadArticleRegulatorData(int articleId);
+
+
     int userLogin(QString name, QString pswd, int role=1);
     int searchUser(QString name, int role=1);
     int addUser(QString name, QString pswd, int role);
 
+
 private:
     ArticlesList senderArticleList, allUserArticleList;
-    QVector<MyArticleObj> allArticles;
-    QVector<MyUserObj> allUsers;
+    QVector<MyArticleObj*> allArticles;
+    QVector<MyUserObj*> allUsers;
 
     QSqlQuery* query;
 

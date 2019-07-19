@@ -40,14 +40,11 @@ public:
     Q_INVOKABLE void chooseRegulator(int index);
     //从QML唤起的增加文章函数
     Q_INVOKABLE void editAnArticle(int index, QString title, QString content);
-    //刷新页面数据
-    Q_INVOKABLE void refreshPage();
 
 private:
 
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;
-
     GlobalComponents* globalStorageComponent;
 
     //当前发送者身份标识，默认为-1（空）
@@ -71,8 +68,6 @@ signals:
 public slots:
     //开始渲染页面
     void startPage(QQmlApplicationEngine *engine);
-    //开始加载数据（同步）
-    void startLoadingData(int flag, int user_id);
 };
 
 

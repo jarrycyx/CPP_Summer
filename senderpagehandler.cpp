@@ -18,17 +18,6 @@ SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents* newGlobal, 
 {
     globalStorageComponent = newGlobal;
     globalStorageComponent -> startLoadingSenderArticleList(senderId);
-/*    QSqlDatabase db = QSqlDatabase::database("qt_sql_default_connection");
-    db.setHostName("39.106.107.241");
-    db.setDatabaseName("cyxcpp");
-    db.setUserName("root");
-    db.setPassword("cyxserver-2019");
-    if (!db.open())
-        qDebug() << "Failed to connect to root mysql admin";
-    else {
-        qDebug() << "open";
-        query=new QSqlQuery(db);
-    }*/
 }
 
 /*************************************************************************
@@ -40,18 +29,6 @@ SenderPageHandler::~SenderPageHandler(){
 
 }
 
-
-/*************************************************************************
-【函数名称】  refreshPage
-【函数功能】  刷新页面，内部调用huhuo 从QML调用
-【参数】    无
-【返回值】   无
-【开发者及日期】    jarrycyx 20190717
-*************************************************************************/
-Q_INVOKABLE void SenderPageHandler::refreshPage(){
-    emit startRefreshQml();
-    startLoadingData(2, thisUserId);
-}
 
 /*************************************************************************
 【函数名称】  startPage
@@ -78,70 +55,8 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
 
 
 Q_INVOKABLE void SenderPageHandler::itemMove(int idx){
-    /*MyArticleObj *articleToRemove = qobject_cast<MyArticleObj*>(myThisModel.takeAt(idx));
-    qDebug()<<myThisModel.length()<<"itemMoveInCpp"<<articleToRemove->articleIdOfArticle();
-    query->exec(QString("delete from articles where article_id=%1")
-                .arg(articleToRemove->articleIdOfArticle()));
-    //startLoadingData(1, thisUserId);
-    refreshPage();*/
+    globalStorageComponent->deleteSenderArticle(idx);
 }
-
-
-
-/*************************************************************************
-【函数名称】       startLoadingData
-【函数功能】       向服务器请求数据并加载到model
-【参数】          flag用于标识登录请求，user_id传递登录用户信息
-【返回值】         无
-【开发者及日期】    jarrycyx 20190713
-*************************************************************************/
-
-
-void SenderPageHandler::startLoadingData(int flag, int user_id){
-    /*if (flag&&query){           //如果为登录请求，且服务器连接正常
-        myThisModel.clear();    //清空list，避免重复加载数据
-        thisUserId=user_id;     //保存userid到该对象中
-        qDebug()<<"data";
-        query->exec(QString("select article_id from articles where sender=%1 ORDER BY create_time DESC")
-                    .arg(user_id));
-                                //读取所需文章的身份标志
-        qDebug()<<"data1";
-        while(query->next()){
-            qDebug()<<"data2";
-            MyArticleObj *newArticleToPull = new MyArticleObj(query, thisUserId ,0);    //创建空文章
-            newArticleToPull->setArticleIdOfArticle(query->value(0).toInt());           //设置空文章身份标志，便于之后读取数据
-            myThisModel.append(newArticleToPull);                                       //加入list的model中
-        }
-        int len = myThisModel.length();
-        for (int i=0; i<len;i++){
-            MyArticleObj *pullAnArticle = qobject_cast<MyArticleObj*>(myThisModel[i]);
-            pullAnArticle->pullArticleInfo(pullAnArticle->articleIdOfArticle());        //存储Article的对象开始向服务器请求文章具体内容数据
-        }
-
-        qDebug()<<"complete signal";
-
-        //同上，但为加载其他用户的文章列表
-        myOtherModel.clear();
-        query->exec(QString("select article_id from articles ORDER BY create_time DESC"));
-        while(query->next()){
-            qDebug()<<"data2";
-            MyArticleObj *pullOtherArticle = new MyArticleObj(query, thisUserId ,0);
-            pullOtherArticle->setArticleIdOfArticle(query->value(0).toInt());
-            myOtherModel.append(pullOtherArticle);
-        }
-        len = myOtherModel.length();
-        for (int i=0; i<len;i++){
-            MyArticleObj *pullAnArticle = qobject_cast<MyArticleObj*>(myOtherModel[i]);
-            pullAnArticle->pullArticleInfo(pullAnArticle->articleIdOfArticle());
-        }
-
-        qDebug()<<"complete signal";
-    }
-
-    //通知QML进行刷新
-    emit refreshQmlComplete();*/
-}
-
 
 /*************************************************************************
 【函数名称】  addAnArticle
@@ -154,23 +69,12 @@ void SenderPageHandler::startLoadingData(int flag, int user_id){
 
 
 Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content){
-    /*emit startRefreshQml();
-    MyArticleObj *newArticle = new MyArticleObj(query, thisUserId, 0);
-    articleSendingId = newArticle->setNewArticleInfo(title, content);
-    if (articleSendingId!=-1) myThisModel.push_front(newArticle);
-    emit refreshQmlComplete();
-    currentInViewIndex=0;
 
-    myRegulatorListModel.clear();
-    query->exec(QString("select user_id, user_name, password from users WHERE role=2 ORDER BY create_time DESC"));
-    while(query->next()){
-        qDebug()<<"data2";
-        myRegulatorListModel.append(new MyUserObj(query->value(0).toInt(), query->value(1).toString(), query->value(2).toString()));
-    }
+    globalStorageComponent->addSenderArticle(thisUserId, title, content);
 
     //添加文章后还需要选取负责人
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
-    thisEngine->load(url);*/
+    thisEngine->load(url);
 }
 
 
@@ -184,12 +88,7 @@ Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content)
 *************************************************************************/
 
 Q_INVOKABLE void SenderPageHandler::editAnArticle(int index, QString title, QString content){
-    /*currentInViewIndex=index;
-    MyArticleObj *newArticle = qobject_cast<MyArticleObj*>(myThisModel[index]);
-    qDebug() << index<< " Chosen" <<articleSendingId<<newArticle->articleIdOfArticle();
-    newArticle->setTitleOfArticle(title);
-    newArticle->setContentOfArticle(content);
-    refreshPage();*/
+    globalStorageComponent->editSenderArticle(index, title, content);
 }
 
 
@@ -206,10 +105,11 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
     while(query->next()){
         qDebug()<<"data2";
         myRegulatorListModel.append(new MyUserObj(query->value(0).toInt(), query->value(1).toString(), query->value(2).toString()));
-    }
+    }*/
+    globalStorageComponent->loadArticleRegulatorData(0);
     currentInViewIndex=index;
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
-    thisEngine->load(url);*/
+    thisEngine->load(url);
 }
 
 /*************************************************************************
