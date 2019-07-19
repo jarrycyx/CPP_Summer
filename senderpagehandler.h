@@ -41,7 +41,16 @@ public:
     //从QML唤起的增加文章函数
     Q_INVOKABLE void editAnArticle(int index, QString title, QString content);
 
+
+    void startLoadingSenderArticleList(int userId);
+    void addSenderArticle(int sender, QString title, QString content);
+    void editSenderArticle(int index, QString title, QString content);
+    void deleteSenderArticle(int index);
+    void loadArticleRegulatorData(int articleId);
+
 private:
+
+    ArticlesList senderArticleList, allUserArticleList;
 
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;

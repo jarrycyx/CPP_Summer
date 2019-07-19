@@ -9,8 +9,8 @@
 
 GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *parent) : QObject(parent)
 {
-    engine->rootContext()->setContextProperty("senderArticleList", &senderArticleList);
-    engine->rootContext()->setContextProperty("allUserArticleList", &allUserArticleList);
+    //engine->rootContext()->setContextProperty("senderArticleList", &senderArticleList);
+    //engine->rootContext()->setContextProperty("allUserArticleList", &allUserArticleList);
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("39.106.107.241");
@@ -36,7 +36,6 @@ GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *paren
 
             if (query->value(0).toInt()>biggestUserId) biggestArticleId=query->value(0).toInt();
             allArticles.append(articleFromDB);
-            allUserArticleList.addAnArticle(articleFromDB);
         }
 
 
@@ -123,26 +122,25 @@ void GlobalComponents::uploadAllData(){
 }
 
 
-void GlobalComponents::startLoadingSenderArticleList(int userId){
-    qDebug() << "sender" << userId;
-    int len=allArticles.length();
-    for (int i=0;i<len;i++){
-        qDebug() << "sender article";
-        if (allArticles[i]->senderIdOfArticle()==userId)
-            senderArticleList.addAnArticle(allArticles[i]);
-    }
+
+int GlobalComponents::getAnArticleId(){
+    biggestArticleId++;
+    return biggestArticleId;
 }
 
 
+int GlobalComponents::getArticlesLength(){
+    return allArticles.length();
+}
 
-void GlobalComponents::loadArticleRegulatorData(int articleId){
-    qDebug() << "article" << articleId;
-    int len=allUsers.length();
-    for (int i=0;i<len;i++){
-        qDebug() << "sender article";
-        if (allUsers[i]->role()==2){}
-            //myRegulatorListModel.append(allUsers[i]);
-    }
+
+MyArticleObj* GlobalComponents::getArticleToEdit(int index){
+    return allArticles[index];
+}
+
+
+void GlobalComponents::addAnArticle(MyArticleObj* newArticle){
+    allArticles.push_front(newArticle);
 }
 
 
@@ -186,31 +184,6 @@ int GlobalComponents::addUser(QString name, QString pswd, int role){
     biggestUserId+=2;
     allUsers.push_front(newUser);
     return 1;
-}
-
-
-
-void GlobalComponents::addSenderArticle(int sender, QString title, QString content){
-    MyArticleObj* newSenderArticle = new MyArticleObj(sender);
-    newSenderArticle->setArticleInfo(biggestArticleId+1, title, content);
-    newSenderArticle->setStatusCodeOfArticle(100);
-    newSenderArticle->setModifyStatus(1);
-    biggestArticleId+=1;
-    //由于需要显示两处，保存一处，故需要增加三处
-    allArticles.push_front(newSenderArticle);
-    senderArticleList.addAnArticle(newSenderArticle);
-    allUserArticleList.addAnArticle(newSenderArticle);
-}
-
-
-
-void GlobalComponents::editSenderArticle(int index, QString title, QString content){
-    //由于数据实体只保存一份，只需编辑一处即可
-    senderArticleList.editAnArticle(index, title, content);
-}
-
-void GlobalComponents::deleteSenderArticle(int index){
-    senderArticleList.deleteAnArticle(index);
 }
 
 

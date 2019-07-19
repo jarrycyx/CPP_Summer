@@ -26,6 +26,7 @@ public:
 
 private:
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
+    ArticlesList senderArticleList, allUserArticleList;
     QQmlApplicationEngine *thisEngine;
     GlobalComponents* globalStorageComponent;
     SenderPageHandler* newSenderPage;

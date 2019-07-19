@@ -15,13 +15,13 @@ public:
     explicit GlobalComponents( QQmlApplicationEngine *engine, QObject *parent = nullptr);
     virtual ~GlobalComponents();
 
-    void uploadAllData();
-    void startLoadingSenderArticleList(int userId);
+    int getAnArticleId();
+    int getArticlesLength();
 
-    void addSenderArticle(int sender, QString title, QString content);
-    void editSenderArticle(int index, QString title, QString content);
-    void deleteSenderArticle(int index);
-    void loadArticleRegulatorData(int articleId);
+    void uploadAllData();
+
+    void addAnArticle(MyArticleObj* newArticle);
+    MyArticleObj* getArticleToEdit(int index);
 
 
     int userLogin(QString name, QString pswd, int role=1);
@@ -30,7 +30,6 @@ public:
 
 
 private:
-    ArticlesList senderArticleList, allUserArticleList;
     QVector<MyArticleObj*> allArticles;
     QVector<MyUserObj*> allUsers;
 
