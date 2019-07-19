@@ -6,6 +6,7 @@
 #include <QQmlContext>
 #include <QSqlError>
 #include <QtConcurrent/QtConcurrent>
+#include "cpp-Components/globalcomponents.h"
 
 /*************************************************************************
 【函数名称】  SenderPageHandler
@@ -13,9 +14,11 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-SenderPageHandler::SenderPageHandler(QObject *parent) : QObject(parent)
+SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents* newGlobal, QObject *parent) : QObject(parent), thisUserId(senderId)
 {
-    QSqlDatabase db = QSqlDatabase::database("qt_sql_default_connection");
+    globalStorageComponent = newGlobal;
+    globalStorageComponent -> startLoadingSenderArticleList(senderId);
+/*    QSqlDatabase db = QSqlDatabase::database("qt_sql_default_connection");
     db.setHostName("39.106.107.241");
     db.setDatabaseName("cyxcpp");
     db.setUserName("root");
@@ -25,7 +28,7 @@ SenderPageHandler::SenderPageHandler(QObject *parent) : QObject(parent)
     else {
         qDebug() << "open";
         query=new QSqlQuery(db);
-    }
+    }*/
 }
 
 /*************************************************************************
@@ -34,16 +37,7 @@ SenderPageHandler::SenderPageHandler(QObject *parent) : QObject(parent)
 【开发者及日期】    jarrycyx 20190718
 *************************************************************************/
 SenderPageHandler::~SenderPageHandler(){
-    int lenThis=myThisModel.length();
-    int lenOther=myOtherModel.length();
-    int lenUser=myRegulatorListModel.length();
-    for (int i=0;i<lenThis;i++)
-        delete myThisModel[i];
-    for (int i=0;i<lenOther;i++)
-        delete myOtherModel[i];
-    for (int i=0;i<lenUser;i++)
-        delete myRegulatorListModel[i];
-    delete query;
+
 }
 
 
@@ -74,26 +68,6 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
     engine->load(url1);
 }
 
-
-/*************************************************************************
-【函数名称】  thisModel，otherModel，regulatorListModel
-【函数功能】  向QML传递ListView所需数据
-【参数】   无
-【返回值】   转换为QVariant类型的QList
-【开发者及日期】    jarrycyx 2019-7-12
-*************************************************************************/
-QVariant SenderPageHandler::thisModel() const{
-    return QVariant::fromValue(myThisModel);
-}
-
-QVariant SenderPageHandler::otherModel() const{
-    return QVariant::fromValue(myOtherModel);
-}
-
-QVariant SenderPageHandler::regulatorListModel() const{
-    return QVariant::fromValue(myRegulatorListModel);
-}
-
 /*************************************************************************
 【函数名称】  itemMove
 【函数功能】  删除文章，执行MyArticleObj的删除操作
@@ -101,13 +75,15 @@ QVariant SenderPageHandler::regulatorListModel() const{
 【返回值】   无
 【开发者及日期】    jarrycyx 20190716
 *************************************************************************/
+
+
 Q_INVOKABLE void SenderPageHandler::itemMove(int idx){
-    MyArticleObj *articleToRemove = qobject_cast<MyArticleObj*>(myThisModel.takeAt(idx));
+    /*MyArticleObj *articleToRemove = qobject_cast<MyArticleObj*>(myThisModel.takeAt(idx));
     qDebug()<<myThisModel.length()<<"itemMoveInCpp"<<articleToRemove->articleIdOfArticle();
     query->exec(QString("delete from articles where article_id=%1")
                 .arg(articleToRemove->articleIdOfArticle()));
     //startLoadingData(1, thisUserId);
-    refreshPage();
+    refreshPage();*/
 }
 
 
@@ -119,8 +95,10 @@ Q_INVOKABLE void SenderPageHandler::itemMove(int idx){
 【返回值】         无
 【开发者及日期】    jarrycyx 20190713
 *************************************************************************/
+
+
 void SenderPageHandler::startLoadingData(int flag, int user_id){
-    if (flag&&query){           //如果为登录请求，且服务器连接正常
+    /*if (flag&&query){           //如果为登录请求，且服务器连接正常
         myThisModel.clear();    //清空list，避免重复加载数据
         thisUserId=user_id;     //保存userid到该对象中
         qDebug()<<"data";
@@ -161,7 +139,7 @@ void SenderPageHandler::startLoadingData(int flag, int user_id){
     }
 
     //通知QML进行刷新
-    emit refreshQmlComplete();
+    emit refreshQmlComplete();*/
 }
 
 
@@ -172,8 +150,11 @@ void SenderPageHandler::startLoadingData(int flag, int user_id){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
+
+
+
 Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content){
-    emit startRefreshQml();
+    /*emit startRefreshQml();
     MyArticleObj *newArticle = new MyArticleObj(query, thisUserId, 0);
     articleSendingId = newArticle->setNewArticleInfo(title, content);
     if (articleSendingId!=-1) myThisModel.push_front(newArticle);
@@ -189,8 +170,9 @@ Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content)
 
     //添加文章后还需要选取负责人
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
-    thisEngine->load(url);
+    thisEngine->load(url);*/
 }
+
 
 
 /*************************************************************************
@@ -200,13 +182,14 @@ Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content)
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
+
 Q_INVOKABLE void SenderPageHandler::editAnArticle(int index, QString title, QString content){
-    currentInViewIndex=index;
+    /*currentInViewIndex=index;
     MyArticleObj *newArticle = qobject_cast<MyArticleObj*>(myThisModel[index]);
     qDebug() << index<< " Chosen" <<articleSendingId<<newArticle->articleIdOfArticle();
     newArticle->setTitleOfArticle(title);
     newArticle->setContentOfArticle(content);
-    refreshPage();
+    refreshPage();*/
 }
 
 
@@ -218,7 +201,7 @@ Q_INVOKABLE void SenderPageHandler::editAnArticle(int index, QString title, QStr
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
-    myRegulatorListModel.clear();
+    /*myRegulatorListModel.clear();
     query->exec(QString("select user_id, user_name, password from users WHERE role=2 ORDER BY create_time DESC"));
     while(query->next()){
         qDebug()<<"data2";
@@ -226,7 +209,7 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
     }
     currentInViewIndex=index;
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
-    thisEngine->load(url);
+    thisEngine->load(url);*/
 }
 
 /*************************************************************************
@@ -236,11 +219,13 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
+
 Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx){
-    MyUserObj *regulatorToChoose = qobject_cast<MyUserObj*>(myRegulatorListModel[idx]);
+    /*MyUserObj *regulatorToChoose = qobject_cast<MyUserObj*>(myRegulatorListModel[idx]);
     MyArticleObj *newArticle = qobject_cast<MyArticleObj*>(myThisModel[currentInViewIndex]);
     qDebug() << idx<< " Chosen" << regulatorToChoose->userId()<<articleSendingId<<newArticle->articleIdOfArticle();
     newArticle->setRegulatorIdOfArticle(regulatorToChoose->userId());
    // emit refreshQmlComplete();
-    refreshPage();
+    refreshPage();*/
 }
+

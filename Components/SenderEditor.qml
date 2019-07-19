@@ -14,14 +14,13 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
-    function editOrViewAnArticle(articleObject, index){
+    function editOrViewAnArticle(title, content, statusCode, index){
         mode=1;
         blankText.visible=false;
         visible=true;
-        console.log(articleObject.contentOfArticle);
-        titleEdit.text=articleObject.titleOfArticle;
-        contentEdit.text=articleObject.contentOfArticle;
-        articleStatus=articleObject.statusCodeOfArticle;
+        titleEdit.text=title;
+        contentEdit.text=content;
+        articleStatus=statusCode;
         indexInList=index;
         element.text="修改翻译需求"
 

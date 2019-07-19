@@ -18,6 +18,8 @@ QT += svg
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        cpp-Components/articleslist.cpp \
+        cpp-Components/globalcomponents.cpp \
         cppobjs/callremotemysqlthread.cpp \
         cppobjs/dataobject.cpp \
         cppobjs/myarticleobj.cpp \
@@ -42,6 +44,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    cpp-Components/articleslist.h \
+    cpp-Components/globalcomponents.h \
     cppobjs/callremotemysqlthread.h \
     cppobjs/dataobject.h \
     cppobjs/myarticleobj.h \

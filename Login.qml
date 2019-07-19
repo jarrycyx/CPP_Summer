@@ -35,12 +35,33 @@ ApplicationWindow {
     }
 
 
+    Connections{
+        target: loginPageHandler
+        onSendErrorMessage: {
+            console.log(errStr);
+            errText.text=errStr;
+            errText.color="#E51400"
+        }
+        onSendSuccessMessage: {
+            console.log(successStr);
+            errText.text=successStr;
+            errText.color="#60A917";
+            if (successStr==="登陆成功")
+                loginWindow.close();
+        }
+        onRequireComplete: {
+            busyIndicator.visible = false;
+            errText.visible = false;
+            if (flag==1) loginWindow.close();
+        }
+    }
+
+
 
     Rectangle{
         EditLightBox{
             id: loginDelegate
         }
-
         height: 114
         width: parent.width
         y:102
@@ -69,8 +90,7 @@ ApplicationWindow {
         height: 48
         text: qsTr("登录")
         onClicked: {
-            loginPageHandler.loginInit(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit);
-            busyIndicator.visible=true;
+            loginPageHandler.loginInit(loginModel.get(0).textInEdit, loginModel.get(1).textInEdit, 1);
         }
         font.family: "DengXian"
     }
@@ -84,24 +104,11 @@ ApplicationWindow {
         text: qsTr("注册")
         font.family: "DengXian"
         onClicked: {
-            loginPageHandler.signUp(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit);
-            busyIndicator.visible=true;
+            loginPageHandler.signUp(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit, 1);
         }
     }
 
-    Connections{
-        target: loginPageHandler
-        onSendErrorMessage: {
-            console.log(errStr);
-            errText.text=errStr;
-            busyIndicator.visible = false;
-        }
-        onRequireComplete: {
-            busyIndicator.visible = false;
-            errText.visible = false;
-            if (flag==1) loginWindow.close();
-        }
-    }
+
 
     Image {
         id: borderImage

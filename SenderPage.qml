@@ -8,7 +8,7 @@ import "./Resources"
 ApplicationWindow {
     id: senderWindow
     objectName: "senderWindow"
-    visible: false
+    visible: true
     width: 1280
     height: 800
     title: qsTr("Stack")
@@ -105,7 +105,7 @@ ApplicationWindow {
                     width: parent.width
                     y: 47
                     height: contentHeight + 40
-                    model: senderPageHandler.thisModel
+                    model: senderArticleList
                     //populate: Transition {
                     //        NumberAnimation { properties: "x,y"; duration: 1000 }
                     //    }
@@ -132,7 +132,7 @@ ApplicationWindow {
                     width: parent.width
                     y: senderArticlesList.height + 47 + 30
                     height: contentHeight+40
-                    model: senderPageHandler.otherModel
+                    model: allUserArticleList
                     delegate: dragDelegate
                     spacing: 32.5
                     cacheBuffer: 50
@@ -194,18 +194,9 @@ ApplicationWindow {
             height: senderWindow.height-60
         }
 
-        BusyIndicator {
-            id: thisBusyIndicator
-            y: (senderWindow.height-80)/2
-            x: (senderWindow.width-388-80)/2+388
-            //visible: false
-            width: 80
-            height: 80
-        }
-
         Text {
             id: blankText
-            visible: false
+            visible: true
             y: (senderWindow.height-80)/2
             x: (senderWindow.width-388-160)/2+388
             text: "可以在左侧查看或添加翻译需求"

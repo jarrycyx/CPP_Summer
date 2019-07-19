@@ -11,6 +11,8 @@
 #include <QSqlQuery>
 #include <QAbstractListModel>
 
+#include "cpp-Components/globalcomponents.h"
+
 /* 发送者页面后台处理程序
  * 也用于启动一些附属页面
  * 其功能与MyArticleObject紧密相关
@@ -19,22 +21,14 @@
 class SenderPageHandler : public QObject
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-    Q_PROPERTY(QVariant thisModel READ thisModel NOTIFY thisModelChanged)
-    Q_PROPERTY(QVariant otherModel READ otherModel NOTIFY otherModelChanged)
-    Q_PROPERTY(QVariant regulatorListModel READ regulatorListModel NOTIFY regulatorListModelChanged)
     /* 以上三个model分别存储
      * 该用户的文章列表
      * 所有用户的文章列表
      * 负责人选取列表的数据 */
 
 public:
-    explicit SenderPageHandler(QObject *parent = nullptr);
+    explicit SenderPageHandler(int senderId, GlobalComponents* newGlobal ,QObject *parent = nullptr);
     ~SenderPageHandler();
-
-    //以下三个函数，用于将C++中的数据暴露给QML
-    QVariant thisModel() const;
-    QVariant otherModel() const;
-    QVariant regulatorListModel() const;
 
     //从QML唤起的删除文章函数
     Q_INVOKABLE void itemMove(int idx);
@@ -53,13 +47,8 @@ private:
 
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;
-    //数据库请求对象指针
-    QSqlQuery *query;
 
-    //存储ListView所需model的数据结构
-    QList<QObject*> myThisModel;
-    QList<QObject*> myOtherModel;
-    QList<QObject*> myRegulatorListModel;
+    GlobalComponents* globalStorageComponent;
 
     //当前发送者身份标识，默认为-1（空）
     int thisUserId=-1;

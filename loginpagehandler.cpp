@@ -34,18 +34,9 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190709
 *************************************************************************/
-LoginPageHandler::LoginPageHandler(QObject *parent) : QObject(parent)
+LoginPageHandler::LoginPageHandler(GlobalComponents* newGlobalStorageComponent, QObject *parent) :
+    QObject(parent), globalStorageComponent(newGlobalStorageComponent)
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("39.106.107.241");
-    db.setDatabaseName("cyxcpp");
-    db.setUserName("root");
-    db.setPassword("cyxserver-2019");
-    if (!db.open())
-        qDebug() << "Failed to connect to root mysql admin";
-    else qDebug() << "open";
-
-    query=new QSqlQuery(db);
 }
 
 /*************************************************************************
@@ -54,7 +45,9 @@ LoginPageHandler::LoginPageHandler(QObject *parent) : QObject(parent)
 【开发者及日期】    jarrycyx 20190718
 *************************************************************************/
 LoginPageHandler::~LoginPageHandler(){
-    delete query;
+    qDebug() << "登陆页面析构";
+    delete newSenderPage;
+    newSenderPage=NULL;
 }
 
 /*************************************************************************
@@ -74,32 +67,36 @@ void LoginPageHandler::startPage(QQmlApplicationEngine *engine){
 
 /*************************************************************************
 【函数名称】  loginInit，loginInNewThread
-【函数功能】  QML从界面中唤起该函数，创建新线程执行登录操作（loginInNewThread）
+【函数功能】  QML从界面中唤起该函数，执行登录操作（loginInNewThread）
 【参数】    从界面中读取的用户名和密码
 【返回值】   无
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
-Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd){
-    //创建新线程
-    QtConcurrent::run(this,&LoginPageHandler::loginInNewThread,name,pswd);
-}
-
-//在新建线程中请求服务器数据
-void LoginPageHandler::loginInNewThread(QString name, QString pswd){
-    //QThread::msleep(500); //让好看的进度指示圈多转一会
-    qDebug()<<name.toUtf8()<<pswd.toUtf8();
-    query->exec(QString("select user_id,password from users where user_name=\"%1\";").arg(name));
-    if (!query->first()) emit sendErrorMessage(QString::fromUtf8("用户不存在"));
-    else{
-        int userId = query->value(0).toInt();
-        QString userPassword = query->value(1).toString();
-        qDebug() << userId << userPassword << userPassword.compare(pswd);
-        if (userPassword.compare(pswd)==0) {
-            emit LoginPageHandler::requireComplete(1, userId);
-                //发送请求完成信号，flag为1代表其为登录完成信号
-            //QThread::msleep(200); //让好看的进度指示圈多转一会
+Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int role){
+    int loginResult = globalStorageComponent->userLogin(name,pswd,role);
+    switch(loginResult){
+        case 1 :{
+            emit sendSuccessMessage("登陆成功");
+            newSenderPage = new SenderPageHandler(globalStorageComponent->searchUser(name,role), globalStorageComponent);
+            newSenderPage->startPage(thisEngine);
+            break;
         }
-        else emit sendErrorMessage(QString::fromUtf8("用户名与密码不匹配"));
+        case 2 :{
+            emit sendErrorMessage("密码不匹配");
+            break;
+        }
+        case 3 :{
+            emit sendErrorMessage("用户身份不匹配");
+            break;
+        }
+        case 4 :{
+            emit sendErrorMessage("用户不存在");
+            break;
+        }
+        default:{
+            emit sendErrorMessage("登陆错误");
+            break;
+        }
     }
 }
 
@@ -110,22 +107,9 @@ void LoginPageHandler::loginInNewThread(QString name, QString pswd){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
-Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd){
-    QtConcurrent::run(this,&LoginPageHandler::signUpInNewThread,name,pswd);
+Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd, int role){
+    int signupResult = globalStorageComponent->addUser(name,pswd,role);
+    if (!signupResult) emit sendErrorMessage("用户已存在");
+    else emit sendSuccessMessage("注册成功");
 }
 
-void LoginPageHandler::signUpInNewThread(QString name, QString pswd){
-    qDebug()<<name.toUtf8()<<pswd.toUtf8();
-    if (name.length()>=5&&pswd.length()>=8){
-        QThread::sleep(1);
-        query->exec(QString("select user_id from users where user_name=\"%1\"").arg(name));
-        if (!query->first()){
-            QString cmdQStr=QString("insert into users (user_type, user_name, create_time,password) values (0, \"%1\", now(),\"%2\");")
-                    .arg(name).arg(pswd);
-            qDebug()<<cmdQStr;
-            query->exec(cmdQStr);
-            emit LoginPageHandler::requireComplete(0, -1);
-        }else emit sendErrorMessage(QString::fromUtf8("用户名已存在"));
-    }else emit sendErrorMessage(QString::fromUtf8("长度不足"));
-    //无需向服务器请求即可对密码合法性进行判断
-}
