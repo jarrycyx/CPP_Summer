@@ -183,12 +183,12 @@ Rectangle {
         onClicked: {
             switch (senderEditorRect.articleStatus){
             case 0:
-                senderPageHandler.addAnArticle(titleEdit.text, contentEdit.text);
+                senderPageHandler.addSenderArticle(titleEdit.text, contentEdit.text);
                 senderEditorRect.articleStatus=100;
                 break;
             case 100:
             case 110:
-                senderPageHandler.editAnArticle(indexInList, titleEdit.text, contentEdit.text)
+                senderPageHandler.editSenderArticle(indexInList, titleEdit.text, contentEdit.text)
                 break;
             }
         }

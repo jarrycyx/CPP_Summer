@@ -121,30 +121,7 @@ void GlobalComponents::uploadAllData(){
     }
 }
 
-
-
-int GlobalComponents::getAnArticleId(){
-    biggestArticleId++;
-    return biggestArticleId;
-}
-
-
-int GlobalComponents::getArticlesLength(){
-    return allArticles.length();
-}
-
-
-MyArticleObj* GlobalComponents::getArticleToEdit(int index){
-    return allArticles[index];
-}
-
-
-void GlobalComponents::addAnArticle(MyArticleObj* newArticle){
-    allArticles.push_front(newArticle);
-}
-
-
-
+/*
 
 int GlobalComponents::userLogin(QString name, QString pswd, int role){
     int len=allUsers.length();
@@ -187,3 +164,4 @@ int GlobalComponents::addUser(QString name, QString pswd, int role){
 }
 
 
+*/

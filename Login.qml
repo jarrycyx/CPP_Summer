@@ -17,6 +17,13 @@ ApplicationWindow {
 
 
 
+    ComboBox {
+        x: 368
+        y: 44
+        model: ["First", "Second", "Third"]
+    }
+
+
     /* 存放两个输入框数据的结构
      * 需要说明的是，由于我自己实现了符合Fluent Design设计规范的许多控件
      * 其中输入框控件的“聚焦”操作依赖于ListView，也就需要相应的model

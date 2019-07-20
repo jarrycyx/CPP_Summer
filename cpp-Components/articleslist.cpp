@@ -46,17 +46,15 @@ void ArticlesList::editAnArticle(int index, QString title, QString content){
 }
 
 void ArticlesList::addAnArticle(MyArticleObj* newArticle){
+    beginInsertRows(QModelIndex(), 0, 0);
     articles.push_front(newArticle);
-    QModelIndex topLeft = createIndex(0,0);
-    QModelIndex bottom = createIndex(articles.length(),0);
-    emit dataChanged(topLeft, bottom);
+    endInsertRows();
 }
 
 void ArticlesList::deleteAnArticle(int index){
+    beginRemoveRows(QModelIndex(), index, index);
     articles[index]->setModifyStatus(3);
     articles.remove(index);
-    QModelIndex topLeft = createIndex(0,0);
-    QModelIndex bottom = createIndex(articles.length(),0);
-    emit dataChanged(topLeft, bottom);
+    endRemoveRows();
 }
 

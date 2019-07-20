@@ -14,19 +14,32 @@ class GlobalComponents : public QObject
 public:
     explicit GlobalComponents( QQmlApplicationEngine *engine, QObject *parent = nullptr);
     virtual ~GlobalComponents();
-
-    int getAnArticleId();
-    int getArticlesLength();
-
     void uploadAllData();
 
-    void addAnArticle(MyArticleObj* newArticle);
-    MyArticleObj* getArticleToEdit(int index);
+
+    inline int getAnArticleId(){biggestArticleId++;return biggestArticleId;}
+
+    inline int getArticlesLength(){return allArticles.length();}
+
+    inline MyArticleObj* getArticleToEdit(int index){return allArticles[index];}
+
+    inline void addAnArticle(MyArticleObj* newArticle){allArticles.push_front(newArticle);}
 
 
-    int userLogin(QString name, QString pswd, int role=1);
-    int searchUser(QString name, int role=1);
-    int addUser(QString name, QString pswd, int role);
+
+    inline int getAUserId(){biggestUserId++;return biggestUserId;}
+
+    inline int getUsersLength(){return allUsers.length();}
+
+    inline MyUserObj* getUserToEdit(int index){return allUsers[index];}
+
+    inline void addAUser(MyUserObj* newUser){allUsers.push_front(newUser);}
+
+
+
+    //int userLogin(QString name, QString pswd, int role=1);
+    //int searchUser(QString name, int role=1);
+    //int addUser(QString name, QString pswd, int role);
 
 
 private:

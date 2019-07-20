@@ -44,8 +44,8 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId){
 
 
 
-void SenderPageHandler::addSenderArticle(int sender, QString title, QString content){
-    MyArticleObj* newSenderArticle = new MyArticleObj(sender);
+void SenderPageHandler::addSenderArticle(QString title, QString content){
+    MyArticleObj* newSenderArticle = new MyArticleObj(thisUserId);
     newSenderArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), title, content);
     newSenderArticle->setStatusCodeOfArticle(100);
     newSenderArticle->setModifyStatus(1);
@@ -54,6 +54,7 @@ void SenderPageHandler::addSenderArticle(int sender, QString title, QString cont
     globalStorageComponent->addAnArticle(newSenderArticle);
     senderArticleList.addAnArticle(newSenderArticle);
     allUserArticleList.addAnArticle(newSenderArticle);
+    chooseRegulator(0);
 }
 
 
@@ -95,10 +96,6 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
 *************************************************************************/
 
 
-Q_INVOKABLE void SenderPageHandler::itemMove(int idx){
-    deleteSenderArticle(idx);
-}
-
 /*************************************************************************
 【函数名称】  addAnArticle
 【函数功能】  增加文章，先创建文章的Object存取信息，再交给MyArticleObj去同步数据
@@ -106,19 +103,6 @@ Q_INVOKABLE void SenderPageHandler::itemMove(int idx){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
-
-
-
-Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content){
-
-    addSenderArticle(thisUserId, title, content);
-
-    //添加文章后还需要选取负责人
-    const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
-    thisEngine->load(url);
-}
-
-
 
 /*************************************************************************
 【函数名称】  editAnArticle
@@ -128,11 +112,6 @@ Q_INVOKABLE void SenderPageHandler::addAnArticle(QString title, QString content)
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
 
-Q_INVOKABLE void SenderPageHandler::editAnArticle(int index, QString title, QString content){
-    editSenderArticle(index, title, content);
-}
-
-
 /*************************************************************************
 【函数名称】  chooseRegulator
 【函数功能】  添加/修改文章负责人
@@ -141,10 +120,15 @@ Q_INVOKABLE void SenderPageHandler::editAnArticle(int index, QString title, QStr
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
-    //loadArticleRegulatorData(0);
-    currentInViewIndex=index;
+    loadArticleRegulatorData(senderArticleList.getArticle(index)->articleIdOfArticle());
+    //currentInViewIndex=index;
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
     thisEngine->load(url);
+}
+
+
+void SenderPageHandler::loadArticleRegulatorData(int articleId){
+    qDebug() << "choose" << articleId;
 }
 
 /*************************************************************************

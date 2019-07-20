@@ -31,21 +31,21 @@ public:
     ~SenderPageHandler();
 
     //从QML唤起的删除文章函数
-    Q_INVOKABLE void itemMove(int idx);
+    //Q_INVOKABLE void itemMove(int idx);
     //从QML唤起的选择负责人函数
     Q_INVOKABLE void regulatorChosen(int idx);
     //从QML唤起的增加文章函数
-    Q_INVOKABLE void addAnArticle(QString title, QString content);
+    //Q_INVOKABLE void addAnArticle(QString title, QString content);
     //从QML唤起的选择负责人函数
     Q_INVOKABLE void chooseRegulator(int index);
     //从QML唤起的增加文章函数
-    Q_INVOKABLE void editAnArticle(int index, QString title, QString content);
+    //Q_INVOKABLE void editAnArticle(int index, QString title, QString content);
 
 
     void startLoadingSenderArticleList(int userId);
-    void addSenderArticle(int sender, QString title, QString content);
-    void editSenderArticle(int index, QString title, QString content);
-    void deleteSenderArticle(int index);
+    Q_INVOKABLE void addSenderArticle(QString title, QString content);
+    Q_INVOKABLE void editSenderArticle(int index, QString title, QString content);
+    Q_INVOKABLE void deleteSenderArticle(int index);
     void loadArticleRegulatorData(int articleId);
 
 private:

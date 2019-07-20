@@ -73,11 +73,11 @@ void LoginPageHandler::startPage(QQmlApplicationEngine *engine){
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
 Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int role){
-    int loginResult = globalStorageComponent->userLogin(name,pswd,role);
+    int loginResult = userLogin(name,pswd,role);
     switch(loginResult){
         case 1 :{
             emit sendSuccessMessage("登陆成功");
-            newSenderPage = new SenderPageHandler(globalStorageComponent->searchUser(name,role), globalStorageComponent);
+            newSenderPage = new SenderPageHandler(searchUser(name,role), globalStorageComponent);
             newSenderPage->startPage(thisEngine);
             break;
         }
@@ -108,8 +108,63 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
 Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd, int role){
-    int signupResult = globalStorageComponent->addUser(name,pswd,role);
+    int signupResult = addUser(name,pswd,role);
     if (!signupResult) emit sendErrorMessage("用户已存在");
     else emit sendSuccessMessage("注册成功");
 }
+
+
+
+
+int LoginPageHandler::userLogin(QString name, QString pswd, int role){
+    int len=globalStorageComponent->getUsersLength();
+    int ifUnRegistered = true;
+    int ifRoleNotExist = true;
+    for (int i=0; i<len; i++){
+        if (name==globalStorageComponent->getUserToEdit(i)->username()){
+            ifUnRegistered = false;
+            if (role==globalStorageComponent->getUserToEdit(i)->role()){
+                ifRoleNotExist = false;
+                if (pswd==globalStorageComponent->getUserToEdit(i)->password())
+                    return 1;
+                else return 2;//密码不匹配
+            }
+        }
+    }
+
+    if (ifUnRegistered) return 4;//用户未注册
+    if (ifRoleNotExist) return 3;//身份不匹配
+    return 0;
+}
+
+
+
+int LoginPageHandler::searchUser(QString name, int role){
+    int len=globalStorageComponent->getUsersLength();
+    for (int i=0; i<len; i++){
+        if (name==globalStorageComponent->getUserToEdit(i)->username())
+            if (role==globalStorageComponent->getUserToEdit(i)->role())
+                return globalStorageComponent->getUserToEdit(i)->userId();
+    }
+    return -1;
+}
+
+int LoginPageHandler::addUser(QString name, QString pswd, int role){
+    int len=globalStorageComponent->getUsersLength();
+    for (int i=0; i<len; i++){
+        if (globalStorageComponent->getUserToEdit(i)->username()==name
+                &&
+                globalStorageComponent->getUserToEdit(i)->role()==role)
+            return 0;//用户已存在
+    }
+    int newUserId= globalStorageComponent->getAUserId();
+    qDebug() << "注册ID" << newUserId;
+    MyUserObj* newUser = new MyUserObj(newUserId, name, pswd, role);
+    newUser->setModifyStatus(1);
+    globalStorageComponent->addAUser(newUser);
+    return 1;
+}
+
+
+
 

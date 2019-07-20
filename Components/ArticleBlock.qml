@@ -35,7 +35,7 @@ Component {
             held = false;
             if (dragArea.mouseX>500) {
                 movedToTarget=true;
-                senderPageHandler.itemMove(indexOfThisDelegate);
+                senderPageHandler.deleteSenderArticle(indexOfThisDelegate);
             }
             else movedToTarget=false;
 

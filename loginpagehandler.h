@@ -24,6 +24,11 @@ public:
     //注册
     Q_INVOKABLE void signUp(QString name, QString pswd, int role);
 
+    Q_INVOKABLE int addUser(QString name, QString pswd, int role);
+    Q_INVOKABLE int searchUser(QString name, int role);
+    Q_INVOKABLE int userLogin(QString name, QString pswd, int role);
+
+
 private:
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     ArticlesList senderArticleList, allUserArticleList;
