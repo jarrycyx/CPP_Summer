@@ -13,10 +13,9 @@ Component {
 
 
             default property bool thisIsSelected: ListView.isCurrentItem
-            borderWidth: 3
+            borderWidth: 2
             height: 48
-            width: 444
-            //outsideColor: "#55f2f2f2"
+            width: indexOfThisDelegate===0 ? 305 : 444
 
             color: "#fdfdfd"
             Behavior on color {
@@ -28,9 +27,6 @@ Component {
                 selected=ListView.isCurrentItem;
                 console.log(indexOfThisDelegate+" is "+selected);
             }
-
-            anchors.horizontalCenter: parent.horizontalCenter
-
 
             MouseArea {
 
@@ -90,6 +86,8 @@ Component {
 
 
         }
+
+
 
 
 }

@@ -18,9 +18,14 @@ ApplicationWindow {
 
 
     ComboBox {
-        x: 368
-        y: 44
-        model: ["First", "Second", "Third"]
+        id: selectRoleBox
+        x: 367
+        y: 102
+        z: 1
+        height: 48
+        width: 121
+        model: ["发布者", "负责人", "翻译者"]
+        font.family: "DengXian"
     }
 
 
@@ -77,7 +82,7 @@ ApplicationWindow {
             height: 114
             anchors.rightMargin: 0
             anchors.bottomMargin: 0
-            anchors.leftMargin: 0
+            anchors.leftMargin: 44
             anchors.topMargin: 0
             model: loginModel
             delegate: loginDelegate
@@ -97,7 +102,8 @@ ApplicationWindow {
         height: 48
         text: qsTr("登录")
         onClicked: {
-            loginPageHandler.loginInit(loginModel.get(0).textInEdit, loginModel.get(1).textInEdit, 1);
+            loginPageHandler.loginInit(loginModel.get(0).textInEdit, loginModel.get(1).textInEdit, selectRoleBox.currentIndex+1);
+            console.log(selectRoleBox.currentIndex+1);
         }
         font.family: "DengXian"
     }
@@ -111,7 +117,7 @@ ApplicationWindow {
         text: qsTr("注册")
         font.family: "DengXian"
         onClicked: {
-            loginPageHandler.signUp(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit, 1);
+            loginPageHandler.signUp(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit, selectRoleBox.currentIndex+1);
         }
     }
 
