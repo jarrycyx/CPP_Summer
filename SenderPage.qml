@@ -6,8 +6,10 @@ import "./Components"
 import "./Resources"
 
 ApplicationWindow {
-    id: senderWindow
-    objectName: "senderWindow"
+    property string name: "senderpage"
+
+    id: mainWindow
+    objectName: "mainWindow"
     visible: true
     width: 1280
     height: 800
@@ -33,7 +35,7 @@ ApplicationWindow {
     Connections{
         target: loginPageHandler
         onRequireComplete: {
-            if (flag==1) senderWindow.visible=true;
+            if (flag==1) mainWindow.visible=true;
         }
     }
 
@@ -41,6 +43,7 @@ ApplicationWindow {
     Rectangle {
         id: root
         anchors.fill: parent
+        z: 1
         ArticleBlock {
             id: dragDelegate
         }
@@ -50,6 +53,7 @@ ApplicationWindow {
             id: effect
             anchors.fill: articlesRect
             glowRadius: 10
+            z: 1
             spread: 0
             color: "#66999999"
             cornerRadius: articlesRect.radius + glowRadius
@@ -57,9 +61,13 @@ ApplicationWindow {
 
         Rectangle {
             property int columnNum: 1
-
+            z:1
             id: articlesRect
-            width: 350*articlesRect.columnNum-45 + 41 + 41 +12//1133//388
+            width: 350*articlesRect.columnNum-45 + 41 + 41 + 8//1133//388
+            Behavior on width {
+                NumberAnimation{duration: 200}
+            }
+
             height: parent.height
             color: "#f2f2f2"
 
@@ -189,22 +197,62 @@ ApplicationWindow {
                 }
             }
 
+            ToolButton {
+                id: expandButton
+                x: articlesRect.width-21
+                y: (mainWindow.height-36)/2
+                width: 21
+                height: 36
+                Image {
+                    id: expandImage
+                    anchors.fill: parent
+                    sourceSize.width: 21
+                    sourceSize.height: 36
+                    source: "Resources/unfold.svg"
+                }
+                onClicked: {
+                    if (articlesRect.columnNum<2){
+                        editorCover.color="#55000000"
+                        articlesRect.columnNum=3;
+                        expandImage.rotation=180;
+                    }else if (articlesRect.columnNum>2){
+                        editorCover.color="#00000000"
+                        articlesRect.columnNum=1;
+                        expandImage.rotation=0;
+                    }
+                }
+            }
+
         }
 
         SenderEditor {
-            x: articlesRect.width+30
+            x: 388+30
             y: 30
+            z: 0
             id: newEditor
             visible: false
-            width: senderWindow.width-x-30
-            height: senderWindow.height-60
+            width: mainWindow.width-x-30
+            height: mainWindow.height-60
+        }
+
+        Rectangle {
+            id: editorCover
+            x: 388+30
+            y: 0
+            z: 0.1
+            width: mainWindow.width
+            height: mainWindow.height
+            color: "#00000000"
+            Behavior on color {
+                ColorAnimation { duration: 300 }
+            }
         }
 
         Text {
             id: blankText
             visible: true
-            y: (senderWindow.height-80)/2
-            x: (senderWindow.width-388-160)/2+388
+            y: (mainWindow.height-80)/2
+            x: (mainWindow.width-388-160)/2+388
             text: "可以在左侧查看或添加翻译需求"
             color: stringsPool.textGray2
             width: 160

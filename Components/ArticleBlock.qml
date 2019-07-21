@@ -10,6 +10,7 @@ Component {
         Strings{id: stringsPool}
         //FontLoader { id: pingfangFont; source: "../Resources/PingFang Regular.ttf" }
 
+        z: 2
         id: dragArea
         property bool held: false
         property bool released: false

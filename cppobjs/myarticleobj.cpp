@@ -18,9 +18,8 @@
 /* 备注：本类中article不能改变，只能为未设置状态或已设置状态 */
 
 
-MyArticleObj::MyArticleObj()
+MyArticleObj::MyArticleObj(): StorageUnit (0)
 {
-    modifyStatus=0;
 }
 
 
@@ -31,10 +30,9 @@ MyArticleObj::MyArticleObj()
 【开发者及日期】   jarrycyx 20190715
 【更改记录】      20190717：删除在构造函数中传入文章数据
 *************************************************************************/
-MyArticleObj::MyArticleObj(const int &sender)
-    :sender_id(sender)
+MyArticleObj::MyArticleObj(const int &sender):
+    StorageUnit (0), sender_id(sender)
 {
-    modifyStatus=0;
 }
 
 
@@ -71,7 +69,7 @@ void MyArticleObj::setTitleOfArticle(const QString &titleOfArticle)
 {
     if (titleOfArticle != m_titleOfArticle) {
         m_titleOfArticle = titleOfArticle;
-        if (modifyStatus==0) modifyStatus=2;//标记为已修改
+        if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
     }
 }
 QString MyArticleObj::contentOfArticle() const
@@ -83,7 +81,7 @@ void MyArticleObj::setContentOfArticle(const QString &contentOfArticle)
 {
     if (contentOfArticle != m_contentOfArticle) {
         m_contentOfArticle = contentOfArticle;
-        if (modifyStatus==0) modifyStatus=2;//标记为已修改
+        if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
     }
 }
 
@@ -104,7 +102,7 @@ int MyArticleObj::statusCodeOfArticle() const{
 
 int MyArticleObj::setStatusCodeOfArticle(int code){
     status_code=code;
-    if (modifyStatus==0) modifyStatus=2;//标记为已修改
+    if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
 }
 
 
@@ -115,7 +113,7 @@ void MyArticleObj::setRegulatorIdOfArticle(const int &regulatorId){
     if (regulator_id!=regulatorId){
         regulator_id=regulatorId;
         status_code=110;
-        if (modifyStatus==0) modifyStatus=2;//标记为已修改
+        if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
     }
 }
 
@@ -125,53 +123,5 @@ int MyArticleObj::senderIdOfArticle() const{
 }
 int MyArticleObj::setSenderIdOfArticle(int id){
     sender_id=id;
-    if (modifyStatus==0) modifyStatus=2;//标记为已修改
+    if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
 }
-
-
-/*************************************************************************
-【函数名称】      updateArticleInfoToRemote
-【函数功能】      本地进行修改后调用该函数上传到服务器
-【参数】         无
-【返回值】        无
-【开发者及日期】   jarrycyx 20190718
-*************************************************************************/
-/*void MyArticleObj::updateArticleInfoToRemote(){
-    qDebug() << QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, regulator=%4, translator=%5, curr_status=%6 where article_id=%7")
-               .arg(m_titleOfArticle).arg(m_contentOfArticle).arg(sender_id)
-                   .arg(regulator_id).arg(-1).arg(status_code).arg(articleIdOfArticle());
-    thisQuery->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, regulator=%4, translator=%5, curr_status=%6 where article_id=%7")
-                .arg(m_titleOfArticle).arg(m_contentOfArticle).arg(sender_id)
-                    .arg(regulator_id).arg(-1).arg(status_code).arg(articleIdOfArticle()));
-}*/
-
-/*************************************************************************
-【函数名称】      addArticleToRemoteDBReturnId
-【函数功能】      未知文章ID，文章内容上传到服务器并获取ID
-【参数】          无
-【返回值】        无
-【开发者及日期】   jarrycyx 20190717
-*************************************************************************/
-/*
-int MyArticleObj::addArticleToRemoteDBReturnId(){
-    thisQuery->exec(QString("insert into articles (title,content,create_time,sender,regulator,translator,curr_status) values "\
-                            "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6)")
-                .arg(m_titleOfArticle).arg(m_contentOfArticle).arg(sender_id).arg(regulator_id).arg(-1).arg(status_code));
-    thisQuery->exec(QString("select article_id FROM articles WHERE sender=%1 ORDER BY create_time DESC").arg(sender_id));
-    qDebug() << QString("select article_id FROM articles WHERE sender=%1 ORDER BY create_time DESC").arg(sender_id);
-    if (thisQuery->next()){
-        qDebug() << "updateArticleToRemoteDBReturnId "<< thisQuery->value(0).toInt();
-        return thisQuery->value(0).toInt();
-    }
-    return -1;
-}
-*/
-
-int MyArticleObj::getModifyStatus(){
-    return modifyStatus;
-}
-
-void MyArticleObj::setModifyStatus(int m){
-    modifyStatus = m;
-}
-

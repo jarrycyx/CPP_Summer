@@ -32,6 +32,9 @@ SenderPageHandler::~SenderPageHandler(){
 
 
 void SenderPageHandler::startLoadingSenderArticleList(int userId){
+    senderArticleList.removeAllArticles();
+    allUserArticleList.removeAllArticles();
+
     qDebug() << "sender" << userId;
     int len=globalStorageComponent->getArticlesLength();
     for (int i=0;i<len;i++){
@@ -83,6 +86,7 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
     thisContext->setContextProperty("senderPageHandler", this);
     thisContext->setContextProperty("senderArticleList", &senderArticleList);
     thisContext->setContextProperty("allUserArticleList", &allUserArticleList);
+    thisContext->setContextProperty("regulatorListModel", &requestUserList);
     const QUrl url1(QStringLiteral("qrc:/SenderPage.qml"));
     engine->load(url1);
 }
@@ -121,7 +125,7 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
     loadArticleRegulatorData(senderArticleList.getArticle(index)->articleIdOfArticle());
-    //currentInViewIndex=index;
+    currentInViewIndex=index;
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
     thisEngine->load(url);
 }
@@ -129,6 +133,16 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
 
 void SenderPageHandler::loadArticleRegulatorData(int articleId){
     qDebug() << "choose" << articleId;
+
+    requestUserList.removeAllRequestUsers();
+    int numOfRequest = globalStorageComponent->getRequestsLength();
+    for (int i=0;i<numOfRequest;i++){
+        MyRequestObj* getRequest = globalStorageComponent->getRequest(i);
+        if (getRequest->getArticleId()==articleId && getRequest->getType()==1){
+            MyUserObj* requestUser = globalStorageComponent->searchUserById(getRequest->getUserId());
+            requestUserList.addARequestUser(requestUser);
+        }
+    }
 }
 
 /*************************************************************************
@@ -140,11 +154,9 @@ void SenderPageHandler::loadArticleRegulatorData(int articleId){
 *************************************************************************/
 
 Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx){
-    /*MyUserObj *regulatorToChoose = qobject_cast<MyUserObj*>(myRegulatorListModel[idx]);
-    MyArticleObj *newArticle = qobject_cast<MyArticleObj*>(myThisModel[currentInViewIndex]);
-    qDebug() << idx<< " Chosen" << regulatorToChoose->userId()<<articleSendingId<<newArticle->articleIdOfArticle();
-    newArticle->setRegulatorIdOfArticle(regulatorToChoose->userId());
-   // emit refreshQmlComplete();
-    refreshPage();*/
+    MyArticleObj* articleToChoose = senderArticleList.getArticle(currentInViewIndex);
+    articleToChoose->setRegulatorIdOfArticle(requestUserList.getRequestUser(idx)->userId());
+    articleToChoose->setStatusCodeOfArticle(110);
+    senderArticleList.editAnArticle(currentInViewIndex);
 }
 

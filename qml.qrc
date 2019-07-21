@@ -21,5 +21,6 @@
         <file>Resources/refresh.svg</file>
         <file>RegulatorPage.qml</file>
         <file>Components/RegulatorViewer.qml</file>
+        <file>Resources/unfold.svg</file>
     </qresource>
 </RCC>

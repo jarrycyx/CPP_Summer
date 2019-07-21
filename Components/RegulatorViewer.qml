@@ -25,16 +25,20 @@ Rectangle {
 
         switch (senderEditorRect.articleStatus){
         case 100:
-            element.text="翻译需求详情"
+            element.text="翻译需求详情";
             button.text="报名";
             button2.visible=false;
             break;
         case 110:
-            element.text="我负责的翻译需求"
-            button.text="保存并拆分";
+            element.text="我负责的翻译需求";
+            button.text="保存";
             button2.visible=true;
-            button2.text="开始招募译者"
+            button2.text="开始招募译者";
             break;
+        case 120:
+            element.text="我负责的翻译需求（正在招募译者）";
+            button.text="停止招募";
+            button2.visible=false;
         }
     }
 
@@ -173,7 +177,7 @@ Rectangle {
                 regulatorPageHandler.signForRegulatorArticle(indexInList, titleEdit.text, contentEdit.text)
                 break;
             case 110:
-                regulatorPageHandler.splitRegulatorArticle(indexInList, titleEdit.text, contentEdit.text)
+                regulatorPageHandler.editArticle(indexInList, titleEdit.text, contentEdit.text)
                 break;
             }
         }
@@ -196,17 +200,4 @@ Rectangle {
              }
          }
     }
-
-    CheckBox {
-        id: checkBox
-        x: parent.width-5-width
-        y: parent.height-17-height
-        height:40
-        text: qsTr("可被拆分")
-        font{family: "DengXian"}
-    }
-
-
-
-
 }

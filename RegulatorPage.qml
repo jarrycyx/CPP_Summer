@@ -6,8 +6,10 @@ import "./Components"
 import "./Resources"
 
 ApplicationWindow {
-    id: senderWindow
-    objectName: "senderWindow"
+    property string name: "regulatorpage"
+
+    id: mainWindow
+    objectName: "mainWindow"
     visible: true
     width: 1280
     height: 800
@@ -33,7 +35,7 @@ ApplicationWindow {
     Connections{
         target: loginPageHandler
         onRequireComplete: {
-            if (flag==1) senderWindow.visible=true;
+            if (flag==1) mainWindow.visible=true;
         }
     }
 
@@ -134,15 +136,15 @@ ApplicationWindow {
             y: 30
             id: newEditor
             visible: false
-            width: senderWindow.width-x-30
-            height: senderWindow.height-60
+            width: mainWindow.width-x-30
+            height: mainWindow.height-60
         }
 
         Text {
             id: blankText
             visible: true
-            y: (senderWindow.height-80)/2
-            x: (senderWindow.width-388-160)/2+388
+            y: (mainWindow.height-80)/2
+            x: (mainWindow.width-388-160)/2+388
             text: "可以在左侧查看翻译需求"
             color: stringsPool.textGray2
             width: 160

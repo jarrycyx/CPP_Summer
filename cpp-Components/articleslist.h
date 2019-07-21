@@ -14,7 +14,10 @@ public:
 
     void addAnArticle(MyArticleObj* newArticle);
     void editAnArticle(int index, QString title, QString content);
+    void editAnArticle(int index);
     void deleteAnArticle(int index);
+
+    inline void removeAllArticles(){articles.clear();}
 
     MyArticleObj* getArticle(int idx);
 

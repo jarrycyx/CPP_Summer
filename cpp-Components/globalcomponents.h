@@ -5,6 +5,7 @@
 #include "../cppobjs/myarticleobj.h"
 #include "articleslist.h"
 #include "../cppobjs/myuserobj.h"
+#include "../cppobjs/myrequestobj.h"
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
 
@@ -35,6 +36,18 @@ public:
 
     inline void addAUser(MyUserObj* newUser){allUsers.push_front(newUser);}
 
+    MyUserObj* searchUserById(int thisUserId);
+
+
+
+    inline int getARequestId(){biggestRequestId++;return biggestRequestId;}
+
+    inline int getRequestsLength(){return allRequests.length();}
+
+    inline MyRequestObj* getRequest(int index){return allRequests[index];}
+
+    inline void addARequest(MyRequestObj* newRequest){allRequests.push_front(newRequest);}
+
 
 
     //int userLogin(QString name, QString pswd, int role=1);
@@ -45,10 +58,11 @@ public:
 private:
     QVector<MyArticleObj*> allArticles;
     QVector<MyUserObj*> allUsers;
+    QVector<MyRequestObj*> allRequests;
 
     QSqlQuery* query;
 
-    int biggestArticleId=0, biggestUserId=0;
+    int biggestArticleId=0, biggestUserId=0, biggestRequestId=0;
 
 signals:
 

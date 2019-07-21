@@ -45,6 +45,12 @@ void ArticlesList::editAnArticle(int index, QString title, QString content){
     emit dataChanged(idx, idx);
 }
 
+
+void ArticlesList::editAnArticle(int index){
+    QModelIndex idx = createIndex(index,index);
+    emit dataChanged(idx, idx);
+}
+
 void ArticlesList::addAnArticle(MyArticleObj* newArticle){
     beginInsertRows(QModelIndex(), 0, 0);
     articles.push_front(newArticle);

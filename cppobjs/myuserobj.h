@@ -1,9 +1,10 @@
 #ifndef MYUSEROBJ_H
 #define MYUSEROBJ_H
 
+#include "storageunit.h"
 #include <QObject>
 
-class MyUserObj
+class MyUserObj: public StorageUnit
 {
 
 public:
@@ -17,11 +18,7 @@ public:
     QString password() const;
     void setPassword(const QString &color);
 
-    int getModifyStatus();
-    void setModifyStatus(int m);
-
 private:
-    int modifyStatus=0; //0:未更改，1:新建，2:修改
     QString m_username;
     QString m_password;
     int m_user_id;

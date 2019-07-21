@@ -26,7 +26,7 @@ ApplicationWindow {
         width: 121
         model: ["发布者", "负责人", "翻译者"]
         font.family: "DengXian"
-        currentIndex: 1
+        currentIndex: 0
     }
 
 
@@ -38,11 +38,11 @@ ApplicationWindow {
         id: loginModel
         objectName: "loginModel"
         ListElement {
-            textInEdit: "regulator1"
+            textInEdit: "sender1"
             placeHolderText: "请输入用户名"
         }
         ListElement {
-            textInEdit: "regulator1pswd"
+            textInEdit: "sender1"
             placeHolderText: "请输入密码"
         }
     }

@@ -20,10 +20,11 @@ QT += svg
 SOURCES += \
         cpp-Components/articleslist.cpp \
         cpp-Components/globalcomponents.cpp \
-        cppobjs/callremotemysqlthread.cpp \
-        cppobjs/dataobject.cpp \
+        cpp-Components/requestuserlist.cpp \
         cppobjs/myarticleobj.cpp \
+        cppobjs/myrequestobj.cpp \
         cppobjs/myuserobj.cpp \
+        cppobjs/storageunit.cpp \
         loginpagehandler.cpp \
         main.cpp \
         regulatorpagehandler.cpp \
@@ -47,10 +48,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     cpp-Components/articleslist.h \
     cpp-Components/globalcomponents.h \
-    cppobjs/callremotemysqlthread.h \
-    cppobjs/dataobject.h \
+    cpp-Components/requestuserlist.h \
     cppobjs/myarticleobj.h \
+    cppobjs/myrequestobj.h \
     cppobjs/myuserobj.h \
+    cppobjs/storageunit.h \
     loginpagehandler.h \
     regulatorpagehandler.h \
     senderpagehandler.h

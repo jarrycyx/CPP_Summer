@@ -48,8 +48,8 @@ LoginPageHandler::LoginPageHandler(GlobalComponents* newGlobalStorageComponent, 
 *************************************************************************/
 LoginPageHandler::~LoginPageHandler(){
     qDebug() << "登陆页面析构";
-    delete newSenderPage;
-    newSenderPage=NULL;
+    //delete newSenderPage;
+    //newSenderPage=NULL;
 }
 
 /*************************************************************************

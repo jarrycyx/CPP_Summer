@@ -6,12 +6,9 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include "../cppobjs/myuserobj.h"
+#include "../cppobjs/myrequestobj.h"
 
-GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *parent) : QObject(parent)
-{
-    //engine->rootContext()->setContextProperty("senderArticleList", &senderArticleList);
-    //engine->rootContext()->setContextProperty("allUserArticleList", &allUserArticleList);
-
+GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *parent) : QObject(parent){
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("39.106.107.241");
     db.setDatabaseName("cyxcpp");
@@ -49,6 +46,19 @@ GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *paren
             allUsers.append(userFromDB);
 
             if (query->value(0).toInt()>biggestUserId) biggestUserId=query->value(0).toInt();
+        }
+
+
+        query->exec(QString("SELECT request_id,user_id,article_id,content,type FROM requests"));
+        while (query->next()){
+            MyRequestObj* requestFromDB = new MyRequestObj(
+                        query->value(0).toInt(),
+                        query->value(1).toInt(),
+                        query->value(2).toInt(),
+                        query->value(4).toInt());
+            allRequests.append(requestFromDB);
+
+            if (query->value(0).toInt()>biggestRequestId) biggestRequestId=query->value(0).toInt();
         }
     }
 
@@ -117,6 +127,31 @@ void GlobalComponents::uploadAllData(){
                         .arg(allUsers[i]->password())
                         .arg(allUsers[i]->role()));
         }
-
     }
+
+
+    int requestLen=allRequests.length();
+    for (int i=0;i<requestLen;i++){
+        int modifyStat = allRequests[i]->getModifyStatus();
+        if (modifyStat == 1){
+            qDebug() << "added request";
+            query->exec(QString("insert into requests "
+                                "(request_id, user_id, article_id, time, content, type) "
+                                "values "
+                                "(%1, %2, %3, NOW(), \"\", %4)")
+                        .arg(allRequests[i]->getRequestId())
+                        .arg(allRequests[i]->getUserId())
+                        .arg(allRequests[i]->getArticleId())
+                        .arg(allRequests[i]->getType()));
+        }
+    }
+}
+
+
+MyUserObj* GlobalComponents::searchUserById(int thisUserId){
+    int len = allUsers.length();
+    for (int i=0;i<len;i++)
+        if (allUsers[i]->userId()==thisUserId)
+            return allUsers[i];
+    return nullptr;
 }

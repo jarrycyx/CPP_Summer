@@ -22,6 +22,7 @@ Rectangle {
     color: "white"
     border.width: borderWidth
     border.color: outsideColor
+    z:2
 
 
     property int heightBefore: height-borderWidth*2

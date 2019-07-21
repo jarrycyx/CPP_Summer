@@ -35,6 +35,7 @@ public:
     Q_INVOKABLE void splitRegulatorArticle(int index, QString title, QString content);
     Q_INVOKABLE void signForRegulatorArticle(int index);
     Q_INVOKABLE void startRecruitingTranslatorForArticle(int index);
+    Q_INVOKABLE void editArticle(int index, QString title, QString content);
 
     void loadArticleRegulatorData(int articleId);
 

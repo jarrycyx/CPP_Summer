@@ -36,7 +36,7 @@ Component{
             y: 17
             width: 200
             height: 20
-            text: model.modelData.username
+            text: nameOfUser
             font{
                 family: "DengXian";
                 pixelSize: 20
@@ -49,7 +49,7 @@ Component{
             y: 47
             width: 257
             height: 12
-            text: model.modelData.password
+            text: "资质说明"
             font{
                 family: "DengXian";
                 pixelSize: 12

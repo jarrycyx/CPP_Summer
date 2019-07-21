@@ -12,6 +12,7 @@
 #include <QAbstractListModel>
 
 #include "cpp-Components/globalcomponents.h"
+#include "cpp-Components/requestuserlist.h"
 
 /* 发送者页面后台处理程序
  * 也用于启动一些附属页面
@@ -51,6 +52,7 @@ public:
 private:
 
     ArticlesList senderArticleList, allUserArticleList;
+    RequestUserList requestUserList;
 
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;

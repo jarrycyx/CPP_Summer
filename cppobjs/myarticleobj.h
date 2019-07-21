@@ -3,30 +3,10 @@
 
 #include <QObject>
 #include <QSqlQuery>
+#include "storageunit.h"
 
 
-
-/**********************************************
- * 文章状态代号含义
-100	已上传，招募开始，生命周期开始
-110	已标记负责人
-115	招募结束
-120	负责人已进行拆分（若忽略则直接修改为200）
----	200	子文章已创建（或已忽略拆分的文章）
----	210	已标记翻译者
----	215	译者正在翻译
----	220	译者翻译完成，提交给负责人
----	225	负责人进行评审，译者修改
----	230	子文章译文评审通过
----	400	子文章生命周期完成
-300	子文章合并完成
-310	负责人提交
-320	发送者已收取
-330	发送者已付款，款项成功分配
-400	生命周期完成
-************************************************/
-
-class MyArticleObj
+class MyArticleObj: public StorageUnit
 {
 public:
     MyArticleObj();
@@ -50,9 +30,6 @@ public:
     int addArticleToRemoteDBReturnId();
     void updateArticleInfoToRemote();
 
-    int getModifyStatus();
-    void setModifyStatus(int m);
-
 signals:
     //文章内容改变后发送的信号
     void titleOfArticleChanged();
@@ -61,7 +38,6 @@ signals:
 
 
 private:
-    int modifyStatus=0; //0:未更改，1:新建，2:修改，3:删除
     //文章内容
     QString m_titleOfArticle;
     QString m_contentOfArticle;
