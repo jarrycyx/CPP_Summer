@@ -6,7 +6,9 @@
 #include <QQuickView>
 #include <QQmlContext>
 #include <QtConcurrent/QtConcurrent>
-#include <senderpagehandler.h>
+#include "senderpagehandler.h"
+#include "regulatorpagehandler.h"
+
 #include <QSqlDatabase>
 
 #include <QDebug>
@@ -77,8 +79,14 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
     switch(loginResult){
         case 1 :{
             emit sendSuccessMessage("登陆成功");
-            newSenderPage = new SenderPageHandler(searchUser(name,role), globalStorageComponent);
-            newSenderPage->startPage(thisEngine);
+
+            if (role==1){
+                newSenderPage = new SenderPageHandler(searchUser(name,role), globalStorageComponent);
+                newSenderPage->startPage(thisEngine);
+            }else if (role==2){
+                newRegulatorPage = new RegulatorPageHandler(searchUser(name, role), globalStorageComponent);
+                newRegulatorPage->startPage(thisEngine);
+            }
             break;
         }
         case 2 :{

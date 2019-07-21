@@ -15,7 +15,7 @@ ApplicationWindow {
     Strings{id: stringsPool}
 
     Connections {
-        target: senderPageHandler
+        target: regulatorPageHandler
         //开始刷新QML
         onStartRefreshQml: {
             thisBusyIndicator.visible = true;
@@ -63,38 +63,17 @@ ApplicationWindow {
             height: parent.height
             color: "#f2f2f2"
 
-            Rectangle {
-                color: "#f2f2f2"
-                x:0
-                y:0
-                z:0.5
-                width:388
-                height: 77
-            }
-
-            Rectangle {
-                color: stringsPool.textGray3
-                x:41
-                y:76
-                z:0.5
-                width: 350*articlesRect.columnNum-45
-                height: 1
-            }
-
             ScrollView{
                 width: articlesRect.width - 24
-                height: parent.height-77
-                clip: true
-                y: 77
-                ScrollBar.vertical.policy: ScrollBar.AsNeeded
-
+                height: parent.height
+                ScrollBar.vertical.policy: ScrollBar.AlwaysOn
                 contentHeight: senderArticlesList.height + 47 + otherArticlesList.height + 47
                 //z:0.2
 
                 Text{
-                    text: qsTr("我发布的文章")
+                    text: qsTr("我负责的文章")
                     x: 41
-                    y: 16
+                    y: 27
                     //z:0.3
                     width: 261
                     height: 18
@@ -108,9 +87,9 @@ ApplicationWindow {
                     id: senderArticlesList
                     width: parent.width
                     x: 41-15
-                    y: 32
+                    y: 43
                     height: contentHeight + 40
-                    model: senderArticleList
+                    model: regulatorArticleList
                     delegate: dragDelegate
 
                     cellWidth: 350
@@ -119,9 +98,9 @@ ApplicationWindow {
                 }
 
                 Text{
-                    text: qsTr("其他文章")
+                    text: qsTr("其他正在招募负责人的文章")
                     x: 41
-                    y: senderArticlesList.height + 16 + 30
+                    y: senderArticlesList.height + 16 + 41
                     //z:0.3
                     width: 261
                     height: 18
@@ -135,9 +114,9 @@ ApplicationWindow {
                     id: otherArticlesList
                     width: parent.width
                     x:41-15
-                    y: senderArticlesList.height + 32 + 30
+                    y: senderArticlesList.height + 32 + 41
                     height: contentHeight+40
-                    model: allUserArticleList
+                    model: allSeekingRegulatorArticle
                     delegate: dragDelegate
 
                     cellWidth: 350
@@ -148,50 +127,9 @@ ApplicationWindow {
 
             }
 
-            Rectangle {
-                x: 41
-                y: 21
-                z:1
-                width: 305
-                height: 48
-                color: "#f2f2f2"
-                ToolButton {
-                    id: toolButton
-                    x: 0
-                    y: 0
-                    anchors.fill: parent
-                    Text{
-                        x: 60
-                        y: 13
-                        height: 22
-                        text: qsTr("新的文章需求")
-                        font{
-                            family: "DengXian";
-                            pixelSize: 22
-                        }
-                    }
-                    onClicked: {
-                        newEditor.addAnArticle();
-                        senderArticlesList.currentIndex=-1;
-                        otherArticlesList.currentIndex=-1;
-                    }
-                }
-
-                Image {
-                    id: borderImage
-                    x: 8
-                    y: 8
-                    width: 32
-                    height: 32
-                    sourceSize.width: 32
-                    sourceSize.height: 32
-                    source: "Resources/add.svg"
-                }
-            }
-
         }
 
-        SenderEditor {
+        RegulatorViewer {
             x: articlesRect.width+30
             y: 30
             id: newEditor
@@ -205,7 +143,7 @@ ApplicationWindow {
             visible: true
             y: (senderWindow.height-80)/2
             x: (senderWindow.width-388-160)/2+388
-            text: "可以在左侧查看或添加翻译需求"
+            text: "可以在左侧查看翻译需求"
             color: stringsPool.textGray2
             width: 160
             height: 80

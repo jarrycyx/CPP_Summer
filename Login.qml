@@ -26,6 +26,7 @@ ApplicationWindow {
         width: 121
         model: ["发布者", "负责人", "翻译者"]
         font.family: "DengXian"
+        currentIndex: 1
     }
 
 
@@ -37,11 +38,11 @@ ApplicationWindow {
         id: loginModel
         objectName: "loginModel"
         ListElement {
-            textInEdit: "sender1"
+            textInEdit: "regulator1"
             placeHolderText: "请输入用户名"
         }
         ListElement {
-            textInEdit: "sender1"
+            textInEdit: "regulator1pswd"
             placeHolderText: "请输入密码"
         }
     }
@@ -89,6 +90,8 @@ ApplicationWindow {
             anchors.fill: parent
             spacing: 18
             cacheBuffer: 50
+
+            currentIndex: -1
         }
 
     }

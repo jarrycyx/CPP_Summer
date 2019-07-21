@@ -26,6 +26,7 @@ SOURCES += \
         cppobjs/myuserobj.cpp \
         loginpagehandler.cpp \
         main.cpp \
+        regulatorpagehandler.cpp \
         senderpagehandler.cpp
 
 RESOURCES += qml.qrc
@@ -51,6 +52,7 @@ HEADERS += \
     cppobjs/myarticleobj.h \
     cppobjs/myuserobj.h \
     loginpagehandler.h \
+    regulatorpagehandler.h \
     senderpagehandler.h
 
 INCLUDEPATH += $$PWD/cppobjs

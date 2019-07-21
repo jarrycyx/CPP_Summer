@@ -5,6 +5,7 @@ import "../Resources"
 
 Component {
     //id: dragDelegate
+
     MouseArea {
         Strings{id: stringsPool}
         //FontLoader { id: pingfangFont; source: "../Resources/PingFang Regular.ttf" }
@@ -14,10 +15,12 @@ Component {
         property bool released: false
         property bool movedToTarget: false
         property int indexOfThisDelegate: index
-        default property bool selected: ListView.isCurrentItem
+        default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
 
-        anchors { left: parent.left; right: parent.right }
-        height: content.height
+        //anchors { left: content.left; right: content.right }
+        //anchors.centerIn: parent
+        height: content.height+45
+        width: content.width+30
 
         signal selectedIndexChange(int idx)
 
@@ -44,10 +47,10 @@ Component {
             senderArticlesList.currentIndex=indexOfThisDelegate;
             otherArticlesList.currentIndex=indexOfThisDelegate;
             content.changeStatus(2);
-            newSenderEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, statusCodeOfArticle, indexOfThisDelegate);
+            newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, statusCodeOfArticle, indexOfThisDelegate);
         }
         onSelectedChanged: {
-            content.selected=ListView.isCurrentItem;
+            content.selected=GridView.isCurrentItem;
             console.log(indexOfThisDelegate+" is "+selected);
         }
         hoverEnabled: true
@@ -136,4 +139,5 @@ Component {
 
 
     }
+
 }

@@ -12,6 +12,7 @@
 
 #include "cpp-Components/globalcomponents.h"
 #include "senderpagehandler.h"
+#include "regulatorpagehandler.h"
 
 class LoginPageHandler : public QObject
 {
@@ -35,6 +36,7 @@ private:
     QQmlApplicationEngine *thisEngine;
     GlobalComponents* globalStorageComponent;
     SenderPageHandler* newSenderPage;
+    RegulatorPageHandler* newRegulatorPage;
 
 signals:
     //错误信息信号，向QML发送，使其在界面上显示
