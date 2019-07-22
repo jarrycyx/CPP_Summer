@@ -27,5 +27,8 @@
         <file>Resources/status-code/120.svg</file>
         <file>Resources/messagebox.svg</file>
         <file>Resources/delete.svg</file>
+        <file>Resources/status-code/130.svg</file>
+        <file>Resources/status-code/140.svg</file>
+        <file>Resources/status-code/200.svg</file>
     </qresource>
 </RCC>

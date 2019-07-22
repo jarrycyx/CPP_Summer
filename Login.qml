@@ -97,7 +97,6 @@ ApplicationWindow {
 
     }
 
-
     Button {
         id: button
         x: 44
@@ -110,6 +109,8 @@ ApplicationWindow {
             console.log(selectRoleBox.currentIndex+1);
         }
         font.family: "DengXian"
+        highlighted: true
+        Universal.foreground: "#ffffff"
     }
 
     Button {

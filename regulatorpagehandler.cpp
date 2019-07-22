@@ -14,7 +14,9 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-RegulatorPageHandler::RegulatorPageHandler(int regulatorId, GlobalComponents* newGlobal, QObject *parent) : QObject(parent), thisUserId(regulatorId)
+RegulatorPageHandler::RegulatorPageHandler(int regulatorId, GlobalComponents* newGlobal, QObject *parent)
+    :QObject(parent), regulatorSubarticleList(1),
+      regulatorArticleList(1), allSeekingRegulatorArticle(2), thisUserId(regulatorId)
 {
 
     globalStorageComponent = newGlobal;
@@ -37,9 +39,14 @@ void RegulatorPageHandler::startLoadingRegulatorArticleList(int userId){
     for (int i=0;i<len;i++){
         qDebug() << "Regulator article";
         if (globalStorageComponent->getArticleToEdit(i)
-                ->regulatorIdOfArticle()==userId)
-            regulatorArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
-        if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle()==100)
+                ->regulatorIdOfArticle()==userId){
+            if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle()/100==2)
+                regulatorSubarticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+            else regulatorArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+        }
+
+        if (globalStorageComponent->getArticleToEdit(i)
+                ->statusCodeOfArticle()==100)
             allSeekingRegulatorArticle.addAnArticle(globalStorageComponent->getArticleToEdit(i));
     }
 }
@@ -47,6 +54,27 @@ void RegulatorPageHandler::startLoadingRegulatorArticleList(int userId){
 
 void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QString content){
     qDebug() << "split" << index;
+    regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(140);
+    regulatorArticleList.editAnArticle(index);//刷新文章状态
+    QStringList subContents = content.split("\n");
+    qDebug() << subContents << index;
+    for (int i=0;i<subContents.length();i++)
+        if (subContents[i].length()==0)
+            subContents.removeAt(i);
+    int numOfSubarticles = subContents.length();
+    for (int i=0;i<numOfSubarticles;i++){
+        QString subTitle = title + " 子任务"+ QString("%1").arg(i);
+        MyArticleObj* newSubArticle = new MyArticleObj(thisUserId);
+        newSubArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), subTitle, subContents[i]);
+        newSubArticle->setStatusCodeOfArticle(200);
+        newSubArticle->setRegulatorIdOfArticle(thisUserId);
+        newSubArticle->setModifyStatus(1);
+        //由于需要显示两处，保存一处，故需要增加三处
+        //allArticles.push_front(newSenderArticle);
+        globalStorageComponent->addAnArticle(newSubArticle);
+        regulatorSubarticleList.addAnArticle(newSubArticle);
+    }
+    emit sendSuccessMessage("文章已拆分");
 }
 
 
@@ -79,6 +107,14 @@ Q_INVOKABLE void RegulatorPageHandler::startRecruitingTranslatorForArticle(int i
 }
 
 
+Q_INVOKABLE void RegulatorPageHandler::stopRecruitingTranslatorForArticle(int index){
+    qDebug() << "stopRecruitingTranslatorForArticle" << index;
+    regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(130);
+    regulatorArticleList.editAnArticle(index);//刷新文章状态
+    emit sendSuccessMessage("停止招募");
+}
+
+
 
 
 /*************************************************************************
@@ -93,6 +129,7 @@ void RegulatorPageHandler::startPage(QQmlApplicationEngine *engine){
     QQmlContext *thisContext=engine->rootContext();
     thisContext->setContextProperty("regulatorPageHandler", this);
     thisContext->setContextProperty("regulatorArticleList", &regulatorArticleList);
+    thisContext->setContextProperty("regulatorSubarticleList", &regulatorSubarticleList);
     thisContext->setContextProperty("allSeekingRegulatorArticle", &allSeekingRegulatorArticle);
     const QUrl url1(QStringLiteral("qrc:/RegulatorPage.qml"));
     engine->load(url1);

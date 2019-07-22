@@ -111,23 +111,38 @@ ApplicationWindow {
                 GridView{
                     property int flag: 1
                     interactive: false
-                    id: senderArticlesList
+                    id: senderSubarticlesList
                     width: parent.width
                     x: 41-15
                     y: 43
                     height: contentHeight + 40
+                    model: regulatorSubarticleList
+                    delegate: dragDelegate
+                    cellWidth: 350
+                    cellHeight: 92
+                    cacheBuffer: 50
+                }
+
+                GridView{
+                    property int flag: 1
+                    interactive: false
+                    id: senderArticlesList
+                    width: parent.width
+                    x: 41-15
+                    y: senderSubarticlesList.height + 41
+                    height: contentHeight + 40
                     model: regulatorArticleList
                     delegate: dragDelegate
-
                     cellWidth: 350
                     cellHeight: 227
                     cacheBuffer: 50
                 }
 
+
                 Text{
                     text: qsTr("其他正在招募负责人的文章")
                     x: 41
-                    y: senderArticlesList.height + 16 + 41
+                    y: senderArticlesList.height+ 41 + senderSubarticlesList.height + 16 + 41
                     //z:0.3
                     width: 261
                     height: 18
@@ -141,7 +156,7 @@ ApplicationWindow {
                     id: otherArticlesList
                     width: parent.width
                     x:41-15
-                    y: senderArticlesList.height + 32 + 41
+                    y: senderArticlesList.height+ 41 + senderSubarticlesList.height + 16 + 41
                     height: contentHeight+40
                     model: allSeekingRegulatorArticle
                     delegate: dragDelegate

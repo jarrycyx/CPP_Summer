@@ -112,7 +112,7 @@ int MyArticleObj::regulatorIdOfArticle() const{
 void MyArticleObj::setRegulatorIdOfArticle(const int &regulatorId){
     if (regulator_id!=regulatorId){
         regulator_id=regulatorId;
-        status_code=110;
+        if (status_code<110) status_code=110; //如果还没有设置过负责人，则标记为110状态
         if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
     }
 }
@@ -125,3 +125,13 @@ int MyArticleObj::setSenderIdOfArticle(int id){
     sender_id=id;
     if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
 }
+
+
+int MyArticleObj::originArticleIdOfArticle() const{
+    return origin_article_id;
+}
+void MyArticleObj::setOriginArticleIdOfArticle(const int &articleId){
+    origin_article_id=articleId;
+    if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+}
+

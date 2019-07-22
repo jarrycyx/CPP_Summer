@@ -20,7 +20,7 @@ GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *paren
         qDebug() << "open";
         query=new QSqlQuery(db);
 
-        query->exec(QString("SELECT article_id,title,content,create_time,sender,regulator,translator,curr_status from articles"));
+        query->exec(QString("SELECT article_id,title,content,create_time,sender,regulator,translator,curr_status,origin from articles"));
         while (query->next()){
             MyArticleObj* articleFromDB = new MyArticleObj();
             articleFromDB->setArticleInfo(query->value(0).toInt(),query->value(1).toString(),query->value(2).toString());
@@ -28,6 +28,7 @@ GlobalComponents::GlobalComponents(QQmlApplicationEngine *engine, QObject *paren
             articleFromDB->setRegulatorIdOfArticle(query->value(5).toInt());
             //articleFromDB->setSenderIdOfArticle(query->value(4).toInt());
             articleFromDB->setStatusCodeOfArticle(query->value(7).toInt());
+            articleFromDB->setOriginArticleIdOfArticle(query->value(8).toInt());
 
             articleFromDB->setModifyStatus(0);
 
@@ -78,26 +79,28 @@ void GlobalComponents::uploadAllData(){
         if (modifyStat==1){
             qDebug() << "added article";
             query->exec(QString("insert into articles "
-                                "(title,content,create_time,sender,regulator,translator,curr_status,article_id) values "
-                                    "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7)")
+                                "(title,content,create_time,sender,regulator,translator,curr_status,article_id,origin) values "
+                                    "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7, %8)")
                         .arg(allArticles[i]->titleOfArticle())
                         .arg(allArticles[i]->contentOfArticle())
                         .arg(allArticles[i]->senderIdOfArticle())
                         .arg(allArticles[i]->regulatorIdOfArticle())
                         .arg(-1)
                         .arg(allArticles[i]->statusCodeOfArticle())
-                        .arg(allArticles[i]->articleIdOfArticle()));
+                        .arg(allArticles[i]->articleIdOfArticle())
+                        .arg(allArticles[i]->originArticleIdOfArticle()));
         }
         else if (modifyStat==2){
             qDebug() << "modified article";
             query->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, "
-                                "regulator=%4, translator=%5, curr_status=%6 WHERE article_id=%7")
+                                "regulator=%4, translator=%5, curr_status=%6, origin=%7 WHERE article_id=%8")
                         .arg(allArticles[i]->titleOfArticle())
                         .arg(allArticles[i]->contentOfArticle())
                         .arg(allArticles[i]->senderIdOfArticle())
                         .arg(allArticles[i]->regulatorIdOfArticle())
                         .arg(-1)
                         .arg(allArticles[i]->statusCodeOfArticle())
+                        .arg(allArticles[i]->originArticleIdOfArticle())
                         .arg(allArticles[i]->articleIdOfArticle()));
         }else if (modifyStat==3){
             qDebug() << "deleted article";

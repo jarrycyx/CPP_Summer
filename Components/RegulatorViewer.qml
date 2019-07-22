@@ -14,7 +14,7 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
-    function editOrViewAnArticle(title, content, statusCode, index){
+    function editOrViewAnArticle(title, content, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
         mode=1;
         blankText.visible=false;
         visible=true;
@@ -42,8 +42,25 @@ Rectangle {
             element.text="我负责的翻译需求";
             button.text="停止招募";
             button2.visible=false;
+            break;
         case 130:
-            statusText.text="已进行拆分，招募译者结束";
+            statusText.text="招募译者结束，即将分配任务";
+            button.text="自动拆分";
+            button2.visible=false;
+            break;
+        }
+
+        if (typeOfArticle===2){//如果是查看其他文章
+            element.text="查看需求";
+            button.enabled=true;//允许报名
+            button2.enabled=false;
+            titleEdit.enabled=false;
+            contentEdit.enabled=false;
+        }else {
+            button.enabled=true;
+            button2.enabled=true;
+            titleEdit.enabled=true;
+            contentEdit.enabled=true;
         }
     }
 
@@ -180,13 +197,22 @@ Rectangle {
         onClicked: {
             switch (senderEditorRect.articleStatus){
             case 100:
-                regulatorPageHandler.signForRegulatorArticle(indexInList, titleEdit.text, contentEdit.text)
+                regulatorPageHandler.signForRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
             case 110:
-                regulatorPageHandler.editArticle(indexInList, titleEdit.text, contentEdit.text)
+                regulatorPageHandler.editArticle(indexInList, titleEdit.text, contentEdit.text);
+                break;
+            case 120:
+                regulatorPageHandler.stopRecruitingTranslatorForArticle(indexInList);
+                break;
+            case 130:
+                regulatorPageHandler.splitRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
             }
         }
+
+        highlighted: true
+        Universal.foreground: "#ffffff"
     }
 
     Button {

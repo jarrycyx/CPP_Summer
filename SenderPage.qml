@@ -175,6 +175,7 @@ ApplicationWindow {
                     cellHeight: 227
 
                     cacheBuffer: 50
+
                 }
 
             }
@@ -334,7 +335,8 @@ ApplicationWindow {
         width: 120
         sourceSize.height: 120
         sourceSize.width: 120
-        source: "Resources/delete.png"
+        source: "Resources/delete.svg"
+        visible: false
     }
 
 

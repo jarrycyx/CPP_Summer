@@ -6,6 +6,7 @@ import "../Resources"
 Component {
     //id: dragDelegate
 
+
     MouseArea {
         Strings{id: stringsPool}
         //FontLoader { id: pingfangFont; source: "../Resources/PingFang Regular.ttf" }
@@ -18,6 +19,7 @@ Component {
         property int indexOfThisDelegate: index
         default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
 
+
         //anchors { left: content.left; right: content.right }
         //anchors.centerIn: parent
         height: content.height+45
@@ -25,7 +27,7 @@ Component {
 
         signal selectedIndexChange(int idx)
 
-        drag.axis: Drag.XAndYAxis
+        drag.axis: typeOfList===1 ? Drag.XAndYAxis : Drag.None
         drag.target: content
 
         onPressed: {
@@ -45,11 +47,15 @@ Component {
 
             console.log("r"+ListView.delegate+ListView.flag);
 
-            senderArticlesList.currentIndex=indexOfThisDelegate;
+            if (statusCodeOfArticle/100!==2)
+                senderArticlesList.currentIndex=indexOfThisDelegate;
+            else senderSubarticlesList.currentIndex=indexOfThisDelegate;
             otherArticlesList.currentIndex=indexOfThisDelegate;
             content.changeStatus(2);
-            newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, statusCodeOfArticle, indexOfThisDelegate);
+            newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle,
+                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
+
         }
         onSelectedChanged: {
             content.selected=GridView.isCurrentItem;
@@ -68,9 +74,11 @@ Component {
             content.changeStatus(4);
         }
 
+
+
         LightBlock {
             id: content
-            height: 197
+            height: statusCodeOfArticle/100!==2 ? 197 : 76
             width: 305
             outsideColor: "#00f2f2f2"
             anchors {
@@ -96,20 +104,20 @@ Component {
             childCont.children:  [
                 Image {
                     id: borderImage
-                    x: 112
-                    y: 32
-                    width: 80
-                    height: 80
-                    sourceSize.width: 80
-                    sourceSize.height: 80
+                    x: statusCodeOfArticle/100!==2 ? 112 : 12
+                    y: statusCodeOfArticle/100!==2 ? 32 : 13
+                    width: statusCodeOfArticle/100!==2 ? 80 : 50
+                    height: statusCodeOfArticle/100!==2 ? 80 : 50
+                    sourceSize.width: statusCodeOfArticle/100!==2 ? 80 : 50
+                    sourceSize.height: statusCodeOfArticle/100!==2 ? 80 : 50
                     source: "../Resources/status-code/"+statusCodeOfArticle+".svg"
                 },
                 Text{
                     id: titleText
                     text: titleOfArticle+"/"+statusCodeOfArticle
-                    x: 21
-                    y: 127
-                    width: 261
+                    x: statusCodeOfArticle/100!==2 ? 21 : 73
+                    y: statusCodeOfArticle/100!==2 ? 127 : 16
+                    width: statusCodeOfArticle/100!==2 ? 261 : 210
                     elide: Text.ElideRight
                     height: 14
                     color: stringsPool.textGray1
@@ -121,9 +129,9 @@ Component {
                 Text{
                     id: previewText
                     text: contentOfArticle
-                    x: 21
-                    y: 150
-                    width: 261
+                    x: statusCodeOfArticle/100!==2 ? 21 : 73
+                    y: statusCodeOfArticle/100!==2 ? 150 : 33
+                    width: statusCodeOfArticle/100!==2 ? 261 : 210
                     height: 24
                     wrapMode: Text.WrapAnywhere
                     color: stringsPool.textGray3

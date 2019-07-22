@@ -14,7 +14,7 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
-    function editOrViewAnArticle(title, content, statusCode, index){
+    function editOrViewAnArticle(title, content, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
         mode=1;
         blankText.visible=false;
         visible=true;
@@ -34,6 +34,7 @@ Rectangle {
             statusText.text="已上传，招募负责人开始";
             button.text="修改";
             button2.visible=true;
+            button2.text="报名状态";
             break;
         case 110:
             statusText.text="已标记负责人，招募负责人结束";
@@ -47,6 +48,19 @@ Rectangle {
             break;
         case 130:
             statusText.text="已进行拆分，招募译者结束";
+        }
+
+        if (typeOfArticle===2){
+            element.text="查看需求";
+            button.enabled=false;
+            button2.enabled=false;
+            titleEdit.enabled=false;
+            contentEdit.enabled=false;
+        }else {
+            button.enabled=true;
+            button2.enabled=true;
+            titleEdit.enabled=true;
+            contentEdit.enabled=true;
         }
     }
 
@@ -74,7 +88,8 @@ Rectangle {
         color: stringsPool.textGray1
         font{
             family: "DengXian";
-            pixelSize: 28
+            pixelSize: 28;
+            bold: true;
         }
     }
 
@@ -203,6 +218,8 @@ Rectangle {
                 break;
             }
         }
+        highlighted: true
+        Universal.foreground: "#ffffff"
     }
 
     Button {

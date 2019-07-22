@@ -1,6 +1,6 @@
 #include "articleslist.h"
 
-ArticlesList::ArticlesList() :QAbstractListModel()
+ArticlesList::ArticlesList(int type) :QAbstractListModel(), typeOfThisList(type)
 {
 
 }
@@ -22,6 +22,8 @@ QVariant ArticlesList::data(const QModelIndex &index, int role) const {
         return articles.at(index.row())->contentOfArticle();
     case 3:
         return articles.at(index.row())->statusCodeOfArticle();
+    case 4:
+        return typeOfThisList;
     }
 }
 
@@ -30,6 +32,7 @@ QHash<int, QByteArray> ArticlesList::roleNames() const {
     roles[1] = "titleOfArticle";
     roles[2] = "contentOfArticle";
     roles[3] = "statusCodeOfArticle";
+    roles[4] = "typeOfList";
     return roles;
 }
 

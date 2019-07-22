@@ -12,6 +12,10 @@ Component {
             property var view: ListView.view
 
 
+            outsideColor: "#66000000"
+            hoverBorderColor: "#9A000000"
+
+
             default property bool thisIsSelected: ListView.isCurrentItem
             borderWidth: 2
             height: 48

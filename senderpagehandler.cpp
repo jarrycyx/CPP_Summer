@@ -14,7 +14,8 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents* newGlobal, QObject *parent) : QObject(parent), thisUserId(senderId)
+SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents* newGlobal, QObject *parent)
+    : QObject(parent), senderArticleList(1), allUserArticleList(2), thisUserId(senderId)
 {
 
     globalStorageComponent = newGlobal;
@@ -57,7 +58,6 @@ void SenderPageHandler::addSenderArticle(QString title, QString content){
     globalStorageComponent->addAnArticle(newSenderArticle);
     senderArticleList.addAnArticle(newSenderArticle);
     allUserArticleList.addAnArticle(newSenderArticle);
-    chooseRegulator(0);
     emit sendSuccessMessage("文章已上传");
 }
 

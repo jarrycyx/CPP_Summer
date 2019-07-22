@@ -27,6 +27,8 @@ public:
     int setStatusCodeOfArticle(int code);
     int regulatorIdOfArticle() const;
     void setRegulatorIdOfArticle(const int &regulatorId);
+    int originArticleIdOfArticle() const;
+    void setOriginArticleIdOfArticle(const int &articleId);
     int addArticleToRemoteDBReturnId();
     void updateArticleInfoToRemote();
 
@@ -42,14 +44,15 @@ private:
     QString m_titleOfArticle;
     QString m_contentOfArticle;
 
+    int origin_article_id;
     //article身份标识
     int m_article_id;
     /* 备注：本类中article_id不能改变，只能为未设置状态或已设置状态 */
 
     //定义并设置默认发送者和负责人
-    int sender_id=-1;
-    int regulator_id=-1;
-    int status_code=100;
+    int sender_id;
+    int regulator_id;
+    int status_code;
 };
 
 #endif // MYARTICLEOBJ_H

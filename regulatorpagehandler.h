@@ -36,12 +36,13 @@ public:
     Q_INVOKABLE void signForRegulatorArticle(int index);
     Q_INVOKABLE void startRecruitingTranslatorForArticle(int index);
     Q_INVOKABLE void editArticle(int index, QString title, QString content);
+    Q_INVOKABLE void stopRecruitingTranslatorForArticle(int index);
 
     void loadArticleRegulatorData(int articleId);
 
 private:
 
-    ArticlesList regulatorArticleList, allSeekingRegulatorArticle;
+    ArticlesList regulatorSubarticleList, regulatorArticleList, allSeekingRegulatorArticle;
 
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;

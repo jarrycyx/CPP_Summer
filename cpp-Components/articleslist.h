@@ -8,7 +8,7 @@
 class ArticlesList: public QAbstractListModel
 {
 public:
-    explicit ArticlesList();
+    explicit ArticlesList(int type);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
@@ -26,6 +26,7 @@ public:
 protected:
     QVector<MyArticleObj*> articles;
     QHash<int, QByteArray> roleNames() const override;
+    int typeOfThisList;
 };
 
 #endif // ARTICLESLIST_H
