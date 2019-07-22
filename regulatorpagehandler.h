@@ -60,6 +60,10 @@ signals:
     void otherModelChanged(const QVariant&);
     void regulatorListModelChanged(const QVariant&);
     void loadArticlesComplete(int article_id, QString title, QString content);
+    //错误信息信号，向QML发送，使其在界面上显示
+    void sendErrorMessage(QString errStr);
+    //成功信息信号，向QML发送，使其在界面上显示
+    void sendSuccessMessage(QString successStr);
 
     //向QML发送刷新ListView界面信号
     void startRefreshQml();

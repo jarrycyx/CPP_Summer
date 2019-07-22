@@ -36,7 +36,8 @@ void RegulatorPageHandler::startLoadingRegulatorArticleList(int userId){
     int len=globalStorageComponent->getArticlesLength();
     for (int i=0;i<len;i++){
         qDebug() << "Regulator article";
-        if (globalStorageComponent->getArticleToEdit(i)->regulatorIdOfArticle()==userId)
+        if (globalStorageComponent->getArticleToEdit(i)
+                ->regulatorIdOfArticle()==userId)
             regulatorArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
         if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle()==100)
             allSeekingRegulatorArticle.addAnArticle(globalStorageComponent->getArticleToEdit(i));
@@ -52,6 +53,8 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
 Q_INVOKABLE void RegulatorPageHandler::editArticle(int index, QString title, QString content){
     qDebug() << "save" << index;
     regulatorArticleList.editAnArticle(index, title, content);
+
+    emit sendSuccessMessage("已保存");
 }
 
 
@@ -60,10 +63,11 @@ Q_INVOKABLE void RegulatorPageHandler::signForRegulatorArticle(int index){
     MyRequestObj *sendNewRequest = new MyRequestObj(
                 globalStorageComponent->getARequestId(),
                 thisUserId,
-                globalStorageComponent->getArticleToEdit(index)->articleIdOfArticle(),
+                allSeekingRegulatorArticle.getArticle(index)->articleIdOfArticle(),
                 1);//1表示成为负责人的请求
     sendNewRequest->setModifyStatus(1);
     globalStorageComponent->addARequest(sendNewRequest);
+    emit sendSuccessMessage("报名成功");
 }
 
 
@@ -71,6 +75,7 @@ Q_INVOKABLE void RegulatorPageHandler::startRecruitingTranslatorForArticle(int i
     qDebug() << "chooseTranslatorForArticle" << index;
     regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(120);
     regulatorArticleList.editAnArticle(index);
+    emit sendSuccessMessage("开始招募");
 }
 
 

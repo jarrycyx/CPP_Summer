@@ -26,7 +26,7 @@ ApplicationWindow {
         width: 121
         model: ["发布者", "负责人", "翻译者"]
         font.family: "DengXian"
-        currentIndex: 0
+        currentIndex: 1
     }
 
 
@@ -38,11 +38,11 @@ ApplicationWindow {
         id: loginModel
         objectName: "loginModel"
         ListElement {
-            textInEdit: "sender1"
+            textInEdit: "regulator1"
             placeHolderText: "请输入用户名"
         }
         ListElement {
-            textInEdit: "sender1"
+            textInEdit: "regulator1pswd"
             placeHolderText: "请输入密码"
         }
     }
@@ -92,6 +92,7 @@ ApplicationWindow {
             cacheBuffer: 50
 
             currentIndex: -1
+
         }
 
     }
@@ -172,6 +173,41 @@ ApplicationWindow {
         font.family: "DengXian"
     }
 
+    RoundButton {
+        id: roundButton1
+        x: 378
+        y: 44
+        text: "1"
+        onClicked: {
+            loginModel.get(0).textInEdit="sender1";
+            loginModel.get(1).textInEdit="sender1";
+            selectRoleBox.currentIndex=0;
+        }
+    }
+
+    RoundButton {
+        id: roundButton2
+        x: 428
+        y: 44
+        text: "2"
+        onClicked: {
+            loginModel.get(0).textInEdit="regulator1";
+            loginModel.get(1).textInEdit="regulator1pswd";
+            selectRoleBox.currentIndex=1;
+        }
+    }
+
+    RoundButton {
+        id: roundButton3
+        x: 478
+        y: 44
+        text: "3"
+        onClicked: {
+            loginModel.get(0).textInEdit="sender1";
+            loginModel.get(1).textInEdit="sender1";
+            selectRoleBox.currentIndex=2;
+        }
+    }
 
 
 

@@ -26,17 +26,27 @@ Rectangle {
 
         switch (senderEditorRect.articleStatus){
         case 0:
+            statusText.text="未上传";
             button.text="发送";
             button2.visible=true;
             break;
         case 100:
+            statusText.text="已上传，招募负责人开始";
             button.text="修改";
             button2.visible=true;
             break;
         case 110:
+            statusText.text="已标记负责人，招募负责人结束";
             button.text="修改";
             button2.visible=false;
             break;
+        case 120:
+            statusText.text="开始招募译者";
+            button.text="修改";
+            button2.visible=false;
+            break;
+        case 130:
+            statusText.text="已进行拆分，招募译者结束";
         }
     }
 
@@ -49,6 +59,7 @@ Rectangle {
         element.text="发布翻译需求"
         senderEditorRect.articleStatus=0;
         button.text="发布"
+        statusText.text="未上传";
     }
 
     Strings{id: stringsPool}
@@ -56,14 +67,14 @@ Rectangle {
     Text {
         id: element
         x: 5
-        y: 5
+        y: 2
         width: 224
-        height: 24
+        height: 28
         text: qsTr("发布翻译需求")
         color: stringsPool.textGray1
         font{
             family: "DengXian";
-            pixelSize: 24
+            pixelSize: 28
         }
     }
 
@@ -221,7 +232,30 @@ Rectangle {
         font{family: "DengXian"}
     }
 
+    Text {
+        x: button2.visible ? 275 : 142
+        y: senderEditorRect.height - 25 - 16
+        width: 74
+        height: 16
+        text: qsTr("当前状态:")
+        font{
+            family: "DengXian";
+            pixelSize: 16
+        }
+    }
 
-
+    Text {
+        id: statusText
+        x: button2.visible ? 349 : 216
+        y: senderEditorRect.height - 25 - 16
+        width: 200
+        height: 16
+        text: qsTr("正在招募译者")
+        font{
+            bold: true;
+            family: "DengXian";
+            pixelSize: 16
+        }
+    }
 
 }

@@ -22,5 +22,10 @@
         <file>RegulatorPage.qml</file>
         <file>Components/RegulatorViewer.qml</file>
         <file>Resources/unfold.svg</file>
+        <file>Resources/status-code/100.svg</file>
+        <file>Resources/status-code/110.svg</file>
+        <file>Resources/status-code/120.svg</file>
+        <file>Resources/messagebox.svg</file>
+        <file>Resources/delete.svg</file>
     </qresource>
 </RCC>

@@ -16,6 +16,12 @@ ApplicationWindow {
     title: qsTr("Stack")
     Strings{id: stringsPool}
 
+    function foldList(){
+        editorCover.color="#00000000"
+        articlesRect.columnNum=1;
+        expandImage.rotation=0;
+    }
+
     Connections {
         target: regulatorPageHandler
         //开始刷新QML
@@ -29,6 +35,19 @@ ApplicationWindow {
             if (newEditor.visible===false) blankText.visible=true;
             senderArticlesList.model=senderPageHandler.thisModel;
             otherArticlesList.model=senderPageHandler.otherModel;
+        }
+
+        onSendErrorMessage: {
+            console.log(errStr);
+            messageText.text=errStr;
+            messageText.color="#d13438"
+            messageBoxAnimation.start();
+        }
+        onSendSuccessMessage: {
+            console.log(successStr);
+            messageText.text=successStr;
+            messageText.color="#10893e"
+            messageBoxAnimation.start();
         }
     }
 
@@ -60,8 +79,14 @@ ApplicationWindow {
         Rectangle {
             property int columnNum: 1
 
+            z: 2
             id: articlesRect
             width: 350*articlesRect.columnNum-45 + 41 + 41 +12//1133//388
+
+            Behavior on width {
+                NumberAnimation{duration: 150}
+            }
+
             height: parent.height
             color: "#f2f2f2"
 
@@ -129,15 +154,55 @@ ApplicationWindow {
 
             }
 
+            ToolButton {
+                id: expandButton
+                x: articlesRect.width-21
+                y: (mainWindow.height-36)/2
+                width: 21
+                height: 36
+                Image {
+                    id: expandImage
+                    anchors.fill: parent
+                    sourceSize.width: 21
+                    sourceSize.height: 36
+                    source: "Resources/unfold.svg"
+                }
+                onClicked: {
+                    if (articlesRect.columnNum<2){
+                        editorCover.color="#55000000"
+                        articlesRect.columnNum=3;
+                        expandImage.rotation=180;
+                    }else if (articlesRect.columnNum>2){
+                        editorCover.color="#00000000"
+                        articlesRect.columnNum=1;
+                        expandImage.rotation=0;
+                    }
+                }
+            }
+
         }
 
         RegulatorViewer {
-            x: articlesRect.width+30
+            x: 388+30
             y: 30
+            z: 0
             id: newEditor
             visible: false
             width: mainWindow.width-x-30
             height: mainWindow.height-60
+        }
+
+        Rectangle {
+            id: editorCover
+            x: 388+30
+            y: 0
+            z: 0.1
+            width: mainWindow.width
+            height: mainWindow.height
+            color: "#00000000"
+            Behavior on color {
+                ColorAnimation { duration: 300 }
+            }
         }
 
         Text {
@@ -161,5 +226,35 @@ ApplicationWindow {
     }
 
 
+    Image {
+        id: messageBoxImg
+        x: (mainWindow.width-160)/2
+        y: -40
+        z: 10
+        height: 35
+        width: 130
+        sourceSize.height: 35
+        sourceSize.width: 130
+        source: "Resources/messagebox.svg"
 
+        SequentialAnimation {
+               id: messageBoxAnimation
+               running: false
+               NumberAnimation { target: messageBoxImg; property: "y"; to: 0; duration: 200 }
+               PauseAnimation { duration: 1000 }
+               NumberAnimation { target: messageBoxImg; property: "y"; to: -40; duration: 200 }
+           }
+
+        Text {
+            id: messageText
+            text: qsTr("操作成功")
+            color: "#10893e"
+            font{
+                family: "DengXian";
+                pixelSize: 16
+            }
+            x: (130 - width)/2
+            y: (35 - height)/2
+        }
+    }
 }

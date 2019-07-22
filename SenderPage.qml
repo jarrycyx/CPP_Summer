@@ -16,6 +16,16 @@ ApplicationWindow {
     title: qsTr("Stack")
     Strings{id: stringsPool}
 
+
+    function foldList(){
+        editorCover.color="#00000000"
+        articlesRect.columnNum=1;
+        expandImage.rotation=0;
+    }
+
+
+
+
     Connections {
         target: senderPageHandler
         //开始刷新QML
@@ -29,6 +39,19 @@ ApplicationWindow {
             if (newEditor.visible===false) blankText.visible=true;
             senderArticlesList.model=senderPageHandler.thisModel;
             otherArticlesList.model=senderPageHandler.otherModel;
+        }
+
+        onSendErrorMessage: {
+            console.log(errStr);
+            messageText.text=errStr;
+            messageText.color="#d13438"
+            messageBoxAnimation.start();
+        }
+        onSendSuccessMessage: {
+            console.log(successStr);
+            messageText.text=successStr;
+            messageText.color="#10893e"
+            messageBoxAnimation.start();
         }
     }
 
@@ -65,7 +88,7 @@ ApplicationWindow {
             id: articlesRect
             width: 350*articlesRect.columnNum-45 + 41 + 41 + 8//1133//388
             Behavior on width {
-                NumberAnimation{duration: 200}
+                NumberAnimation{duration: 150}
             }
 
             height: parent.height
@@ -268,6 +291,51 @@ ApplicationWindow {
 
     }
 
+
+
+    Image {
+        id: messageBoxImg
+        x: (mainWindow.width-width)/2
+        y: -40
+        z: 10
+        height: 35
+        width: 130
+        sourceSize.height: 35
+        sourceSize.width: 130
+        source: "Resources/messagebox.svg"
+
+        SequentialAnimation {
+               id: messageBoxAnimation
+               running: false
+               NumberAnimation { target: messageBoxImg; property: "y"; to: 0; duration: 200 }
+               PauseAnimation { duration: 1000 }
+               NumberAnimation { target: messageBoxImg; property: "y"; to: -40; duration: 200 }
+           }
+
+        Text {
+            id: messageText
+            text: qsTr("操作成功")
+            color: "#10893e"
+            font{
+                family: "DengXian";
+                pixelSize: 16
+            }
+            x: (130 - width)/2
+            y: (35 - height)/2
+        }
+    }
+
+    Image {
+        id: deleteImg
+        x: mainWindow.width-68-120
+        y: (mainWindow.height-120)/2
+        z: 10
+        height: 120
+        width: 120
+        sourceSize.height: 120
+        sourceSize.width: 120
+        source: "Resources/delete.png"
+    }
 
 
 }

@@ -58,6 +58,7 @@ void SenderPageHandler::addSenderArticle(QString title, QString content){
     senderArticleList.addAnArticle(newSenderArticle);
     allUserArticleList.addAnArticle(newSenderArticle);
     chooseRegulator(0);
+    emit sendSuccessMessage("文章已上传");
 }
 
 
@@ -65,10 +66,13 @@ void SenderPageHandler::addSenderArticle(QString title, QString content){
 void SenderPageHandler::editSenderArticle(int index, QString title, QString content){
     //由于数据实体只保存一份，只需编辑一处即可
     senderArticleList.editAnArticle(index, title, content);
+
+    emit sendSuccessMessage("已保存");
 }
 
 void SenderPageHandler::deleteSenderArticle(int index){
     senderArticleList.deleteAnArticle(index);
+    emit sendSuccessMessage("已删除");
 }
 
 
@@ -119,7 +123,7 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
 /*************************************************************************
 【函数名称】  chooseRegulator
 【函数功能】  添加/修改文章负责人
-【参数】    文章在列表中的位置
+【参数】    文章在列表中的位置index
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
@@ -152,11 +156,13 @@ void SenderPageHandler::loadArticleRegulatorData(int articleId){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
-
 Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx){
     MyArticleObj* articleToChoose = senderArticleList.getArticle(currentInViewIndex);
     articleToChoose->setRegulatorIdOfArticle(requestUserList.getRequestUser(idx)->userId());
     articleToChoose->setStatusCodeOfArticle(110);
     senderArticleList.editAnArticle(currentInViewIndex);
+
+
+    emit sendSuccessMessage("已确定负责人");
 }
 

@@ -25,20 +25,25 @@ Rectangle {
 
         switch (senderEditorRect.articleStatus){
         case 100:
+            statusText.text="已上传，招募负责人开始";
             element.text="翻译需求详情";
             button.text="报名";
             button2.visible=false;
             break;
         case 110:
+            statusText.text="已标记负责人，招募负责人结束";
             element.text="我负责的翻译需求";
             button.text="保存";
             button2.visible=true;
             button2.text="开始招募译者";
             break;
         case 120:
-            element.text="我负责的翻译需求（正在招募译者）";
+            statusText.text="开始招募译者";
+            element.text="我负责的翻译需求";
             button.text="停止招募";
             button2.visible=false;
+        case 130:
+            statusText.text="已进行拆分，招募译者结束";
         }
     }
 
@@ -47,14 +52,15 @@ Rectangle {
     Text {
         id: element
         x: 5
-        y: 5
+        y: 2
         width: 224
-        height: 24
+        height: 28
         text: qsTr("翻译需求详情")
         color: stringsPool.textGray1
         font{
+            bold: true
             family: "DengXian";
-            pixelSize: 24
+            pixelSize: 28
         }
     }
 
@@ -166,7 +172,7 @@ Rectangle {
     Button {
         id: button
         x: 5
-        y: parent.height-17-40
+        y: parent.height-13-40
         height: 40
         width: 120
         text: qsTr("报名")
@@ -186,7 +192,7 @@ Rectangle {
     Button {
         id: button2
         x: 136
-        y: parent.height-17-40
+        y: parent.height-13-40
         width: 120
         height: 40
         text: qsTr("选择负责人")
@@ -199,5 +205,31 @@ Rectangle {
                  break;
              }
          }
+    }
+
+    Text {
+        x: button2.visible ? 275 : 142
+        y: senderEditorRect.height - 25 - 16
+        width: 74
+        height: 16
+        text: qsTr("当前状态:")
+        font{
+            family: "DengXian";
+            pixelSize: 16
+        }
+    }
+
+    Text {
+        id: statusText
+        x: button2.visible ? 349 : 216
+        y: senderEditorRect.height - 25 - 16
+        width: 200
+        height: 16
+        text: qsTr("正在招募译者")
+        font{
+            bold: true;
+            family: "DengXian";
+            pixelSize: 16
+        }
     }
 }

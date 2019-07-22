@@ -49,6 +49,7 @@ Component {
             otherArticlesList.currentIndex=indexOfThisDelegate;
             content.changeStatus(2);
             newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, statusCodeOfArticle, indexOfThisDelegate);
+            mainWindow.foldList();
         }
         onSelectedChanged: {
             content.selected=GridView.isCurrentItem;
@@ -101,7 +102,7 @@ Component {
                     height: 80
                     sourceSize.width: 80
                     sourceSize.height: 80
-                    source: "../Resources/passage_state_1.svg"
+                    source: "../Resources/status-code/"+statusCodeOfArticle+".svg"
                 },
                 Text{
                     id: titleText
