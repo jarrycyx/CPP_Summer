@@ -12,7 +12,7 @@ Rectangle {
     property int mode: 0 //0: new 1:edit/view
     property int articleStatus: 0
     property int indexInList: -1
-    id: senderEditorRect
+    id: translatorEditorRect
 
     function editOrViewAnArticle(title, content, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
         mode=1;
@@ -23,43 +23,31 @@ Rectangle {
         articleStatus=statusCode;
         indexInList=index;
 
-        switch (senderEditorRect.articleStatus){
-        case 100:
-            statusText.text="已上传，招募负责人开始";
-            element.text="翻译需求详情";
-            button.text="报名";
-            button2.visible=false;
-            break;
-        case 110:
-            statusText.text="已标记负责人，招募负责人结束";
-            element.text="我负责的翻译需求";
-            button.text="保存";
-            button2.visible=true;
-            button2.text="开始招募译者";
-            break;
+        switch (translatorEditorRect.articleStatus){
         case 120:
-            statusText.text="开始招募译者";
+            statusText.text="正在招募译者";
             element.text="我负责的翻译需求";
-            button.text="停止招募";
+            button.text="报名";
             button2.visible=false;
             element.text="翻译需求详情";
             break;
         case 130:
-            statusText.text="招募译者结束，即将分配任务";
-            button.text="自动拆分";
+            statusText.text="招募译者结束，即将拆分";
+            button.text="退出报名";
+            button.enabled=false;
             button2.visible=false;
             element.text="我负责的翻译需求";
             break;
         case 140:
-            statusText.text="已被拆分，请查看子任务";
+            statusText.text="已被拆分，等待分配子任务";
             button.text="已拆分";
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的翻译需求（已拆分为子任务）";
             break;
-        case 200:
-            statusText.text="子任务已创建，等待分配译者";
-            button.text="分配任务";
+        case 210:
+            statusText.text="子任务已分配译者";
+            button.text="上传";
             button2.visible=false;
             element.text="我负责的子任务";
         }
@@ -209,22 +197,11 @@ Rectangle {
         text: qsTr("报名")
         font{family: "DengXian"}
         onClicked: {
-            switch (senderEditorRect.articleStatus){
-            case 100:
-                regulatorPageHandler.signForRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
-                break;
-            case 110:
-                regulatorPageHandler.editArticle(indexInList, titleEdit.text, contentEdit.text);
-                break;
+            switch (translatorEditorRect.articleStatus){
             case 120:
-                regulatorPageHandler.stopRecruitingTranslatorForArticle(indexInList);
+                translatorPageHandler.signForTranslatorArticle(indexInList);
                 break;
-            case 130:
-                regulatorPageHandler.splitRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
-                break;
-            case 140:
-                emit: regulatorPageHandler.sendErrorMessage("已拆分，请查看子任务");
-                break;
+
             }
         }
 
@@ -241,10 +218,10 @@ Rectangle {
         text: qsTr("选择负责人")
         font.family: "DengXian"
         onClicked: {
-            switch (senderEditorRect.articleStatus){
+            switch (translatorEditorRect.articleStatus){
             case 0:
             case 110:
-                regulatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
+                translatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
                 break;
             }
         }
@@ -252,7 +229,7 @@ Rectangle {
 
     Text {
         x: button2.visible ? 275 : 142
-        y: senderEditorRect.height - 25 - 16
+        y: translatorEditorRect.height - 25 - 16
         width: 74
         height: 16
         text: qsTr("当前状态:")
@@ -265,7 +242,7 @@ Rectangle {
     Text {
         id: statusText
         x: button2.visible ? 349 : 216
-        y: senderEditorRect.height - 25 - 16
+        y: translatorEditorRect.height - 25 - 16
         width: 200
         height: 16
         text: qsTr("正在招募译者")

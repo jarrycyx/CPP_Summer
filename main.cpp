@@ -16,12 +16,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-
-    GlobalComponents globalStorageComponent(&engine);
+    GlobalComponents globalStorageComponent;
 
     LoginPageHandler newLoginPage(&globalStorageComponent); //创建登陆页面对象
-    newLoginPage.startPage(&engine);//渲染登录页面的主界面
+    newLoginPage.startPage(&engine);                        //渲染登录页面的主界面
 
     return app.exec();
 }
-

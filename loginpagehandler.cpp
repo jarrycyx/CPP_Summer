@@ -24,11 +24,9 @@
 【更改记录】     20190714: 修改为异步查询数据
 *************************************************************************/
 
-
 /* 登陆界面的后台处理类
  * 使用异步线程请求登录数据
  */
-
 
 /*************************************************************************
 【函数名称】  LoginPageHandler
@@ -36,8 +34,7 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190709
 *************************************************************************/
-LoginPageHandler::LoginPageHandler(GlobalComponents* newGlobalStorageComponent, QObject *parent) :
-    QObject(parent), globalStorageComponent(newGlobalStorageComponent)
+LoginPageHandler::LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent) : QObject(parent), globalStorageComponent(newGlobalStorageComponent)
 {
 }
 
@@ -46,7 +43,8 @@ LoginPageHandler::LoginPageHandler(GlobalComponents* newGlobalStorageComponent, 
 【函数功能】  析构函数，同时释放内存
 【开发者及日期】    jarrycyx 20190718
 *************************************************************************/
-LoginPageHandler::~LoginPageHandler(){
+LoginPageHandler::~LoginPageHandler()
+{
     qDebug() << "登陆页面析构";
     //delete newSenderPage;
     //newSenderPage=NULL;
@@ -59,13 +57,13 @@ LoginPageHandler::~LoginPageHandler(){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-void LoginPageHandler::startPage(QQmlApplicationEngine *engine){
-    QQmlContext *thisContext=engine->rootContext();
+void LoginPageHandler::startPage(QQmlApplicationEngine *engine)
+{
+    QQmlContext *thisContext = engine->rootContext();
     thisContext->setContextProperty("loginPageHandler", this);
-    thisEngine=engine;
+    thisEngine = engine;
     engine->load(QUrl(QStringLiteral("qrc:/Login.qml")));
 }
-
 
 /*************************************************************************
 【函数名称】  loginInit，loginInNewThread
@@ -74,37 +72,51 @@ void LoginPageHandler::startPage(QQmlApplicationEngine *engine){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
-Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int role){
-    int loginResult = userLogin(name,pswd,role);
-    switch(loginResult){
-        case 1 :{
-            emit sendSuccessMessage("登陆成功");
+Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int role)
+{
+    int loginResult = userLogin(name, pswd, role);
+    switch (loginResult)
+    {
+    case 1:
+    {
+        emit sendSuccessMessage("登陆成功");
 
-            if (role==1){
-                newSenderPage = new SenderPageHandler(searchUser(name,role), globalStorageComponent);
-                newSenderPage->startPage(thisEngine);
-            }else if (role==2){
-                newRegulatorPage = new RegulatorPageHandler(searchUser(name, role), globalStorageComponent);
-                newRegulatorPage->startPage(thisEngine);
-            }
-            break;
+        if (role == 1)
+        {
+            newSenderPage = new SenderPageHandler(searchUser(name, role), globalStorageComponent);
+            newSenderPage->startPage(thisEngine);
         }
-        case 2 :{
-            emit sendErrorMessage("密码不匹配");
-            break;
+        else if (role == 2)
+        {
+            newRegulatorPage = new RegulatorPageHandler(searchUser(name, role), globalStorageComponent);
+            newRegulatorPage->startPage(thisEngine);
+        }else if (role == 3)
+        {
+            newTranslatorPage = new TranslatorPageHandler(searchUser(name, role), globalStorageComponent);
+            newTranslatorPage->startPage(thisEngine);
         }
-        case 3 :{
-            emit sendErrorMessage("用户身份不匹配");
-            break;
-        }
-        case 4 :{
-            emit sendErrorMessage("用户不存在");
-            break;
-        }
-        default:{
-            emit sendErrorMessage("登陆错误");
-            break;
-        }
+        break;
+    }
+    case 2:
+    {
+        emit sendErrorMessage("密码不匹配");
+        break;
+    }
+    case 3:
+    {
+        emit sendErrorMessage("用户身份不匹配");
+        break;
+    }
+    case 4:
+    {
+        emit sendErrorMessage("用户不存在");
+        break;
+    }
+    default:
+    {
+        emit sendErrorMessage("登陆错误");
+        break;
+    }
     }
 }
 
@@ -115,64 +127,68 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 【返回值】   无
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
-Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd, int role){
-    int signupResult = addUser(name,pswd,role);
-    if (!signupResult) emit sendErrorMessage("用户已存在");
-    else emit sendSuccessMessage("注册成功");
+Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd, int role)
+{
+    int signupResult = addUser(name, pswd, role);
+    if (!signupResult)
+        emit sendErrorMessage("用户已存在");
+    else
+        emit sendSuccessMessage("注册成功");
 }
 
-
-
-
-int LoginPageHandler::userLogin(QString name, QString pswd, int role){
-    int len=globalStorageComponent->getUsersLength();
+int LoginPageHandler::userLogin(QString name, QString pswd, int role)
+{
+    int len = globalStorageComponent->getUsersLength();
     int ifUnRegistered = true;
     int ifRoleNotExist = true;
-    for (int i=0; i<len; i++){
-        if (name==globalStorageComponent->getUserToEdit(i)->username()){
+    for (int i = 0; i < len; i++)
+    {
+        if (name == globalStorageComponent->getUserToEdit(i)->username())
+        {
             ifUnRegistered = false;
-            if (role==globalStorageComponent->getUserToEdit(i)->role()){
+            if (role == globalStorageComponent->getUserToEdit(i)->role())
+            {
                 ifRoleNotExist = false;
-                if (pswd==globalStorageComponent->getUserToEdit(i)->password())
+                if (pswd == globalStorageComponent->getUserToEdit(i)->password())
                     return 1;
-                else return 2;//密码不匹配
+                else
+                    return 2; //密码不匹配
             }
         }
     }
 
-    if (ifUnRegistered) return 4;//用户未注册
-    if (ifRoleNotExist) return 3;//身份不匹配
+    if (ifUnRegistered)
+        return 4; //用户未注册
+    if (ifRoleNotExist)
+        return 3; //身份不匹配
     return 0;
 }
 
-
-
-int LoginPageHandler::searchUser(QString name, int role){
-    int len=globalStorageComponent->getUsersLength();
-    for (int i=0; i<len; i++){
-        if (name==globalStorageComponent->getUserToEdit(i)->username())
-            if (role==globalStorageComponent->getUserToEdit(i)->role())
+int LoginPageHandler::searchUser(QString name, int role)
+{
+    int len = globalStorageComponent->getUsersLength();
+    for (int i = 0; i < len; i++)
+    {
+        if (name == globalStorageComponent->getUserToEdit(i)->username())
+            if (role == globalStorageComponent->getUserToEdit(i)->role())
                 return globalStorageComponent->getUserToEdit(i)->userId();
     }
     return -1;
 }
 
-int LoginPageHandler::addUser(QString name, QString pswd, int role){
-    int len=globalStorageComponent->getUsersLength();
-    for (int i=0; i<len; i++){
-        if (globalStorageComponent->getUserToEdit(i)->username()==name
-                &&
-                globalStorageComponent->getUserToEdit(i)->role()==role)
-            return 0;//用户已存在
+int LoginPageHandler::addUser(QString name, QString pswd, int role)
+{
+    int len = globalStorageComponent->getUsersLength();
+    for (int i = 0; i < len; i++)
+    {
+        if (globalStorageComponent->getUserToEdit(i)->username() == name &&
+                globalStorageComponent->getUserToEdit(i)->role() == role)
+            return 0; //用户已存在
     }
-    int newUserId= globalStorageComponent->getAUserId();
+    int newUserId = globalStorageComponent->getAUserId();
     qDebug() << "注册ID" << newUserId;
-    MyUserObj* newUser = new MyUserObj(newUserId, name, pswd, role);
+    MyUserObj *newUser = new MyUserObj(newUserId, name, pswd, role);
     newUser->setModifyStatus(1);
     globalStorageComponent->addAUser(newUser);
     return 1;
 }
-
-
-
-

@@ -47,7 +47,13 @@ Rectangle {
             button2.visible=false;
             break;
         case 130:
-            statusText.text="已进行拆分，招募译者结束";
+            statusText.text="招募译者结束";
+            break;
+        case 140:
+            statusText.text="已拆分";
+            button.enabled=false;
+            button2.visible=false;
+            break;
         }
 
         if (typeOfArticle===2){
@@ -143,53 +149,53 @@ Rectangle {
 
 
     Flickable {
-         id: flick
-         x: 5
-         y: 120
-         width: parent.width-10
-         height: parent.height - 227
-         contentWidth: contentEdit.paintedWidth
-         contentHeight: contentEdit.paintedHeight
-         clip: true
+        id: flick
+        x: 5
+        y: 120
+        width: parent.width-10
+        height: parent.height - 227
+        contentWidth: contentEdit.paintedWidth
+        contentHeight: contentEdit.paintedHeight
+        clip: true
 
-         function ensureVisible(r)
-         {
-             if (contentX >= r.x)
-                 contentX = r.x;
-             else if (contentX+width <= r.x+r.width)
-                 contentX = r.x+r.width-width;
-             if (contentY >= r.y)
-                 contentY = r.y;
-             else if (contentY+height <= r.y+r.height)
-                 contentY = r.y+r.height-height;
-         }
+        function ensureVisible(r)
+        {
+            if (contentX >= r.x)
+                contentX = r.x;
+            else if (contentX+width <= r.x+r.width)
+                contentX = r.x+r.width-width;
+            if (contentY >= r.y)
+                contentY = r.y;
+            else if (contentY+height <= r.y+r.height)
+                contentY = r.y+r.height-height;
+        }
 
-         TextEdit {
-             id: contentEdit
-             width: flick.width
-             height: flick.height
-             focus: true
-             wrapMode: TextEdit.Wrap
-             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
-             selectByMouse: true
-             font{family: "DengXian";pixelSize: 17}
-             property string placeholderText: "在此输入内容"
+        TextEdit {
+            id: contentEdit
+            width: flick.width
+            height: flick.height
+            focus: true
+            wrapMode: TextEdit.Wrap
+            onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+            selectByMouse: true
+            font{family: "DengXian";pixelSize: 17}
+            property string placeholderText: "在此输入内容"
 
 
-             Text {
-                 text: contentEdit.placeholderText
-                 color: stringsPool.textGray3
-                 visible: !contentEdit.text
-                 font{family: "DengXian";pixelSize: 17}
-             }
-             MouseArea {
-                 anchors.fill: parent
-                 cursorShape: Qt.IBeamCursor
-                 onPressed: mouse.accepted=false
-                 onReleased:  mouse.accepted=false
-             }
-         }
-     }
+            Text {
+                text: contentEdit.placeholderText
+                color: stringsPool.textGray3
+                visible: !contentEdit.text
+                font{family: "DengXian";pixelSize: 17}
+            }
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.IBeamCursor
+                onPressed: mouse.accepted=false
+                onReleased:  mouse.accepted=false
+            }
+        }
+    }
     Rectangle {
         color: stringsPool.textGray3
         x:5
@@ -213,8 +219,18 @@ Rectangle {
                 senderEditorRect.articleStatus=100;
                 break;
             case 100:
+                senderPageHandler.editSenderArticle(indexInList, titleEdit.text, contentEdit.text)
+                break;
             case 110:
                 senderPageHandler.editSenderArticle(indexInList, titleEdit.text, contentEdit.text)
+                break;
+            case 120:
+                senderPageHandler.editSenderArticle(indexInList, titleEdit.text, contentEdit.text)
+                break;
+            case 130:
+                senderPageHandler.editSenderArticle(indexInList, titleEdit.text, contentEdit.text)
+                break;
+            case 140:
                 break;
             }
         }
@@ -231,13 +247,13 @@ Rectangle {
         text: qsTr("选择负责人")
         font.family: "DengXian"
         onClicked: {
-             switch (senderEditorRect.articleStatus){
-             case 0:
-             case 100:
-                 senderPageHandler.chooseRegulator(indexInList);
-                 break;
-             }
-         }
+            switch (senderEditorRect.articleStatus){
+            case 0:
+            case 100:
+                senderPageHandler.chooseRegulator(indexInList);
+                break;
+            }
+        }
     }
 
     CheckBox {

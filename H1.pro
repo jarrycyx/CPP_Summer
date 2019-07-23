@@ -28,7 +28,8 @@ SOURCES += \
         loginpagehandler.cpp \
         main.cpp \
         regulatorpagehandler.cpp \
-        senderpagehandler.cpp
+        senderpagehandler.cpp \
+        translatorpagehandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -55,7 +56,8 @@ HEADERS += \
     cppobjs/storageunit.h \
     loginpagehandler.h \
     regulatorpagehandler.h \
-    senderpagehandler.h
+    senderpagehandler.h \
+    translatorpagehandler.h
 
 INCLUDEPATH += $$PWD/cppobjs
 DEPENDPATH += $$PWD/cppobjs

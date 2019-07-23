@@ -22,7 +22,7 @@ ApplicationWindow {
         id: chooseRegulatorDelegate
     }
 
-   //childCont.children:
+    //childCont.children:
     ListView {
         id: chooseRegulatorList
         anchors.fill: parent

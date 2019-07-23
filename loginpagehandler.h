@@ -13,15 +13,15 @@
 #include "cpp-Components/globalcomponents.h"
 #include "senderpagehandler.h"
 #include "regulatorpagehandler.h"
+#include "translatorpagehandler.h"
 
 class LoginPageHandler : public QObject
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-public:
-    explicit LoginPageHandler(GlobalComponents* newGlobalStorageComponent,QObject *parent = nullptr);
+        public : explicit LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent = nullptr);
     ~LoginPageHandler();
     //登录
-    Q_INVOKABLE void loginInit(QString name, QString pswd, int role=1);
+    Q_INVOKABLE void loginInit(QString name, QString pswd, int role = 1);
     //注册
     Q_INVOKABLE void signUp(QString name, QString pswd, int role);
 
@@ -29,13 +29,13 @@ public:
     Q_INVOKABLE int searchUser(QString name, int role);
     Q_INVOKABLE int userLogin(QString name, QString pswd, int role);
 
-
 private:
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;
-    GlobalComponents* globalStorageComponent;
-    SenderPageHandler* newSenderPage;
-    RegulatorPageHandler* newRegulatorPage;
+    GlobalComponents *globalStorageComponent;
+    SenderPageHandler *newSenderPage;
+    RegulatorPageHandler *newRegulatorPage;
+    TranslatorPageHandler *newTranslatorPage;
 
 signals:
     //错误信息信号，向QML发送，使其在界面上显示

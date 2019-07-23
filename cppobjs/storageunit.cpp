@@ -4,11 +4,12 @@ StorageUnit::StorageUnit(int newStatus) : modifyStatus(newStatus)
 {
 }
 
-
-int StorageUnit::getModifyStatus(){
+int StorageUnit::getModifyStatus()
+{
     return modifyStatus;
 }
 
-void StorageUnit::setModifyStatus(int m){
+void StorageUnit::setModifyStatus(int m)
+{
     modifyStatus = m;
 }

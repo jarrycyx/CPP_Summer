@@ -4,7 +4,6 @@
 #include <QVariant>
 #include <QDebug>
 
-
 /*************************************************************************
 【类名】        MyArticleObj
 【功能】        代表文章的类，用于存储数据、修改数据、向服务器同步数据
@@ -17,11 +16,9 @@
 
 /* 备注：本类中article不能改变，只能为未设置状态或已设置状态 */
 
-
-MyArticleObj::MyArticleObj(): StorageUnit (0)
+MyArticleObj::MyArticleObj() : StorageUnit(0)
 {
 }
-
 
 /*************************************************************************
 【函数名称】      MyArticleObj
@@ -30,13 +27,9 @@ MyArticleObj::MyArticleObj(): StorageUnit (0)
 【开发者及日期】   jarrycyx 20190715
 【更改记录】      20190717：删除在构造函数中传入文章数据
 *************************************************************************/
-MyArticleObj::MyArticleObj(const int &sender):
-    StorageUnit (0), sender_id(sender)
+MyArticleObj::MyArticleObj(const int &sender) : StorageUnit(0), sender_id(sender)
 {
 }
-
-
-
 
 /*************************************************************************
 【函数名称】      setNewArticleInfo
@@ -45,15 +38,14 @@ MyArticleObj::MyArticleObj(const int &sender):
 【返回值】        上传到服务器后返回的文章ID
 【开发者及日期】   jarrycyx 20190716
 *************************************************************************/
-int MyArticleObj::setArticleInfo(const int &newId, const QString &title, const QString &content){
-    m_article_id=newId;
-    m_titleOfArticle=title;
-    m_contentOfArticle=content;
+int MyArticleObj::setArticleInfo(const int &newId, const QString &title, const QString &content)
+{
+    m_article_id = newId;
+    m_titleOfArticle = title;
+    m_contentOfArticle = content;
     //m_article_id = addArticleToRemoteDBReturnId();
     return m_article_id;
 }
-
-
 
 /*************************************************************************
 【函数名称】      titleOfArticle等
@@ -67,9 +59,11 @@ QString MyArticleObj::titleOfArticle() const
 
 void MyArticleObj::setTitleOfArticle(const QString &titleOfArticle)
 {
-    if (titleOfArticle != m_titleOfArticle) {
+    if (titleOfArticle != m_titleOfArticle)
+    {
         m_titleOfArticle = titleOfArticle;
-        if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+        if (getModifyStatus() == 0)
+            setModifyStatus(2); //标记为已修改
     }
 }
 QString MyArticleObj::contentOfArticle() const
@@ -79,9 +73,11 @@ QString MyArticleObj::contentOfArticle() const
 
 void MyArticleObj::setContentOfArticle(const QString &contentOfArticle)
 {
-    if (contentOfArticle != m_contentOfArticle) {
+    if (contentOfArticle != m_contentOfArticle)
+    {
         m_contentOfArticle = contentOfArticle;
-        if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+        if (getModifyStatus() == 0)
+            setModifyStatus(2); //标记为已修改
     }
 }
 
@@ -90,48 +86,70 @@ int MyArticleObj::articleIdOfArticle() const
     return m_article_id;
 }
 
-
-void MyArticleObj::setArticleIdOfArticle(const int &id){
-    m_article_id=id;
+void MyArticleObj::setArticleIdOfArticle(const int &id)
+{
+    m_article_id = id;
 }
 
-
-int MyArticleObj::statusCodeOfArticle() const{
+int MyArticleObj::statusCodeOfArticle() const
+{
     return status_code;
 }
 
-int MyArticleObj::setStatusCodeOfArticle(int code){
-    status_code=code;
-    if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+int MyArticleObj::setStatusCodeOfArticle(int code)
+{
+    status_code = code;
+    if (getModifyStatus() == 0)
+        setModifyStatus(2); //标记为已修改
 }
 
-
-int MyArticleObj::regulatorIdOfArticle() const{
+int MyArticleObj::regulatorIdOfArticle() const
+{
     return regulator_id;
 }
-void MyArticleObj::setRegulatorIdOfArticle(const int &regulatorId){
-    if (regulator_id!=regulatorId){
-        regulator_id=regulatorId;
-        if (status_code<110) status_code=110; //如果还没有设置过负责人，则标记为110状态
-        if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+void MyArticleObj::setRegulatorIdOfArticle(const int &regulatorId)
+{
+    if (regulator_id != regulatorId)
+    {
+        regulator_id = regulatorId;
+        if (status_code < 110)
+            status_code = 110; //如果还没有设置过负责人，则标记为110状态
+        if (getModifyStatus() == 0)
+            setModifyStatus(2); //标记为已修改
     }
 }
 
-
-int MyArticleObj::senderIdOfArticle() const{
+int MyArticleObj::senderIdOfArticle() const
+{
     return sender_id;
 }
-int MyArticleObj::setSenderIdOfArticle(int id){
-    sender_id=id;
-    if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+int MyArticleObj::setSenderIdOfArticle(int id)
+{
+    sender_id = id;
+    if (getModifyStatus() == 0)
+        setModifyStatus(2); //标记为已修改
 }
 
-
-int MyArticleObj::originArticleIdOfArticle() const{
+int MyArticleObj::originArticleIdOfArticle() const
+{
     return origin_article_id;
 }
-void MyArticleObj::setOriginArticleIdOfArticle(const int &articleId){
-    origin_article_id=articleId;
-    if (getModifyStatus()==0) setModifyStatus(2);//标记为已修改
+void MyArticleObj::setOriginArticleIdOfArticle(const int &articleId)
+{
+    origin_article_id = articleId;
+    if (getModifyStatus() == 0)
+        setModifyStatus(2); //标记为已修改
 }
 
+
+
+int MyArticleObj::translatorIdOfArticle() const
+{
+    return translator_id;
+}
+void MyArticleObj::setTranslatorIdOfArticle(int id)
+{
+    translator_id = id;
+    if (getModifyStatus() == 0)
+        setModifyStatus(2); //标记为已修改
+}

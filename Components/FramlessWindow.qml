@@ -21,7 +21,7 @@ ApplicationWindow {
         acceptedButtons: Qt.LeftButton
         property point clickPos: "0,0"
         onPressed: {
-             clickPos  = Qt.point(mouse.x,mouse.y)
+            clickPos  = Qt.point(mouse.x,mouse.y)
         }
         onPositionChanged: {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y)
@@ -31,28 +31,28 @@ ApplicationWindow {
     }
 
     Rectangle {
-           id:mainRec
-           width: parent.width-40
-           height: parent.height-40
-           anchors.centerIn: parent
-           clip: true
+        id:mainRec
+        width: parent.width-40
+        height: parent.height-40
+        anchors.centerIn: parent
+        clip: true
     }
 
     DropShadow {
-           anchors.fill: mainRec
-           radius: 20
-           samples: 25
-           color: "#20000000"
-           spread: 0.0
-           source: mainRec
+        anchors.fill: mainRec
+        radius: 20
+        samples: 25
+        color: "#20000000"
+        spread: 0.0
+        source: mainRec
     }
     DropShadow {
-            anchors.fill: mainRec
-            radius: 12.0
-            samples: 25
-            color: "#20000000"
-            spread: 0.0
-            source: mainRec
-        }
+        anchors.fill: mainRec
+        radius: 12.0
+        samples: 25
+        color: "#20000000"
+        spread: 0.0
+        source: mainRec
+    }
 
 }

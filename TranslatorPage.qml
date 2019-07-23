@@ -6,7 +6,7 @@ import "./Components"
 import "./Resources"
 
 ApplicationWindow {
-    property string name: "regulatorpage"
+    property string name: "translatorpage"
 
     id: mainWindow
     objectName: "mainWindow"
@@ -16,14 +16,18 @@ ApplicationWindow {
     title: qsTr("Stack")
     Strings{id: stringsPool}
 
+
     function foldList(){
         editorCover.color="#00000000"
         articlesRect.columnNum=1;
         expandImage.rotation=0;
     }
 
+
+
+
     Connections {
-        target: regulatorPageHandler
+        target: translatorPageHandler
         //开始刷新QML
         onStartRefreshQml: {
             thisBusyIndicator.visible = true;
@@ -33,8 +37,8 @@ ApplicationWindow {
             console.log("refresh");
             thisBusyIndicator.visible = false;
             if (newEditor.visible===false) blankText.visible=true;
-            senderArticlesList.model=senderPageHandler.thisModel;
-            otherArticlesList.model=senderPageHandler.otherModel;
+            translatorArticlesList.model=translatorPageHandler.thisModel;
+            otherArticlesList.model=translatorPageHandler.otherModel;
         }
 
         onSendErrorMessage: {
@@ -62,11 +66,7 @@ ApplicationWindow {
     Rectangle {
         id: root
         anchors.fill: parent
-
-        MiniArticleBlock {
-            id: dragDelegate0
-        }
-
+        z: 1
         ThisUserArticleBlock {
             id: dragDelegate1
         }
@@ -75,11 +75,11 @@ ApplicationWindow {
             id: dragDelegate2
         }
 
-
         RectangularGlow {
             id: effect
             anchors.fill: articlesRect
             glowRadius: 10
+            z: 1
             spread: 0
             color: "#66999999"
             cornerRadius: articlesRect.radius + glowRadius
@@ -87,11 +87,9 @@ ApplicationWindow {
 
         Rectangle {
             property int columnNum: 1
-
-            z: 2
+            z:1
             id: articlesRect
-            width: 350*articlesRect.columnNum-45 + 41 + 41 +12//1133//388
-
+            width: 350*articlesRect.columnNum-45 + 41 + 41 + 8//1133//388
             Behavior on width {
                 NumberAnimation{duration: 150}
             }
@@ -99,17 +97,38 @@ ApplicationWindow {
             height: parent.height
             color: "#f2f2f2"
 
+            Rectangle {
+                color: "#f2f2f2"
+                x:0
+                y:0
+                z:0.5
+                width:388
+                height: 77
+            }
+
+            Rectangle {
+                color: stringsPool.textGray3
+                x:41
+                y:76
+                z:0.5
+                width: 350*articlesRect.columnNum-45
+                height: 1
+            }
+
             ScrollView{
                 width: articlesRect.width - 24
-                height: parent.height
-                ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-                contentHeight: senderArticlesList.height + 47 + otherArticlesList.height + 47
+                height: parent.height-77
+                clip: true
+                y: 77
+                ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                contentHeight: translatorArticlesList.height + 47 + otherArticlesList.height + 47
                 //z:0.2
 
                 Text{
-                    text: qsTr("我负责的文章和子任务")
+                    text: qsTr("我发布的文章")
                     x: 41
-                    y: 27
+                    y: 16
                     //z:0.3
                     width: 261
                     height: 18
@@ -125,7 +144,7 @@ ApplicationWindow {
                     x: 41-15
                     y: 43
                     height: contentHeight + 40
-                    model: regulatorSubarticleList
+                    model: translatorSubarticleList
                     delegate: dragDelegate0
                     cellWidth: 350
                     cellHeight: 92
@@ -133,27 +152,10 @@ ApplicationWindow {
                     currentIndex: -1
                 }
 
-                GridView{
-                    property int flag: 1
-                    interactive: false
-                    id: senderArticlesList
-                    width: parent.width
-                    x: 41-15
-                    y: senderSubarticlesList.height + 22
-                    height: contentHeight + 40
-                    model: regulatorArticleList
-                    delegate: dragDelegate1
-                    cellWidth: 350
-                    cellHeight: 227
-                    cacheBuffer: 50
-                    currentIndex: -1
-                }
-
-
                 Text{
-                    text: qsTr("其他正在招募负责人的文章")
+                    text: qsTr("其他正在招募的文章")
                     x: 41
-                    y: senderArticlesList.height + senderSubarticlesList.height + 41
+                    y: senderSubarticlesList.height + 16 + 30
                     //z:0.3
                     width: 261
                     height: 18
@@ -166,22 +168,61 @@ ApplicationWindow {
                     interactive: false
                     id: otherArticlesList
                     width: parent.width
-                    x: 41 - 15
-                    y: senderArticlesList.height + senderSubarticlesList.height + 41
+                    x:41-15
+                    y: senderSubarticlesList.height + 32 + 30
                     height: contentHeight+40
-                    model: allSeekingRegulatorArticle
+                    model: allSeekingTranslatorArticle
                     delegate: dragDelegate2
+                    currentIndex: -1
+
                     cellWidth: 350
                     cellHeight: 227
+
                     cacheBuffer: 50
-                    currentIndex: -1
-                }
-                Rectangle{
-                    x: 41 - 15
-                    y: senderArticlesList.height + senderSubarticlesList.height + 41 + otherArticlesList.height
-                    height: 100
+
                 }
 
+            }
+
+            Rectangle {
+                x: 41
+                y: 21
+                z:1
+                width: 305
+                height: 48
+                color: "#f2f2f2"
+                ToolButton {
+                    id: toolButton
+                    x: 0
+                    y: 0
+                    anchors.fill: parent
+                    Text{
+                        x: 60
+                        y: 13
+                        height: 22
+                        text: qsTr("新的文章需求")
+                        font{
+                            family: "DengXian";
+                            pixelSize: 22
+                        }
+                    }
+                    onClicked: {
+                        newEditor.addAnArticle();
+                        translatorArticlesList.currentIndex=-1;
+                        otherArticlesList.currentIndex=-1;
+                    }
+                }
+
+                Image {
+                    id: borderImage
+                    x: 8
+                    y: 8
+                    width: 32
+                    height: 32
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                    source: "Resources/add.svg"
+                }
             }
 
             ToolButton {
@@ -212,7 +253,7 @@ ApplicationWindow {
 
         }
 
-        RegulatorViewer {
+        TranslatorEditor {
             x: 388+30
             y: 30
             z: 0
@@ -240,7 +281,7 @@ ApplicationWindow {
             visible: true
             y: (mainWindow.height-80)/2
             x: (mainWindow.width-388-160)/2+388
-            text: "可以在左侧查看翻译需求"
+            text: "可以在左侧查看或添加翻译需求"
             color: stringsPool.textGray2
             width: 160
             height: 80
@@ -254,6 +295,7 @@ ApplicationWindow {
 
 
     }
+
 
 
     Image {
@@ -286,4 +328,5 @@ ApplicationWindow {
             anchors.centerIn: parent
         }
     }
+
 }

@@ -14,7 +14,7 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents* newGlobal, QObject *parent)
+SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent)
     : QObject(parent), senderArticleList(1), allUserArticleList(2), thisUserId(senderId)
 {
 
@@ -27,29 +27,30 @@ SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents* newGlobal, 
 【函数功能】  析构函数，删除动态分配的内存
 【开发者及日期】    jarrycyx 20190718
 *************************************************************************/
-SenderPageHandler::~SenderPageHandler(){
-
+SenderPageHandler::~SenderPageHandler()
+{
 }
 
-
-void SenderPageHandler::startLoadingSenderArticleList(int userId){
+void SenderPageHandler::startLoadingSenderArticleList(int userId)
+{
     senderArticleList.removeAllArticles();
     allUserArticleList.removeAllArticles();
 
     qDebug() << "sender" << userId;
-    int len=globalStorageComponent->getArticlesLength();
-    for (int i=0;i<len;i++){
+    int len = globalStorageComponent->getArticlesLength();
+    for (int i = 0; i < len; i++)
+    {
         qDebug() << "sender article";
-        if (globalStorageComponent->getArticleToEdit(i)->senderIdOfArticle()==userId)
+        if (globalStorageComponent->getArticleToEdit(i)->senderIdOfArticle() == userId)
             senderArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
-        allUserArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+        if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
+            allUserArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
     }
 }
 
-
-
-void SenderPageHandler::addSenderArticle(QString title, QString content){
-    MyArticleObj* newSenderArticle = new MyArticleObj(thisUserId);
+void SenderPageHandler::addSenderArticle(QString title, QString content)
+{
+    MyArticleObj *newSenderArticle = new MyArticleObj(thisUserId);
     newSenderArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), title, content);
     newSenderArticle->setStatusCodeOfArticle(100);
     newSenderArticle->setModifyStatus(1);
@@ -61,21 +62,19 @@ void SenderPageHandler::addSenderArticle(QString title, QString content){
     emit sendSuccessMessage("文章已上传");
 }
 
-
-
-void SenderPageHandler::editSenderArticle(int index, QString title, QString content){
+void SenderPageHandler::editSenderArticle(int index, QString title, QString content)
+{
     //由于数据实体只保存一份，只需编辑一处即可
     senderArticleList.editAnArticle(index, title, content);
 
     emit sendSuccessMessage("已保存");
 }
 
-void SenderPageHandler::deleteSenderArticle(int index){
+void SenderPageHandler::deleteSenderArticle(int index)
+{
     senderArticleList.deleteAnArticle(index);
     emit sendSuccessMessage("已删除");
 }
-
-
 
 /*************************************************************************
 【函数名称】  startPage
@@ -84,9 +83,10 @@ void SenderPageHandler::deleteSenderArticle(int index){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
+void SenderPageHandler::startPage(QQmlApplicationEngine *engine)
+{
     thisEngine = engine;
-    QQmlContext *thisContext=engine->rootContext();
+    QQmlContext *thisContext = engine->rootContext();
     thisContext->setContextProperty("senderPageHandler", this);
     thisContext->setContextProperty("senderArticleList", &senderArticleList);
     thisContext->setContextProperty("allUserArticleList", &allUserArticleList);
@@ -102,7 +102,6 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190716
 *************************************************************************/
-
 
 /*************************************************************************
 【函数名称】  addAnArticle
@@ -127,23 +126,26 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
-Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index){
+Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index)
+{
     loadArticleRegulatorData(senderArticleList.getArticle(index)->articleIdOfArticle());
-    currentInViewIndex=index;
+    currentInViewIndex = index;
     const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
     thisEngine->load(url);
 }
 
-
-void SenderPageHandler::loadArticleRegulatorData(int articleId){
+void SenderPageHandler::loadArticleRegulatorData(int articleId)
+{
     qDebug() << "choose" << articleId;
 
     requestUserList.removeAllRequestUsers();
     int numOfRequest = globalStorageComponent->getRequestsLength();
-    for (int i=0;i<numOfRequest;i++){
-        MyRequestObj* getRequest = globalStorageComponent->getRequest(i);
-        if (getRequest->getArticleId()==articleId && getRequest->getType()==1){
-            MyUserObj* requestUser = globalStorageComponent->searchUserById(getRequest->getUserId());
+    for (int i = 0; i < numOfRequest; i++)
+    {
+        MyRequestObj *getRequest = globalStorageComponent->getRequest(i);
+        if (getRequest->getArticleId() == articleId && getRequest->getType() == 1)
+        {
+            MyUserObj *requestUser = globalStorageComponent->searchUserById(getRequest->getUserId());
             requestUserList.addARequestUser(requestUser);
         }
     }
@@ -156,13 +158,12 @@ void SenderPageHandler::loadArticleRegulatorData(int articleId){
 【返回值】   无
 【开发者及日期】    jarrycyx 20190717
 *************************************************************************/
-Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx){
-    MyArticleObj* articleToChoose = senderArticleList.getArticle(currentInViewIndex);
+Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
+{
+    MyArticleObj *articleToChoose = senderArticleList.getArticle(currentInViewIndex);
     articleToChoose->setRegulatorIdOfArticle(requestUserList.getRequestUser(idx)->userId());
     articleToChoose->setStatusCodeOfArticle(110);
     senderArticleList.editAnArticle(currentInViewIndex);
 
-
     emit sendSuccessMessage("已确定负责人");
 }
-

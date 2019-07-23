@@ -204,8 +204,8 @@ ApplicationWindow {
         y: 44
         text: "3"
         onClicked: {
-            loginModel.get(0).textInEdit="sender1";
-            loginModel.get(1).textInEdit="sender1";
+            loginModel.get(0).textInEdit="translator1";
+            loginModel.get(1).textInEdit="translator1";
             selectRoleBox.currentIndex=2;
         }
     }

@@ -67,10 +67,13 @@ ApplicationWindow {
         id: root
         anchors.fill: parent
         z: 1
-        ArticleBlock {
-            id: dragDelegate
+        ThisUserArticleBlock {
+            id: dragDelegate1
         }
 
+        OtherUserArticleBlock {
+            id: dragDelegate2
+        }
 
         RectangularGlow {
             id: effect
@@ -142,7 +145,8 @@ ApplicationWindow {
                     y: 32
                     height: contentHeight + 40
                     model: senderArticleList
-                    delegate: dragDelegate
+                    delegate: dragDelegate1
+                    currentIndex: -1
 
                     cellWidth: 350
                     cellHeight: 227
@@ -169,7 +173,8 @@ ApplicationWindow {
                     y: senderArticlesList.height + 32 + 30
                     height: contentHeight+40
                     model: allUserArticleList
-                    delegate: dragDelegate
+                    delegate: dragDelegate2
+                    currentIndex: -1
 
                     cellWidth: 350
                     cellHeight: 227
@@ -296,22 +301,22 @@ ApplicationWindow {
 
     Image {
         id: messageBoxImg
-        x: (mainWindow.width-width)/2
+        x: (mainWindow.width-160)/2
         y: -40
         z: 10
         height: 35
-        width: 130
+        width: messageText.width+30
         sourceSize.height: 35
-        sourceSize.width: 130
+        sourceSize.width: messageText.width+30
         source: "Resources/messagebox.svg"
 
         SequentialAnimation {
-               id: messageBoxAnimation
-               running: false
-               NumberAnimation { target: messageBoxImg; property: "y"; to: 0; duration: 200 }
-               PauseAnimation { duration: 1000 }
-               NumberAnimation { target: messageBoxImg; property: "y"; to: -40; duration: 200 }
-           }
+            id: messageBoxAnimation
+            running: false
+            NumberAnimation { target: messageBoxImg; property: "y"; to: 0; duration: 200 }
+            PauseAnimation { duration: 2000 }
+            NumberAnimation { target: messageBoxImg; property: "y"; to: -40; duration: 200 }
+        }
 
         Text {
             id: messageText
@@ -321,23 +326,8 @@ ApplicationWindow {
                 family: "DengXian";
                 pixelSize: 16
             }
-            x: (130 - width)/2
-            y: (35 - height)/2
+            anchors.centerIn: parent
         }
     }
-
-    Image {
-        id: deleteImg
-        x: mainWindow.width-68-120
-        y: (mainWindow.height-120)/2
-        z: 10
-        height: 120
-        width: 120
-        sourceSize.height: 120
-        sourceSize.width: 120
-        source: "Resources/delete.svg"
-        visible: false
-    }
-
 
 }

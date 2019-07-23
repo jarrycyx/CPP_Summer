@@ -1,7 +1,6 @@
 #ifndef STORAGEUNIT_H
 #define STORAGEUNIT_H
 
-
 class StorageUnit
 {
 public:

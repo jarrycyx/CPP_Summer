@@ -47,10 +47,13 @@ Component {
 
             console.log("r"+ListView.delegate+ListView.flag);
 
-            if (statusCodeOfArticle/100!==2)
+            if (typeof senderArticlesList!=='undefined')
                 senderArticlesList.currentIndex=indexOfThisDelegate;
-            else senderSubarticlesList.currentIndex=indexOfThisDelegate;
-            otherArticlesList.currentIndex=indexOfThisDelegate;
+            if (typeof otherArticlesList!=='undefined')
+                otherArticlesList.currentIndex=-1;
+            if (typeof senderSubarticlesList!=='undefined')
+                senderSubarticlesList.currentIndex=-1;
+
             content.changeStatus(2);
             newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle,
                                           statusCodeOfArticle, indexOfThisDelegate, typeOfList);
@@ -74,11 +77,9 @@ Component {
             content.changeStatus(4);
         }
 
-
-
         LightBlock {
             id: content
-            height: statusCodeOfArticle/100!==2 ? 197 : 76
+            height: 197
             width: 305
             outsideColor: "#00f2f2f2"
             anchors {
@@ -91,33 +92,33 @@ Component {
                 ColorAnimation { duration: 100 }
             }
             states: [State {
-                when: dragArea.held
-                ParentChange { target: content; parent: root }
-                AnchorChanges {
-                    target: content
-                    anchors { horizontalCenter: undefined; verticalCenter: undefined }
-                }
-            },State {
-                 when: dragArea.released&&dragArea.movedToTarget
-                 //ParentChange { target: content; parent: rect }
-            }]
+                    when: dragArea.held
+                    ParentChange { target: content; parent: root }
+                    AnchorChanges {
+                        target: content
+                        anchors { horizontalCenter: undefined; verticalCenter: undefined }
+                    }
+                },State {
+                    when: dragArea.released&&dragArea.movedToTarget
+                    //ParentChange { target: content; parent: rect }
+                }]
             childCont.children:  [
                 Image {
                     id: borderImage
-                    x: statusCodeOfArticle/100!==2 ? 112 : 12
-                    y: statusCodeOfArticle/100!==2 ? 32 : 13
-                    width: statusCodeOfArticle/100!==2 ? 80 : 50
-                    height: statusCodeOfArticle/100!==2 ? 80 : 50
-                    sourceSize.width: statusCodeOfArticle/100!==2 ? 80 : 50
-                    sourceSize.height: statusCodeOfArticle/100!==2 ? 80 : 50
+                    x: 112
+                    y: 32
+                    width: 80
+                    height: 80
+                    sourceSize.width: 80
+                    sourceSize.height: 80
                     source: "../Resources/status-code/"+statusCodeOfArticle+".svg"
                 },
                 Text{
                     id: titleText
                     text: titleOfArticle+"/"+statusCodeOfArticle
-                    x: statusCodeOfArticle/100!==2 ? 21 : 73
-                    y: statusCodeOfArticle/100!==2 ? 127 : 16
-                    width: statusCodeOfArticle/100!==2 ? 261 : 210
+                    x: 21
+                    y: 127
+                    width: 261
                     elide: Text.ElideRight
                     height: 14
                     color: stringsPool.textGray1
@@ -129,9 +130,9 @@ Component {
                 Text{
                     id: previewText
                     text: contentOfArticle
-                    x: statusCodeOfArticle/100!==2 ? 21 : 73
-                    y: statusCodeOfArticle/100!==2 ? 150 : 33
-                    width: statusCodeOfArticle/100!==2 ? 261 : 210
+                    x: 21
+                    y: 150
+                    width: 261
                     height: 24
                     wrapMode: Text.WrapAnywhere
                     color: stringsPool.textGray3
