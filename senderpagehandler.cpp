@@ -90,7 +90,7 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine)
     thisContext->setContextProperty("senderPageHandler", this);
     thisContext->setContextProperty("senderArticleList", &senderArticleList);
     thisContext->setContextProperty("allUserArticleList", &allUserArticleList);
-    thisContext->setContextProperty("regulatorListModel", &requestUserList);
+    thisContext->setContextProperty("userListModel", &requestUserList);
     const QUrl url1(QStringLiteral("qrc:/SenderPage.qml"));
     engine->load(url1);
 }
@@ -130,7 +130,7 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index)
 {
     loadArticleRegulatorData(senderArticleList.getArticle(index)->articleIdOfArticle());
     currentInViewIndex = index;
-    const QUrl url(QStringLiteral("qrc:/ChooseRegulatorMiniPage.qml"));
+    const QUrl url(QStringLiteral("qrc:/ChooseUserMiniPage.qml"));
     thisEngine->load(url);
 }
 

@@ -26,6 +26,10 @@ QVariant ArticlesList::data(const QModelIndex &index, int role) const
         return articles.at(index.row())->statusCodeOfArticle();
     case 4:
         return typeOfThisList;
+    case 5:
+        return articles.at(index.row())->translatedTitle();
+    case 6:
+        return articles.at(index.row())->translatedContent();
     }
 }
 
@@ -36,6 +40,8 @@ QHash<int, QByteArray> ArticlesList::roleNames() const
     roles[2] = "contentOfArticle";
     roles[3] = "statusCodeOfArticle";
     roles[4] = "typeOfList";
+    roles[5] = "translatedTitle";
+    roles[6] = "translatedContent";
     return roles;
 }
 

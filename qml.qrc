@@ -15,8 +15,7 @@
         <file>Components/SenderEditor.qml</file>
         <file>Components/EditLightBox.qml</file>
         <file>Resources/user-default.svg</file>
-        <file>Components/ChooseRegulatorDelegate.qml</file>
-        <file>ChooseRegulatorMiniPage.qml</file>
+        <file>ChooseUserMiniPage.qml</file>
         <file>Resources/refresh.svg</file>
         <file>RegulatorPage.qml</file>
         <file>Components/RegulatorViewer.qml</file>
@@ -38,5 +37,7 @@
         <file>Components/MiniArticleBlock.qml</file>
         <file>Components/TranslatorEditor.qml</file>
         <file>TranslatorPage.qml</file>
+        <file>Components/ChooseUserDelegate.qml</file>
+        <file>RegulatorCommentDialog.qml</file>
     </qresource>
 </RCC>

@@ -52,12 +52,14 @@ void TranslatorPageHandler::startLoadingTranslatorArticleList(int userId)
     }
 }
 
-Q_INVOKABLE void TranslatorPageHandler::editArticle(int index, QString title, QString content)
+Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString tTitle, QString tContent)
 {
     qDebug() << "save" << index;
-    translatorSubarticleList.editAnArticle(index, title, content);
+    translatorSubarticleList.getArticle(index)->setTranslatedTitle(tTitle);
+    translatorSubarticleList.getArticle(index)->setTranslatedContent(tContent);
+    translatorSubarticleList.editAnArticle(index);
 
-    emit sendSuccessMessage("已保存");
+    emit sendSuccessMessage("译文已保存");
 }
 
 Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)

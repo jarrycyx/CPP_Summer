@@ -1,0 +1,42 @@
++-------------+------------------+------+-----+---------+----------------+
+| Field       | Type             | Null | Key | Default | Extra          |
++-------------+------------------+------+-----+---------+----------------+
+| article_id  | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| title       | tinytext         | YES  |     | NULL    |                |
+| content     | longtext         | YES  |     | NULL    |                |
+| create_time | datetime         | YES  |     | NULL    |                |
+| sender      | tinytext         | YES  |     | NULL    |                |
+| regulator   | int(11)          | YES  |     | NULL    |                |
+| translator  | int(11)          | YES  |     | NULL    |                |
+| curr_status | int(11)          | YES  |     | NULL    |                |
+| origin      | int(11)          | YES  |     | NULL    |                |
+| t_title     | tinytext         | YES  |     | NULL    |                |
+| t_content   | longtext         | YES  |     | NULL    |                |
++-------------+------------------+------+-----+---------+----------------+
+11 rows in set (0.01 sec)
+
+
++-------------+------------------+------+-----+---------+----------------+
+| Field       | Type             | Null | Key | Default | Extra          |
++-------------+------------------+------+-----+---------+----------------+
+| user_id     | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| user_type   | tinyint(4)       | YES  |     | NULL    |                |
+| user_name   | tinytext         | YES  |     | NULL    |                |
+| create_time | datetime         | YES  |     | NULL    |                |
+| password    | tinytext         | YES  |     | NULL    |                |
+| role        | int(11)          | YES  |     | NULL    |                |
++-------------+------------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+
++------------+------------------+------+-----+---------+----------------+
+| Field      | Type             | Null | Key | Default | Extra          |
++------------+------------------+------+-----+---------+----------------+
+| request_id | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| user_id    | int(11)          | YES  |     | NULL    |                |
+| article_id | int(11)          | YES  |     | NULL    |                |
+| time       | datetime         | YES  |     | NULL    |                |
+| content    | tinytext         | YES  |     | NULL    |                |
+| type       | int(11)          | YES  |     | NULL    |                |
++------------+------------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)

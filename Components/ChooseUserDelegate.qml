@@ -14,7 +14,10 @@ Component{
         ToolButton{
             anchors.fill:parent
             onClicked: {
-                senderPageHandler.regulatorChosen(mainRectInChoose.indexOfThisDelegate);
+                if (typeof senderPageHandler!=='undefined')
+                    senderPageHandler.regulatorChosen(mainRectInChoose.indexOfThisDelegate);
+                if (typeof regulatorPageHandler!=='undefined')
+                    regulatorPageHandler.translatorChosen(mainRectInChoose.indexOfThisDelegate);
                 chooseRegulatorWindow.close();
             }
         }

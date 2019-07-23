@@ -41,7 +41,7 @@ Component {
                 senderSubarticlesList.currentIndex=-1;
 
             content.changeStatus(2);
-            newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle,
+            newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, translatedTitle, translatedContent,
                                           statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
         }

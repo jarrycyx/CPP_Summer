@@ -153,3 +153,27 @@ void MyArticleObj::setTranslatorIdOfArticle(int id)
     if (getModifyStatus() == 0)
         setModifyStatus(2); //标记为已修改
 }
+
+
+
+QString MyArticleObj::translatedTitle() const
+{
+    return m_translatedTitle;
+}
+void MyArticleObj::setTranslatedTitle(QString newTitle)
+{
+    m_translatedTitle = newTitle;
+    if (getModifyStatus() == 0)
+        setModifyStatus(2); //标记为已修改
+}
+
+QString MyArticleObj::translatedContent() const
+{
+    return m_translatedContent;
+}
+void MyArticleObj::setTranslatedContent(QString newContent)
+{
+    m_translatedContent = newContent;
+    if (getModifyStatus() == 0)
+        setModifyStatus(2); //标记为已修改
+}

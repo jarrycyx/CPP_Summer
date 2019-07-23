@@ -22,7 +22,9 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
         qDebug() << "open";
         query = new QSqlQuery(db);
 
-        query->exec(QString("SELECT article_id,title,content,create_time,sender,regulator,translator,curr_status,origin from articles"));
+        query->exec(QString("SELECT article_id,title,content,create_time,sender,"
+                            "regulator,translator,curr_status,origin,t_title,t_content "
+                            "from articles"));
         while (query->next())
         {
             MyArticleObj *articleFromDB = new MyArticleObj();
@@ -32,6 +34,8 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
             articleFromDB->setTranslatorIdOfArticle(query->value(6).toInt());
             articleFromDB->setStatusCodeOfArticle(query->value(7).toInt());
             articleFromDB->setOriginArticleIdOfArticle(query->value(8).toInt());
+            articleFromDB->setTranslatedTitle(query->value(9).toString());
+            articleFromDB->setTranslatedContent(query->value(10).toString());
 
             articleFromDB->setModifyStatus(0);
 
@@ -44,10 +48,10 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
         while (query->next())
         {
             MyUserObj *userFromDB = new MyUserObj(
-                query->value(0).toInt(),
-                query->value(1).toString(),
-                query->value(3).toString(),
-                query->value(4).toInt());
+                        query->value(0).toInt(),
+                        query->value(1).toString(),
+                        query->value(3).toString(),
+                        query->value(4).toInt());
             allUsers.append(userFromDB);
 
             if (query->value(0).toInt() > biggestUserId)
@@ -58,10 +62,10 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
         while (query->next())
         {
             MyRequestObj *requestFromDB = new MyRequestObj(
-                query->value(0).toInt(),
-                query->value(1).toInt(),
-                query->value(2).toInt(),
-                query->value(4).toInt());
+                        query->value(0).toInt(),
+                        query->value(1).toInt(),
+                        query->value(2).toInt(),
+                        query->value(4).toInt());
             allRequests.append(requestFromDB);
 
             if (query->value(0).toInt() > biggestRequestId)
@@ -86,30 +90,37 @@ void GlobalComponents::uploadAllData()
         {
             qDebug() << "added article";
             query->exec(QString("insert into articles "
-                                "(title,content,create_time,sender,regulator,translator,curr_status,article_id,origin) values "
-                                "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7, %8)")
-                            .arg(allArticles[i]->titleOfArticle())
-                            .arg(allArticles[i]->contentOfArticle())
-                            .arg(allArticles[i]->senderIdOfArticle())
-                            .arg(allArticles[i]->regulatorIdOfArticle())
-                            .arg(allArticles[i]->translatorIdOfArticle())
-                            .arg(allArticles[i]->statusCodeOfArticle())
-                            .arg(allArticles[i]->articleIdOfArticle())
-                            .arg(allArticles[i]->originArticleIdOfArticle()));
+                                "(title,content,create_time,sender,regulator,translator,"
+                                "curr_status,article_id,origin,t_title,t_content) "
+                                "values "
+                                "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7, %8, %9, %10)")
+                        .arg(allArticles[i]->titleOfArticle())
+                        .arg(allArticles[i]->contentOfArticle())
+                        .arg(allArticles[i]->senderIdOfArticle())
+                        .arg(allArticles[i]->regulatorIdOfArticle())
+                        .arg(allArticles[i]->translatorIdOfArticle())
+                        .arg(allArticles[i]->statusCodeOfArticle())
+                        .arg(allArticles[i]->articleIdOfArticle())
+                        .arg(allArticles[i]->originArticleIdOfArticle())
+                        .arg(allArticles[i]->translatedTitle())
+                        .arg(allArticles[i]->translatedContent()));
         }
         else if (modifyStat == 2)
         {
             qDebug() << "modified article";
             query->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, "
-                                "regulator=%4, translator=%5, curr_status=%6, origin=%7 WHERE article_id=%8")
-                            .arg(allArticles[i]->titleOfArticle())
-                            .arg(allArticles[i]->contentOfArticle())
-                            .arg(allArticles[i]->senderIdOfArticle())
-                            .arg(allArticles[i]->regulatorIdOfArticle())
-                            .arg(allArticles[i]->translatorIdOfArticle())
-                            .arg(allArticles[i]->statusCodeOfArticle())
-                            .arg(allArticles[i]->originArticleIdOfArticle())
-                            .arg(allArticles[i]->articleIdOfArticle()));
+                                "regulator=%4, translator=%5, curr_status=%6, origin=%7, t_title=\"%8\", t_content=\"%9\" "
+                                "WHERE article_id=%10")
+                        .arg(allArticles[i]->titleOfArticle())
+                        .arg(allArticles[i]->contentOfArticle())
+                        .arg(allArticles[i]->senderIdOfArticle())
+                        .arg(allArticles[i]->regulatorIdOfArticle())
+                        .arg(allArticles[i]->translatorIdOfArticle())
+                        .arg(allArticles[i]->statusCodeOfArticle())
+                        .arg(allArticles[i]->originArticleIdOfArticle())
+                        .arg(allArticles[i]->translatedTitle())
+                        .arg(allArticles[i]->translatedContent())
+                        .arg(allArticles[i]->articleIdOfArticle()));
         }
         else if (modifyStat == 3)
         {
@@ -128,19 +139,19 @@ void GlobalComponents::uploadAllData()
             query->exec(QString("insert into users "
                                 "(user_id,user_name,create_time,password,role) values "
                                 "(%1, \"%2\", NOW(), \"%3\", %4)")
-                            .arg(allUsers[i]->userId())
-                            .arg(allUsers[i]->username())
-                            .arg(allUsers[i]->password())
-                            .arg(allUsers[i]->role()));
+                        .arg(allUsers[i]->userId())
+                        .arg(allUsers[i]->username())
+                        .arg(allUsers[i]->password())
+                        .arg(allUsers[i]->role()));
         }
         else if (modifyStat == 2)
         {
             qDebug() << "modified user";
             query->exec(QString("UPDATE users SET user_name=\"%2\" ,password=\"%3\", role=%4 WHERE user_id=%1")
-                            .arg(allUsers[i]->userId())
-                            .arg(allUsers[i]->username())
-                            .arg(allUsers[i]->password())
-                            .arg(allUsers[i]->role()));
+                        .arg(allUsers[i]->userId())
+                        .arg(allUsers[i]->username())
+                        .arg(allUsers[i]->password())
+                        .arg(allUsers[i]->role()));
         }
     }
 
@@ -155,10 +166,10 @@ void GlobalComponents::uploadAllData()
                                 "(request_id, user_id, article_id, time, content, type) "
                                 "values "
                                 "(%1, %2, %3, NOW(), \"\", %4)")
-                            .arg(allRequests[i]->getRequestId())
-                            .arg(allRequests[i]->getUserId())
-                            .arg(allRequests[i]->getArticleId())
-                            .arg(allRequests[i]->getType()));
+                        .arg(allRequests[i]->getRequestId())
+                        .arg(allRequests[i]->getUserId())
+                        .arg(allRequests[i]->getArticleId())
+                        .arg(allRequests[i]->getType()));
         }
     }
 }

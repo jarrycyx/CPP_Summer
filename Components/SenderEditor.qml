@@ -14,7 +14,8 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
-    function editOrViewAnArticle(title, content, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
+    function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){
+        //type: 1,自己的需求 2,别人的需求
         mode=1;
         blankText.visible=false;
         visible=true;

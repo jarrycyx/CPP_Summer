@@ -11,6 +11,7 @@
 #include <QSqlQuery>
 #include <QAbstractListModel>
 
+#include "cpp-Components/requestuserlist.h"
 #include "cpp-Components/globalcomponents.h"
 
 /* 发送者页面后台处理程序
@@ -36,11 +37,16 @@ class RegulatorPageHandler : public QObject
     Q_INVOKABLE void startRecruitingTranslatorForArticle(int index);
     Q_INVOKABLE void editArticle(int index, QString title, QString content);
     Q_INVOKABLE void stopRecruitingTranslatorForArticle(int index);
+    Q_INVOKABLE void chooseTranslator(int index);
+    //从QML唤起的选择译者函数
+    Q_INVOKABLE void translatorChosen(int idx);
+    Q_INVOKABLE void commentToTranslator(int idx, QString comment);
 
-    void loadArticleRegulatorData(int articleId);
+    void loadArticleTranslatorData(int originArticleId);
 
 private:
     ArticlesList regulatorSubarticleList, regulatorArticleList, allSeekingRegulatorArticle;
+    RequestUserList translatorList;
 
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
     QQmlApplicationEngine *thisEngine;

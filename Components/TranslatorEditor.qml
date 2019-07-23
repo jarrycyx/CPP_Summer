@@ -12,9 +12,19 @@ Rectangle {
     property int mode: 0 //0: new 1:edit/view
     property int articleStatus: 0
     property int indexInList: -1
+
+    property string thisTitle
+    property string thisContent
+    property string thisTrTitle
+    property string thisTrContent
+
     id: translatorEditorRect
 
-    function editOrViewAnArticle(title, content, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
+    function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
+        thisTitle=title;
+        thisContent=content;
+        thisTrTitle=translatedTitle;
+        thisTrContent=translatedContent;
         mode=1;
         blankText.visible=false;
         visible=true;
@@ -30,6 +40,7 @@ Rectangle {
             button.text="报名";
             button2.visible=false;
             element.text="翻译需求详情";
+            button3.visible=false;
             break;
         case 130:
             statusText.text="招募译者结束，即将拆分";
@@ -37,6 +48,7 @@ Rectangle {
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的翻译需求";
+            button3.visible=false;
             break;
         case 140:
             statusText.text="已被拆分，等待分配子任务";
@@ -44,12 +56,19 @@ Rectangle {
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的翻译需求（已拆分为子任务）";
+            button3.visible=false;
             break;
         case 210:
             statusText.text="子任务已分配译者";
             button.text="上传";
             button2.visible=false;
             element.text="我负责的子任务";
+            button3.visible=true;
+            titleEdit.text=translatedTitle;
+            contentEdit.text=translatedContent;
+            //contentEdit.text="Translated content for" + content + Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd");
+            //titleEdit.text="Translated Subtitle";
+            break;
         }
 
         if (typeOfArticle===2){//如果是查看其他文章
@@ -201,7 +220,10 @@ Rectangle {
             case 120:
                 translatorPageHandler.signForTranslatorArticle(indexInList);
                 break;
-
+            case 210://两种代号情况下都可以修改译文
+            case 220:
+                translatorPageHandler.editTranslatedArticle(indexInList, titleEdit.text, contentEdit.text);
+                break;
             }
         }
 
@@ -252,4 +274,33 @@ Rectangle {
             pixelSize: 16
         }
     }
+
+    Button {
+        id: button3
+        x: parent.width-5-120
+        y: parent.height-13-40
+        visible: false;
+        width: 120
+        height: 40
+        text: qsTr("查看原文")
+        font.family: "DengXian"
+        onClicked: {
+            if (text==="查看原文"){
+                thisTrTitle=titleEdit.text;
+                thisTrContent=contentEdit.text;
+                titleEdit.text=thisTitle;
+                contentEdit.text=thisContent;
+                titleEdit.enabled=false;
+                contentEdit.enabled=false;
+                text="查看译文";
+            } else {
+                titleEdit.text=thisTrTitle;
+                contentEdit.text=thisTrContent;
+                titleEdit.enabled=true;
+                contentEdit.enabled=true;
+                text="查看原文";
+            }
+        }
+    }
+
 }

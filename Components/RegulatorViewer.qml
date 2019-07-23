@@ -14,7 +14,18 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
-    function editOrViewAnArticle(title, content, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
+    property string thisTitle
+    property string thisContent
+    property string thisTrTitle
+    property string thisTrContent
+
+    function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){
+        //type: 1,自己的需求 2,别人的需求
+        thisTitle=title;
+        thisContent=content;
+        thisTrTitle=translatedTitle;
+        thisTrContent=translatedContent;
+
         mode=1;
         blankText.visible=false;
         visible=true;
@@ -29,6 +40,7 @@ Rectangle {
             element.text="翻译需求详情";
             button.text="报名";
             button2.visible=false;
+            button3.visible=false;
             break;
         case 110:
             statusText.text="已标记负责人，招募负责人结束";
@@ -36,6 +48,7 @@ Rectangle {
             button.text="保存";
             button2.visible=true;
             button2.text="开始招募译者";
+            button3.visible=false;
             break;
         case 120:
             statusText.text="开始招募译者";
@@ -43,25 +56,37 @@ Rectangle {
             button.text="停止招募";
             button2.visible=false;
             element.text="翻译需求详情";
+            button3.visible=false;
             break;
         case 130:
             statusText.text="招募译者结束，即将分配任务";
             button.text="自动拆分";
             button2.visible=false;
             element.text="我负责的翻译需求";
+            button3.visible=false;
             break;
         case 140:
             statusText.text="已被拆分，请查看子任务";
             button.text="已拆分";
             button.enabled=false;
             button2.visible=false;
-            element.text="我负责的翻译需求（已拆分为子任务）";
+            element.text="我负责的任务（已拆分为子任务）";
+            button3.visible=false;
             break;
         case 200:
             statusText.text="子任务已创建，等待分配译者";
             button.text="分配任务";
             button2.visible=false;
             element.text="我负责的子任务";
+            button3.visible=false;
+            break;
+        case 210:
+            statusText.text="已分配译者，译者正在进行翻译";
+            button.text="反馈";
+            button2.visible=false;
+            element.text="我负责的子任务";
+            button3.visible=true;
+            break;
         }
 
         if (typeOfArticle===2){//如果是查看其他文章
@@ -225,6 +250,13 @@ Rectangle {
             case 140:
                 emit: regulatorPageHandler.sendErrorMessage("已拆分，请查看子任务");
                 break;
+            case 200:
+                regulatorPageHandler.chooseTranslator(indexInList);
+                break;
+            case 210:
+                var commentWindow=Qt.createComponent("../RegulatorCommentDialog.qml").createObject(RegulatorViewer)
+                commentWindow.currentArticleIndex=indexInList;
+                break;
             }
         }
 
@@ -273,6 +305,31 @@ Rectangle {
             bold: true;
             family: "DengXian";
             pixelSize: 16
+        }
+    }
+
+
+    Button {
+        id: button3
+        x: parent.width-5-120
+        y: parent.height-13-40
+        visible: false;
+        width: 120
+        height: 40
+        text: qsTr("查看译文")
+        font.family: "DengXian"
+        onClicked: {
+            if (text==="查看原文"){
+                thisTrTitle=titleEdit.text;
+                thisTrContent=contentEdit.text;
+                titleEdit.text=thisTitle;
+                contentEdit.text=thisContent;
+                text="查看译文";
+            } else {
+                titleEdit.text=thisTrTitle;
+                contentEdit.text=thisTrContent;
+                text="查看原文";
+            }
         }
     }
 }

@@ -70,6 +70,8 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
         QString subTitle = title + " 子任务" + QString("%1").arg(i);
         MyArticleObj *newSubArticle = new MyArticleObj(thisUserId);
         newSubArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), subTitle, subContents[i]);
+        newSubArticle->setTranslatedTitle(subTitle);
+        newSubArticle->setTranslatedContent(subContents[i]);
         newSubArticle->setStatusCodeOfArticle(200);
         newSubArticle->setRegulatorIdOfArticle(thisUserId);
         newSubArticle->setOriginArticleIdOfArticle(regulatorArticleList.getArticle(index)->articleIdOfArticle());
@@ -88,6 +90,46 @@ Q_INVOKABLE void RegulatorPageHandler::editArticle(int index, QString title, QSt
 
     emit sendSuccessMessage("已保存");
 }
+
+
+Q_INVOKABLE void RegulatorPageHandler::chooseTranslator(int index)
+{
+    loadArticleTranslatorData(regulatorSubarticleList.getArticle(index)->originArticleIdOfArticle());
+    currentInViewIndex = index;
+    const QUrl url(QStringLiteral("qrc:/ChooseUserMiniPage.qml"));
+    thisEngine->load(url);
+}
+
+Q_INVOKABLE void RegulatorPageHandler::loadArticleTranslatorData(int originArticleId){
+    qDebug() << "choose origin" << originArticleId;
+
+    translatorList.removeAllRequestUsers();
+    int numOfRequest = globalStorageComponent->getRequestsLength();
+    for (int i = 0; i < numOfRequest; i++)
+    {
+        MyRequestObj *getRequest = globalStorageComponent->getRequest(i);
+        if (getRequest->getArticleId() == originArticleId
+                && getRequest->getType() == 2)
+        {
+            MyUserObj *requestUser = globalStorageComponent->searchUserById(getRequest->getUserId());
+            translatorList.addARequestUser(requestUser);
+        }
+    }
+}
+
+
+Q_INVOKABLE void RegulatorPageHandler::translatorChosen(int idx){
+    MyArticleObj *articleToChoose = regulatorSubarticleList.getArticle(currentInViewIndex);
+    articleToChoose->setTranslatorIdOfArticle(translatorList.getRequestUser(idx)->userId());
+
+    qDebug() << translatorList.getRequestUser(idx)->userId() << "choosen";
+
+    articleToChoose->setStatusCodeOfArticle(210);
+    regulatorSubarticleList.editAnArticle(currentInViewIndex);
+
+    emit sendSuccessMessage("已确定译者");
+}
+
 
 Q_INVOKABLE void RegulatorPageHandler::signForRegulatorArticle(int index)
 {
@@ -118,6 +160,11 @@ Q_INVOKABLE void RegulatorPageHandler::stopRecruitingTranslatorForArticle(int in
     emit sendSuccessMessage("停止招募");
 }
 
+
+Q_INVOKABLE void RegulatorPageHandler::commentToTranslator(int idx, QString comment){
+    qDebug() << idx << " " << comment;
+}
+
 /*************************************************************************
 【函数名称】  startPage
 【函数功能】  开始渲染主页面
@@ -133,6 +180,7 @@ void RegulatorPageHandler::startPage(QQmlApplicationEngine *engine)
     thisContext->setContextProperty("regulatorArticleList", &regulatorArticleList);
     thisContext->setContextProperty("regulatorSubarticleList", &regulatorSubarticleList);
     thisContext->setContextProperty("allSeekingRegulatorArticle", &allSeekingRegulatorArticle);
+    thisContext->setContextProperty("userListModel", &translatorList);
     const QUrl url1(QStringLiteral("qrc:/RegulatorPage.qml"));
     engine->load(url1);
 }

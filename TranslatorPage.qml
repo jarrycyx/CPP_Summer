@@ -67,7 +67,7 @@ ApplicationWindow {
         id: root
         anchors.fill: parent
         z: 1
-        ThisUserArticleBlock {
+        MiniArticleBlock {
             id: dragDelegate1
         }
 
@@ -122,11 +122,11 @@ ApplicationWindow {
                 y: 77
                 ScrollBar.vertical.policy: ScrollBar.AsNeeded
 
-                contentHeight: translatorArticlesList.height + 47 + otherArticlesList.height + 47
+                contentHeight: senderSubarticlesList.height + 47 + otherArticlesList.height + 30
                 //z:0.2
 
                 Text{
-                    text: qsTr("我发布的文章")
+                    text: qsTr("我正在翻译的文章")
                     x: 41
                     y: 16
                     //z:0.3
@@ -142,10 +142,10 @@ ApplicationWindow {
                     id: senderSubarticlesList
                     width: parent.width
                     x: 41-15
-                    y: 43
+                    y: 32
                     height: contentHeight + 40
                     model: translatorSubarticleList
-                    delegate: dragDelegate0
+                    delegate: dragDelegate1
                     cellWidth: 350
                     cellHeight: 92
                     cacheBuffer: 50
@@ -155,7 +155,7 @@ ApplicationWindow {
                 Text{
                     text: qsTr("其他正在招募的文章")
                     x: 41
-                    y: senderSubarticlesList.height + 16 + 30
+                    y: senderSubarticlesList.height + 16 + 19
                     //z:0.3
                     width: 261
                     height: 18
@@ -169,7 +169,7 @@ ApplicationWindow {
                     id: otherArticlesList
                     width: parent.width
                     x:41-15
-                    y: senderSubarticlesList.height + 32 + 30
+                    y: senderSubarticlesList.height + 32 + 19
                     height: contentHeight+40
                     model: allSeekingTranslatorArticle
                     delegate: dragDelegate2

@@ -35,11 +35,14 @@ public:
     int originArticleIdOfArticle() const;
     void setOriginArticleIdOfArticle(const int &articleId);
 
-    int addArticleToRemoteDBReturnId();
-    void updateArticleInfoToRemote();
-
     int translatorIdOfArticle() const;
     void setTranslatorIdOfArticle(int id);
+
+    QString translatedTitle() const;
+    void setTranslatedTitle(QString newTitle);
+
+    QString translatedContent() const;
+    void setTranslatedContent(QString newContent);
 
 
 signals:
@@ -50,8 +53,8 @@ signals:
 
 private:
     //文章内容
-    QString m_titleOfArticle;
-    QString m_contentOfArticle;
+    QString m_titleOfArticle, m_translatedTitle;
+    QString m_contentOfArticle, m_translatedContent;
 
     int origin_article_id;
     //article身份标识

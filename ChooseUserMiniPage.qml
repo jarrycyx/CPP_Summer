@@ -18,16 +18,16 @@ ApplicationWindow {
     title: qsTr("选择负责人")
     visible: true
 
-    ChooseRegulatorDelegate {
-        id: chooseRegulatorDelegate
+    ChooseUserDelegate {
+        id: chooseUserDelegate
     }
 
     //childCont.children:
     ListView {
         id: chooseRegulatorList
         anchors.fill: parent
-        delegate: chooseRegulatorDelegate
-        model: regulatorListModel
+        delegate: chooseUserDelegate
+        model: userListModel
         cacheBuffer: 50
     }
 }

@@ -21,18 +21,15 @@
 class TranslatorPageHandler : public QObject
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-        /* 以上三个model分别存储
-     * 该用户的文章列表
-     * 所有用户的文章列表
-     * 负责人选取列表的数据 */
 
-        public : explicit TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent = nullptr);
+public :
+    explicit TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent = nullptr);
     ~TranslatorPageHandler();
 
     void startLoadingTranslatorArticleList(int userId);
 
     Q_INVOKABLE void signForTranslatorArticle(int index);
-    Q_INVOKABLE void editArticle(int index, QString title, QString content);
+    Q_INVOKABLE void editTranslatedArticle(int index, QString title, QString content);
 
     void loadArticleTranslatorData(int articleId);
 
