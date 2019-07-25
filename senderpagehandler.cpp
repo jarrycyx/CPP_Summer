@@ -53,6 +53,11 @@ void SenderPageHandler::addSenderArticle(QString title, QString content)
     MyArticleObj *newSenderArticle = new MyArticleObj(thisUserId);
     newSenderArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), title, content);
     newSenderArticle->setStatusCodeOfArticle(100);
+
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(100)),
+                newSenderArticle);
+
     newSenderArticle->setModifyStatus(StorageUnit::New);
     //由于需要显示两处，保存一处，故需要增加三处
     //allArticles.push_front(newSenderArticle);
@@ -163,6 +168,11 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
     MyArticleObj *articleToChoose = senderArticleList.getArticle(currentInViewIndex);
     articleToChoose->setRegulatorIdOfArticle(requestUserList.getRequestUser(idx)->userId());
     articleToChoose->setStatusCodeOfArticle(110);
+
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(110)),
+                articleToChoose);
+
     senderArticleList.editAnArticle(currentInViewIndex);
 
     emit sendSuccessMessage("已确定负责人");

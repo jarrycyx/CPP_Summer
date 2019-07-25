@@ -34,11 +34,20 @@ public:
     int role() const;
     QString password() const;
     void setPassword(const QString &color);
+    QString qualification() const;
+    void setQualification(QString newQuali);
+    int money() const;
+    void setMoney(int newMoney);
+    int credit() const;
+    void setCredit(int newCredit);
 
 private:
-    QString m_username;
-    QString m_password;
-    int m_user_id;
-    int m_role;
+    QString mUsername;
+    QString mPassword;
+    QString mQualification;
+    int mMoney;
+    int mCredit;
+    int mUserId;
+    int mRole;
 };
 #endif // MYUSEROBJ_H

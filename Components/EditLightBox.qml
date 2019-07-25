@@ -67,26 +67,26 @@ Component {
 
         childCont.children:
             TextEdit {
-            selectByMouse: true
-            verticalAlignment: TextEdit.AlignVCenter
-            id: editName
-            text: textInEdit
-            onTextChanged: {
-                textInEdit=text
-            }
-            anchors.fill: parent
-            anchors.margins: 5
-            anchors.leftMargin: 10
-            font.family: "DengXian"
-            Text {
-                text: editBox.placeholderText
-                color: stringsPool.textGray3
-                visible: !editName.text
-                height: parent.height
+                selectByMouse: true
                 verticalAlignment: TextEdit.AlignVCenter
-                font{family: "DengXian"}
+                id: editName
+                text: textInEdit
+                onTextChanged: {
+                    textInEdit=text
+                }
+                anchors.fill: parent
+                anchors.margins: 5
+                anchors.leftMargin: 10
+                font.family: "DengXian"
+                Text {
+                    text: editBox.placeholderText
+                    color: stringsPool.textGray3
+                    visible: !editName.text
+                    height: parent.height
+                    verticalAlignment: TextEdit.AlignVCenter
+                    font{family: "DengXian"}
+                }
             }
-        }
 
 
     }

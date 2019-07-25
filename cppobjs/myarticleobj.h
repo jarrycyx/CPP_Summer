@@ -62,6 +62,7 @@ public:
     void setContentOfArticle(const QString &color);
     //状态号
     int statusCodeOfArticle() const;
+    //此处传入GlobalStorage的目的是发送状态更改的消息
     void setStatusCodeOfArticle(int code);
     //负责人id
     int regulatorIdOfArticle() const;

@@ -44,7 +44,8 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
             allArticles.append(articleFromDB);
         }
 
-        query->exec(QString("SELECT user_id,user_name,create_time,password,role from users"));
+        query->exec(QString("SELECT user_id,user_name,create_time,password,role,money,credit,quali"
+                            " from users"));
         while (query->next())
         {
             MyUserObj *userFromDB = new MyUserObj(
@@ -52,6 +53,9 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
                         query->value(1).toString(),
                         query->value(3).toString(),
                         query->value(4).toInt());
+            userFromDB->setMoney(query->value(5).toInt());
+            userFromDB->setCredit(query->value(6).toInt());
+            userFromDB->setQualification(query->value(7).toString());
             allUsers.append(userFromDB);
 
             if (query->value(0).toInt() > biggestUserId)
@@ -139,21 +143,28 @@ void GlobalComponents::uploadAllData()
         {
             qDebug() << "added user";
             query->exec(QString("insert into users "
-                                "(user_id,user_name,create_time,password,role) values "
-                                "(%1, \"%2\", NOW(), \"%3\", %4)")
+                                "(user_id,user_name,create_time,password,role,money,credit,quali) values "
+                                "(%1, \"%2\", NOW(), \"%3\", %4, %5, %6, \"%7\")")
                         .arg(allUsers[i]->userId())
                         .arg(allUsers[i]->username())
                         .arg(allUsers[i]->password())
-                        .arg(allUsers[i]->role()));
+                        .arg(allUsers[i]->role())
+                        .arg(allUsers[i]->money())
+                        .arg(allUsers[i]->credit())
+                        .arg(allUsers[i]->qualification()));
         }
         else if (modifyStat == StorageUnit::Changed)
         {
             qDebug() << "modified user";
-            query->exec(QString("UPDATE users SET user_name=\"%2\" ,password=\"%3\", role=%4 WHERE user_id=%1")
+            query->exec(QString("UPDATE users SET user_name=\"%2\" ,password=\"%3\", "
+                                "role=%4 ,money=%5, credit=%6, quali=\"%7\" WHERE user_id=%1")
                         .arg(allUsers[i]->userId())
                         .arg(allUsers[i]->username())
                         .arg(allUsers[i]->password())
-                        .arg(allUsers[i]->role()));
+                        .arg(allUsers[i]->role())
+                        .arg(allUsers[i]->money())
+                        .arg(allUsers[i]->credit())
+                        .arg(allUsers[i]->qualification()));
         }
     }
 
@@ -193,4 +204,63 @@ MyArticleObj *GlobalComponents::searchArticleById(int thisArticleId)
         if (allArticles[i]->articleIdOfArticle() == thisArticleId)
             return allArticles[i];
     return nullptr;
+}
+
+
+
+void GlobalComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)
+{
+    QString titleStr=articleInChange->titleOfArticle();
+    if (titleStr.length()>12) titleStr=titleStr.mid(0,12)+"...";
+    qDebug() << "Send message " << str;
+    if (articleInChange->senderIdOfArticle()>0){
+        MyRequestObj* newRequest = new MyRequestObj(getARequestId(),
+                                                    articleInChange->senderIdOfArticle(),
+                                                    articleInChange->articleIdOfArticle(),
+                                                    4);
+        newRequest->setContent(QString("您发布的文章 %1 状态：").arg(titleStr)+str);
+        newRequest->setModifyStatus(StorageUnit::New);
+        addARequest(newRequest);
+    }
+    if (articleInChange->regulatorIdOfArticle()>0){
+        MyRequestObj* newRequest = new MyRequestObj(getARequestId(),
+                                                    articleInChange->regulatorIdOfArticle(),
+                                                    articleInChange->articleIdOfArticle(),
+                                                    4);
+        newRequest->setContent(QString("您负责的文章 %1 状态：").arg(titleStr)+str);
+        newRequest->setModifyStatus(StorageUnit::New);
+        addARequest(newRequest);
+    }
+    if (articleInChange->translatorIdOfArticle()>0){
+        MyRequestObj* newRequest = new MyRequestObj(getARequestId(),
+                                                    articleInChange->translatorIdOfArticle(),
+                                                    articleInChange->articleIdOfArticle(),
+                                                    4);
+        newRequest->setContent(QString("您翻译的文章 %1 状态：").arg(titleStr)+str);
+        newRequest->setModifyStatus(StorageUnit::New);
+        addARequest(newRequest);
+    }
+}
+
+
+QString GlobalComponents::decodeStatusCode(int code){
+    switch (code) {
+    case (100): return "已上传，招募负责人开始";
+    case (110): return "已标记负责人，招募负责人结束";
+    case (120): return "开始招募译者";
+    case (130): return "招募译者结束，即将分配任务";
+    case (140): return "已拆分";
+    case (200): return "子文章已创建";
+    case (210): return "已标记翻译者";
+    case (215): return "译者开始翻译";
+    case (220): return "译者正在根据负责人意见修改";
+    case (230): return "子文章译文评审通过";
+    case (240): return "子文章生命周期完成";
+    case (300): return "子文章合并完成";
+    case (310): return "负责人提交";
+    case (320): return "发送者已收取";
+    case (330): return "发送者已付款，款项成功分配";
+    case (400): return "生命周期完成";
+    }
+    return "";
 }

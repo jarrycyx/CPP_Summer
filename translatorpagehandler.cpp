@@ -57,6 +57,10 @@ Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString
     qDebug() << "save" << index;
     translatorSubarticleList.getArticle(index)->setTranslatedTitle(tTitle);
     translatorSubarticleList.getArticle(index)->setStatusCodeOfArticle(215);
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(215)),
+                translatorSubarticleList.getArticle(index));
+
     translatorSubarticleList.getArticle(index)->setTranslatedContent(tContent);
     translatorSubarticleList.editAnArticle(index);
 
@@ -67,10 +71,10 @@ Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
 {
     qDebug() << "sign up for" << index;
     MyRequestObj *sendNewRequest = new MyRequestObj(
-        globalStorageComponent->getARequestId(),
-        thisUserId,
-        allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
-        2); //2表示成为译者的请求
+                globalStorageComponent->getARequestId(),
+                thisUserId,
+                allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
+                2); //2表示成为译者的请求
     sendNewRequest->setModifyStatus(StorageUnit::New);
     globalStorageComponent->addARequest(sendNewRequest);
     emit sendSuccessMessage("报名成功");

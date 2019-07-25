@@ -58,6 +58,10 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
 {
     qDebug() << "split" << index;
     regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(140);
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(140)),
+                regulatorArticleList.getArticle(index));
+
     regulatorArticleList.editAnArticle(index); //刷新文章状态
     QStringList subContents = content.split("\n");
     qDebug() << subContents << index;
@@ -73,6 +77,9 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
         newSubArticle->setTranslatedTitle(subTitle);
         newSubArticle->setTranslatedContent(subContents[i]);
         newSubArticle->setStatusCodeOfArticle(200);
+        globalStorageComponent->sendMessageToRelatedUser(
+                    QString("%1").arg(globalStorageComponent->decodeStatusCode(200)),
+                    newSubArticle);
         newSubArticle->setRegulatorIdOfArticle(thisUserId);
         newSubArticle->setOriginArticleIdOfArticle(regulatorArticleList.getArticle(index)->articleIdOfArticle());
         newSubArticle->setModifyStatus(StorageUnit::New);
@@ -110,6 +117,10 @@ Q_INVOKABLE void RegulatorPageHandler::mergeRegulatorArticle(int index){
                 QString subTransContent=thisSubArticle->translatedContent();
                 QString subTitle=thisSubArticle->titleOfArticle();
                 thisSubArticle->setStatusCodeOfArticle(240);
+
+                globalStorageComponent->sendMessageToRelatedUser(
+                            QString("%1").arg(globalStorageComponent->decodeStatusCode(230)),
+                            thisSubArticle);
                 qDebug() << subTransContent << subTitle << subTitle[subTitle.length()-1];
                 QChar indexChar=subTitle[subTitle.length()-1];//子文章标题最后的序号
                 if (!indexChar.isNumber())
@@ -135,6 +146,10 @@ Q_INVOKABLE void RegulatorPageHandler::mergeRegulatorArticle(int index){
     originAriticle->setTranslatedTitle(subTitle);
     originAriticle->setTranslatedContent(transContent);
     originAriticle->setStatusCodeOfArticle(300);
+
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(300)),
+                originAriticle);
 
     //刷新视图
     regulatorArticleList.refreshAll();
@@ -183,7 +198,10 @@ Q_INVOKABLE void RegulatorPageHandler::translatorChosen(int idx){
     qDebug() << translatorList.getRequestUser(idx)->userId() << "choosen";
 
     articleToChoose->setStatusCodeOfArticle(210);
-    regulatorSubarticleList.editAnArticle(currentInViewIndex);
+
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(210)),
+                articleToChoose);
 
     emit sendSuccessMessage("已确定译者");
 }
@@ -193,10 +211,10 @@ Q_INVOKABLE void RegulatorPageHandler::signForRegulatorArticle(int index)
 {
     qDebug() << "sign up for" << index;
     MyRequestObj *sendNewRequest = new MyRequestObj(
-        globalStorageComponent->getARequestId(),
-        thisUserId,
-        allSeekingRegulatorArticle.getArticle(index)->articleIdOfArticle(),
-        1); //1表示成为负责人的请求
+                globalStorageComponent->getARequestId(),
+                thisUserId,
+                allSeekingRegulatorArticle.getArticle(index)->articleIdOfArticle(),
+                1); //1表示成为负责人的请求
     sendNewRequest->setModifyStatus(StorageUnit::New);
     globalStorageComponent->addARequest(sendNewRequest);
     emit sendSuccessMessage("报名成功");
@@ -206,6 +224,10 @@ Q_INVOKABLE void RegulatorPageHandler::startRecruitingTranslatorForArticle(int i
 {
     qDebug() << "chooseTranslatorForArticle" << index;
     regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(120);
+
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(120)),
+                regulatorSubarticleList.getArticle(index));
     regulatorArticleList.editAnArticle(index);
     emit sendSuccessMessage("开始招募");
 }
@@ -214,6 +236,9 @@ Q_INVOKABLE void RegulatorPageHandler::stopRecruitingTranslatorForArticle(int in
 {
     qDebug() << "stopRecruitingTranslatorForArticle" << index;
     regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(130);
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(130)),
+                regulatorArticleList.getArticle(index));
     regulatorArticleList.editAnArticle(index); //刷新文章状态
     emit sendSuccessMessage("停止招募");
 }
@@ -226,6 +251,9 @@ Q_INVOKABLE void RegulatorPageHandler::commentToTranslator(int idx, QString comm
                                                 regulatorSubarticleList.getArticle(idx)->articleIdOfArticle(),
                                                 3);
     regulatorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(220);
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(220)),
+                regulatorSubarticleList.getArticle(idx));
     regulatorSubarticleList.editAnArticle(idx);
     newRequest->setContent(comment);
     newRequest->setModifyStatus(StorageUnit::New);
@@ -256,6 +284,9 @@ Q_INVOKABLE QString RegulatorPageHandler::getHistoryComment(int idx){
 Q_INVOKABLE void RegulatorPageHandler::acceptSubarticle(int idx)
 {
     regulatorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(230);
+    globalStorageComponent->sendMessageToRelatedUser(
+                QString("%1").arg(globalStorageComponent->decodeStatusCode(230)),
+                regulatorSubarticleList.getArticle(idx));
     regulatorSubarticleList.editAnArticle(idx);
     emit sendSuccessMessage("已审核通过");
 }

@@ -5,7 +5,8 @@ MyUserObj::MyUserObj() : StorageUnit(StorageUnit::Unchanged)
 }
 
 MyUserObj::MyUserObj(const int &user_id, const QString &name, const QString &password, int role)
-    : StorageUnit(StorageUnit::Unchanged), m_username(name), m_password(password), m_user_id(user_id), m_role(role)
+    : StorageUnit(StorageUnit::Unchanged), mUsername(name), mPassword(password),
+      mUserId(user_id), mRole(role)
     //初始更改状态为0：未更改
 {
 }
@@ -18,14 +19,14 @@ MyUserObj::MyUserObj(const int &user_id, const QString &name, const QString &pas
 *************************************************************************/
 QString MyUserObj::username() const
 {
-    return m_username;
+    return mUsername;
 }
 
 void MyUserObj::setUsername(const QString &name)
 {
-    if (name != m_username)
+    if (name != mUsername)
     {
-        m_username = name;
+        mUsername = name;
         if (getModifyStatus() == StorageUnit::Unchanged)
             setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
     }
@@ -33,14 +34,14 @@ void MyUserObj::setUsername(const QString &name)
 
 QString MyUserObj::password() const
 {
-    return m_password;
+    return mPassword;
 }
 
 void MyUserObj::setPassword(const QString &pswd)
 {
-    if (pswd != m_password)
+    if (pswd != mPassword)
     {
-        m_password = pswd;
+        mPassword = pswd;
         if (getModifyStatus() == StorageUnit::Unchanged)
             setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
     }
@@ -48,10 +49,37 @@ void MyUserObj::setPassword(const QString &pswd)
 
 int MyUserObj::userId() const
 {
-    return m_user_id;
+    return mUserId;
 }
 
 int MyUserObj::role() const
 {
-    return m_role;
+    return mRole;
+}
+
+
+
+QString MyUserObj::qualification() const
+{
+    return mQualification;
+}
+void MyUserObj::setQualification(QString newQuali)
+{
+    mQualification=newQuali;
+}
+int MyUserObj::money() const
+{
+    return mMoney;
+}
+void MyUserObj::setMoney(int newMoney)
+{
+    mMoney=newMoney;
+}
+int MyUserObj::credit() const
+{
+    return mCredit;
+}
+void MyUserObj::setCredit(int newCredit)
+{
+    mCredit=newCredit;
 }

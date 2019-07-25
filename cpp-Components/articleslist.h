@@ -13,6 +13,7 @@
 
 //TO-DO: 使用类模板进行优化
 //TO-DO: 重载[]运算符
+//TO-DO: 将decodeStatuscode封装在内
 
 
 #ifndef ARTICLESLIST_H

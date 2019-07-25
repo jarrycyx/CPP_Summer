@@ -26,6 +26,11 @@ public:
     explicit GlobalComponents(QObject *parent = nullptr);
     virtual ~GlobalComponents();
 
+    //文章状态改变，通知给相关用户
+    void sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange);
+    //返回状态值对应的含义
+    QString decodeStatusCode(int code);
+
     //程序结束前，析构函数调用以上传所有更改数据
     void uploadAllData();
     //自动生成一个文章ID，比所有其他ID都大

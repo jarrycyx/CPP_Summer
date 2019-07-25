@@ -37,6 +37,9 @@
 #include <QString>
 #include <QVariant>
 #include <QDebug>
+#include <../cpp-Components/globalcomponents.h>
+
+#include <myrequestobj.h>
 
 /* 备注：本类中article_id不能改变，只能为未设置状态或已设置状态 */
 
@@ -125,6 +128,7 @@ void MyArticleObj::setStatusCodeOfArticle(int code)
     status_code = code;
     if (getModifyStatus() == StorageUnit::Unchanged)
         setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
+
 }
 
 int MyArticleObj::regulatorIdOfArticle() const
