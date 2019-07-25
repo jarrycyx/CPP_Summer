@@ -37,7 +37,7 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
             articleFromDB->setTranslatedTitle(query->value(9).toString());
             articleFromDB->setTranslatedContent(query->value(10).toString());
 
-            articleFromDB->setModifyStatus(0);
+            articleFromDB->setModifyStatus(StorageUnit::Unchanged);
 
             if (query->value(0).toInt() > biggestUserId)
                 biggestArticleId = query->value(0).toInt();
@@ -66,6 +66,7 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
                         query->value(1).toInt(),
                         query->value(2).toInt(),
                         query->value(4).toInt());
+            requestFromDB->setContent(query->value(3).toString());
             allRequests.append(requestFromDB);
 
             if (query->value(0).toInt() > biggestRequestId)
@@ -86,7 +87,7 @@ void GlobalComponents::uploadAllData()
     for (int i = 0; i < artiLen; i++)
     {
         int modifyStat = allArticles[i]->getModifyStatus();
-        if (modifyStat == 1)
+        if (modifyStat == StorageUnit::New)
         {
             qDebug() << "added article";
             query->exec(QString("insert into articles "
@@ -105,7 +106,7 @@ void GlobalComponents::uploadAllData()
                         .arg(allArticles[i]->translatedTitle())
                         .arg(allArticles[i]->translatedContent()));
         }
-        else if (modifyStat == 2)
+        else if (modifyStat == StorageUnit::Changed)
         {
             qDebug() << "modified article";
             query->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, "
@@ -122,7 +123,7 @@ void GlobalComponents::uploadAllData()
                         .arg(allArticles[i]->translatedContent())
                         .arg(allArticles[i]->articleIdOfArticle()));
         }
-        else if (modifyStat == 3)
+        else if (modifyStat == StorageUnit::Deleted)
         {
             qDebug() << "deleted article";
             query->exec(QString("DELETE FROM articles WHERE article_id=%1").arg(allArticles[i]->articleIdOfArticle()));
@@ -133,7 +134,7 @@ void GlobalComponents::uploadAllData()
     for (int i = 0; i < userLen; i++)
     {
         int modifyStat = allUsers[i]->getModifyStatus();
-        if (modifyStat == 1)
+        if (modifyStat == StorageUnit::New)
         {
             qDebug() << "added user";
             query->exec(QString("insert into users "
@@ -144,7 +145,7 @@ void GlobalComponents::uploadAllData()
                         .arg(allUsers[i]->password())
                         .arg(allUsers[i]->role()));
         }
-        else if (modifyStat == 2)
+        else if (modifyStat == StorageUnit::Changed)
         {
             qDebug() << "modified user";
             query->exec(QString("UPDATE users SET user_name=\"%2\" ,password=\"%3\", role=%4 WHERE user_id=%1")
@@ -159,16 +160,17 @@ void GlobalComponents::uploadAllData()
     for (int i = 0; i < requestLen; i++)
     {
         int modifyStat = allRequests[i]->getModifyStatus();
-        if (modifyStat == 1)
+        if (modifyStat == StorageUnit::New)
         {
             qDebug() << "added request";
             query->exec(QString("insert into requests "
                                 "(request_id, user_id, article_id, time, content, type) "
                                 "values "
-                                "(%1, %2, %3, NOW(), \"\", %4)")
+                                "(%1, %2, %3, NOW(), \"%4\", %5)")
                         .arg(allRequests[i]->getRequestId())
                         .arg(allRequests[i]->getUserId())
                         .arg(allRequests[i]->getArticleId())
+                        .arg(allRequests[i]->getContent())
                         .arg(allRequests[i]->getType()));
         }
     }
@@ -180,5 +182,14 @@ MyUserObj *GlobalComponents::searchUserById(int thisUserId)
     for (int i = 0; i < len; i++)
         if (allUsers[i]->userId() == thisUserId)
             return allUsers[i];
+    return nullptr;
+}
+
+MyArticleObj *GlobalComponents::searchArticleById(int thisArticleId)
+{
+    int len = allArticles.length();
+    for (int i = 0; i < len; i++)
+        if (allArticles[i]->articleIdOfArticle() == thisArticleId)
+            return allArticles[i];
     return nullptr;
 }

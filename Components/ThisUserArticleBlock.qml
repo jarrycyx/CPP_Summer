@@ -1,6 +1,15 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     View
+/************************************************************************************************************************
+文件名：    ThisUserArticleBlock
+功能：      实现Fluent Design效果的中间层控件，使用了AcrylicBlock的封装
+日期：      20190710 基本实现
+           20190711 实现拖动效果
+           20190715 分拆成Mini，This，Other三个控件，用于分离调用
+************************************************************************************************************************/
+
+
 import QtQuick 2.0
-
-
 import "../Resources"
 
 Component {
@@ -34,7 +43,7 @@ Component {
             held = true;
             released = false;
             console.log("p");
-            content.changeStatus(1);
+            content.changeStatus(content.pressed);
         }
         onReleased: {
             if (held) released=true;
@@ -54,7 +63,7 @@ Component {
             if (typeof senderSubarticlesList!=='undefined')
                 senderSubarticlesList.currentIndex=-1;
 
-            content.changeStatus(2);
+            content.changeStatus(content.released);
             newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, translatedTitle, translatedContent,
                                           statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
@@ -70,14 +79,14 @@ Component {
         onMouseYChanged: content.chaseLight(-1,mouseY)
         onEntered: {
             console.log("en");
-            content.changeStatus(3);
+            content.changeStatus(content.hovered);
         }
         onExited: {
             console.log("ex");
-            content.changeStatus(4);
+            content.changeStatus(content.none);
         }
 
-        LightBlock {
+        AcrylicBlock {
             id: content
             height: 197
             width: 305

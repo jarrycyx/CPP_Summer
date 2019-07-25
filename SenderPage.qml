@@ -23,9 +23,6 @@ ApplicationWindow {
         expandImage.rotation=0;
     }
 
-
-
-
     Connections {
         target: senderPageHandler
         //开始刷新QML

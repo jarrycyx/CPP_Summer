@@ -1,5 +1,5 @@
-//总体框架：             Storage - Data - Model - Interaction - View
-//该类所处层级：     Model-Interaction
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Model-Interaction
 /************************************************************************************************************************
 类名：     RegulatorPageHandler
 功能：     负责人页面的后台处理类，通过信号槽和直接唤起函数与QML紧密联动
@@ -8,6 +8,8 @@
                  20190722 实现拆分文章功能
                  20190723 实现向翻译者分配文章功能
 ************************************************************************************************************************/
+
+//TO-DO: 负责人提交前再次修改
 
 #ifndef RegulatorPageHandler_H
 #define RegulatorPageHandler_H
@@ -44,6 +46,7 @@ class RegulatorPageHandler : public QObject
     void startLoadingRegulatorArticleList(int userId);
 
     Q_INVOKABLE void splitRegulatorArticle(int index, QString title, QString content);
+    Q_INVOKABLE void mergeRegulatorArticle(int index);
     Q_INVOKABLE void signForRegulatorArticle(int index);
     Q_INVOKABLE void startRecruitingTranslatorForArticle(int index);
     Q_INVOKABLE void editArticle(int index, QString title, QString content);
@@ -52,6 +55,8 @@ class RegulatorPageHandler : public QObject
     //从QML唤起的选择译者函数
     Q_INVOKABLE void translatorChosen(int idx);
     Q_INVOKABLE void commentToTranslator(int idx, QString comment);
+    Q_INVOKABLE QString getHistoryComment(int idx);
+    Q_INVOKABLE void acceptSubarticle(int idx);
 
     void loadArticleTranslatorData(int originArticleId);
 

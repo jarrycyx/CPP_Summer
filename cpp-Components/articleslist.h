@@ -1,5 +1,5 @@
-//总体框架：             Storage - Data - Model - Interaction - View
-//该类所处层级：     Model
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Data-Model
 /************************************************************************************************************************
 类名：     ArticleList
 功能：     用于文章列表显示，继承QAbstractListModel，作为界面显示的Model
@@ -43,6 +43,8 @@ public:
     inline void removeAllArticles() { articles.clear(); }
     //获取文章的指针，用于实际的修改操作
     MyArticleObj *getArticle(int idx);
+    //刷新全部
+    void refreshAll();
 
 protected:
     //存储所有文章的数据结构，由于需要保证文章对象实体只有一份，使用指针

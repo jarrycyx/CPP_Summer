@@ -11,8 +11,8 @@ import "./Resources"
 FramlessWindow {
     id: commentWindow
     objectName: "chooseRegulatorWindow"
-    width: 640 + 40
-    height: 480 + 40
+    width: childRect.width + 40
+    height: childRect.height + 40
 
     property int currentArticleIndex: -1
 
@@ -23,10 +23,8 @@ FramlessWindow {
         }
     }
 
-    onCurrentArticleIndexChanged: {
-        contentEdit.text = Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
-        contentEdit.text += ": \n\t"
-        console.log(Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd"));
+    onCurrentArticleIndexChanged: {  //已设置文章id，则向CPP请求内容
+        contentEdit.text=translatorPageHandler.getRegulatorComment(currentArticleIndex);
     }
 
 
@@ -38,7 +36,8 @@ FramlessWindow {
 
     childCont.children: [
         Rectangle{
-            height: 480
+            id: childRect
+            height:  contentEdit.height+24 + 28 + 24 + 24 + 40 + 24
             width: 640
             clip: true
 
@@ -46,16 +45,17 @@ FramlessWindow {
             TextEdit {
                 id: contentEdit
                 clip: true
+                enabled: false
                 x: 24
                 y: 24 + 28 + 24
-                width: 640 - 24*2
-                height: 480 - 24 - 28 - 24 - 24 - 40 - 24
+                width: 480 - 24*2
+                //height: 480 - 24 - 28 - 24 - 24 - 40 - 24
                 focus: true
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                 selectByMouse: true
                 font{family: "DengXian";pixelSize: 17}
-                property string placeholderText: "在此输入反馈内容"
+                property string placeholderText: "暂时还没有反馈"
 
 
                 Text {
@@ -79,7 +79,7 @@ FramlessWindow {
                 y: 28
                 width: 282
                 height: 24
-                text: qsTr("给译者的反馈信息")
+                text: qsTr("来自负责人的反馈信息")
                 font.pixelSize: 24
                 font.family: "DengXian"
             }
@@ -87,29 +87,17 @@ FramlessWindow {
             Button {
                 id: button
                 x: 24
-                y: 416
-                width: 294
+                y: childRect.height-64
+                width: childRect.width - 48
                 height: 40
-                text: qsTr("提交")
+                text: qsTr("确定")
                 font.family: "DengXian"
                 onClicked: {
-                    regulatorPageHandler.commentToTranslator(currentArticleIndex, contentEdit.text);
                     commentWindow.close();
                 }
             }
 
-            Button {
-                id: button1
-                x: 322
-                y: 416
-                width: 294
-                height: 40
-                text: qsTr("取消")
-                font.family: "DengXian"
-                onClicked: {
-                    commentWindow.close();
-                }
-            }
+
         }]
 
     //childCont.children:

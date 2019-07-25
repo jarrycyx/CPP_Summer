@@ -56,6 +56,7 @@ Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString
 {
     qDebug() << "save" << index;
     translatorSubarticleList.getArticle(index)->setTranslatedTitle(tTitle);
+    translatorSubarticleList.getArticle(index)->setStatusCodeOfArticle(215);
     translatorSubarticleList.getArticle(index)->setTranslatedContent(tContent);
     translatorSubarticleList.editAnArticle(index);
 
@@ -70,9 +71,27 @@ Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
         thisUserId,
         allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
         2); //2表示成为译者的请求
-    sendNewRequest->setModifyStatus(1);
+    sendNewRequest->setModifyStatus(StorageUnit::New);
     globalStorageComponent->addARequest(sendNewRequest);
     emit sendSuccessMessage("报名成功");
+}
+
+
+Q_INVOKABLE QString TranslatorPageHandler::getRegulatorComment(int index)//此处index指在正在翻译的文章列表中的索引
+{
+    qDebug() << "get comment " << index;
+    int numOfRequest = globalStorageComponent->getRequestsLength();
+    QString commentStr = "";
+    for (int i = 0; i < numOfRequest; i++)
+    {
+        MyRequestObj *getRequest = globalStorageComponent->getRequest(i);
+        if (getRequest->getArticleId() == translatorSubarticleList.getArticle(index)->articleIdOfArticle()
+                && getRequest->getType() == 3)
+        {
+            commentStr += getRequest->getContent() + "\n\n";
+        }
+    }
+    return commentStr;
 }
 
 /*************************************************************************

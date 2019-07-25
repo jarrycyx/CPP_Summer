@@ -4,7 +4,7 @@ import "../Resources"
 
 
 Component {
-    LightBlock {
+    AcrylicBlock {
         Strings{id: stringsPool}
         id: editBox
         property int indexOfThisDelegate: index

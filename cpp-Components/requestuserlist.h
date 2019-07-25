@@ -1,5 +1,5 @@
-//总体框架：             Storage - Data - Model - Interaction - View
-//该类所处层级：     Model
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Data-Model
 /************************************************************************************************************************
 类名：     RequestUserList
 功能：     用于报名的用户（负责人和翻译者）显示，继承QAbstractListModel，作为界面显示的Model

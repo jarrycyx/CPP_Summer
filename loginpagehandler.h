@@ -1,5 +1,5 @@
-//总体框架：             Storage - Data - Model - Interaction - View
-//该类所处层级：     Model-Interaction
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Model-Interaction
 /************************************************************************************************************************
 类名：     LoginPageHandler
 功能：     登录、注册页面的后台处理类，通过信号槽和直接唤起函数与QML紧密联动

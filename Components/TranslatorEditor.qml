@@ -1,10 +1,17 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     View
+/************************************************************************************************************************
+名称：     TranslatorEditor
+功能：     上层控件，翻译者页面查看、修改文章状态的组件
+日期：     20190723 实现基本功能
+************************************************************************************************************************/
+
+
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
-
 import QtQuick.Controls.Universal 2.12
-
 import "../Resources"
 
 
@@ -25,6 +32,8 @@ Rectangle {
         thisContent=content;
         thisTrTitle=translatedTitle;
         thisTrContent=translatedContent;
+
+        button3.text="查看译文";
         mode=1;
         blankText.visible=false;
         visible=true;
@@ -33,6 +42,7 @@ Rectangle {
         articleStatus=statusCode;
         indexInList=index;
 
+        //针对不同状态号来定制组件
         switch (translatorEditorRect.articleStatus){
         case 120:
             statusText.text="正在招募译者";
@@ -41,6 +51,7 @@ Rectangle {
             button2.visible=false;
             element.text="翻译需求详情";
             button3.visible=false;
+            button4.visible=false;
             break;
         case 130:
             statusText.text="招募译者结束，即将拆分";
@@ -49,6 +60,7 @@ Rectangle {
             button2.visible=false;
             element.text="我负责的翻译需求";
             button3.visible=false;
+            button4.visible=false;
             break;
         case 140:
             statusText.text="已被拆分，等待分配子任务";
@@ -57,17 +69,29 @@ Rectangle {
             button2.visible=false;
             element.text="我负责的翻译需求（已拆分为子任务）";
             button3.visible=false;
+            button4.visible=false;
             break;
         case 210:
-            statusText.text="子任务已分配译者";
+        case 215:
+        case 220://三种状态相同处理
+            statusText.text="已分配译者,正在翻译";
             button.text="上传";
             button2.visible=false;
             element.text="我负责的子任务";
             button3.visible=true;
+            button4.visible=true;
             titleEdit.text=translatedTitle;
             contentEdit.text=translatedContent;
-            //contentEdit.text="Translated content for" + content + Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd");
-            //titleEdit.text="Translated Subtitle";
+            break;
+        case 230:
+            statusText.text="子任务已完成，审核通过";
+            button.enabled=false;
+            button2.visible=false;
+            element.text="我负责的子任务";
+            button3.visible=false;
+            button4.visible=true;
+            titleEdit.text=translatedTitle;
+            contentEdit.text=translatedContent;
             break;
         }
 
@@ -220,8 +244,9 @@ Rectangle {
             case 120:
                 translatorPageHandler.signForTranslatorArticle(indexInList);
                 break;
-            case 210://两种代号情况下都可以修改译文
-            case 220:
+            case 210:
+            case 215:
+            case 220://三种状态相同操作
                 translatorPageHandler.editTranslatedArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
             }
@@ -302,5 +327,22 @@ Rectangle {
             }
         }
     }
+
+
+    Button {
+        id: button4
+        x: parent.width-5-120-11-120
+        y: parent.height-13-40
+        visible: false;
+        width: 120
+        height: 40
+        text: qsTr("查看反馈")
+        font.family: "DengXian"
+        onClicked: {
+            var commentWindow=Qt.createComponent("../TranslatorCommentDialog.qml").createObject(RegulatorViewer)
+            commentWindow.currentArticleIndex=indexInList;
+        }
+    }
+
 
 }

@@ -1,5 +1,5 @@
-//总体框架：             Storage - Data - Model - Interaction - View
-//该类所处层级：     Storage-Data
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Storage-Data
 /************************************************************************************************************************
 类名：     StorageUnit
 功能：     本地存储内容的基类，实现对存储状态的标记，用于程序结束时对服务器信息的更新
@@ -19,12 +19,18 @@
 class StorageUnit
 {
 public:
-    StorageUnit(int newStatus);
+    enum ModifyStatus{
+        Unchanged = 0,
+        New,
+        Changed,
+        Deleted
+    };
+    StorageUnit(ModifyStatus newStatus);
     int getModifyStatus();
-    void setModifyStatus(int m);
+    void setModifyStatus(ModifyStatus m);
 
 private:
-    int modifyStatus; //0:未更改，1:新建，2:修改
+    ModifyStatus modifyStatus; //0:未更改，1:新建，2:修改，3：删除
 };
 
 #endif // STORAGEUNIT_H

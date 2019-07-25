@@ -1,16 +1,20 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     View
+/************************************************************************************************************************
+文件名：    MiniArticleBlock
+功能：      实现Fluent Design效果的中间层控件，使用了AcrylicBlock的封装
+日期：      20190710 基本实现
+           20190711 实现拖动效果
+           20190715 分拆成Mini，This，Other三个控件，用于分离调用
+************************************************************************************************************************/
+
+
 import QtQuick 2.0
-
-
 import "../Resources"
 
 Component {
-    //id: dragDelegate
-
-
     MouseArea {
         Strings{id: stringsPool}
-        //FontLoader { id: pingfangFont; source: "../Resources/PingFang Regular.ttf" }
-
         z: 2
         id: dragArea
         property bool held: false
@@ -19,14 +23,13 @@ Component {
         property int indexOfThisDelegate: index
         default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
 
-
-        //anchors { left: content.left; right: content.right }
-        //anchors.centerIn: parent
+        //计算边距
         height: content.height+45
         width: content.width+30
 
         signal selectedIndexChange(int idx)
 
+        //定义拖拽方向和对象
         drag.axis: typeOfList===1 ? Drag.XAndYAxis : Drag.None
         drag.target: content
 
@@ -34,7 +37,8 @@ Component {
             held = true;
             released = false;
             console.log("p");
-            content.changeStatus(1);
+            //通知AcrylicBlock改变状态
+            content.changeStatus(content.pressed);
         }
         onReleased: {
             if (held) released=true;
@@ -47,6 +51,7 @@ Component {
 
             console.log("r"+ListView.delegate+ListView.flag);
 
+            //为了能够被多处调用，通过判断是否存在来调用不同来源的类似方法
             if (typeof senderArticlesList!=='undefined')
                 senderArticlesList.currentIndex=-1;
             if (typeof otherArticlesList!=='undefined')
@@ -54,32 +59,38 @@ Component {
             if (typeof senderSubarticlesList!=='undefined')
                 senderSubarticlesList.currentIndex=indexOfThisDelegate;
 
-            content.changeStatus(2);
+            //通知AcrylicBlock改变状态
+            content.changeStatus(content.released);
             newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, translatedTitle, translatedContent,
                                           statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
 
         }
         onSelectedChanged: {
+            //更新选中状态
+            //通知AcrylicBlock组件进行高亮显示
             content.selected=GridView.isCurrentItem;
             console.log(indexOfThisDelegate+" is "+selected);
         }
         hoverEnabled: true
 
+        //通知AcrylicBlock进行追光
         onMouseXChanged: content.chaseLight(mouseX,-1)
         onMouseYChanged: content.chaseLight(-1,mouseY)
         onEntered: {
             console.log("en");
-            content.changeStatus(3);
+            //通知AcrylicBlock改变状态
+            content.changeStatus(content.hovered);
         }
         onExited: {
             console.log("ex");
-            content.changeStatus(4);
+            //通知AcrylicBlock改变状态
+            content.changeStatus(content.none);
         }
 
 
 
-        LightBlock {
+        AcrylicBlock {
             id: content
             height: 76
             width: 305
@@ -149,8 +160,5 @@ Component {
                 }
             ]
         }
-
-
     }
-
 }

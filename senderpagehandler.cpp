@@ -53,7 +53,7 @@ void SenderPageHandler::addSenderArticle(QString title, QString content)
     MyArticleObj *newSenderArticle = new MyArticleObj(thisUserId);
     newSenderArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), title, content);
     newSenderArticle->setStatusCodeOfArticle(100);
-    newSenderArticle->setModifyStatus(1);
+    newSenderArticle->setModifyStatus(StorageUnit::New);
     //由于需要显示两处，保存一处，故需要增加三处
     //allArticles.push_front(newSenderArticle);
     globalStorageComponent->addAnArticle(newSenderArticle);

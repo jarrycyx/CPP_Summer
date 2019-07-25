@@ -121,15 +121,21 @@ void ArticlesList::editAnArticle(int index)
 
 void ArticlesList::addAnArticle(MyArticleObj *newArticle)
 {
-    beginInsertRows(QModelIndex(), 0, 0);                                                 //开始刷新
+    beginInsertRows(QModelIndex(), 0, 0);                                   //开始刷新
     articles.push_front(newArticle);
-    endInsertRows();                                                                                       //结束刷新
+    endInsertRows();                                                        //结束刷新
 }
 
 void ArticlesList::deleteAnArticle(int index)
 {
     beginRemoveRows(QModelIndex(), index, index);
-    articles[index]->setModifyStatus(3);
+    articles[index]->setModifyStatus(StorageUnit::Deleted);
     articles.remove(index);
     endRemoveRows();
 }
+
+
+void ArticlesList::refreshAll(){
+    emit dataChanged(createIndex(0, 0), createIndex(articles.length()-1, 0));
+}
+

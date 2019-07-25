@@ -188,7 +188,7 @@ int LoginPageHandler::addUser(QString name, QString pswd, int role)
     int newUserId = globalStorageComponent->getAUserId();
     qDebug() << "注册ID" << newUserId;
     MyUserObj *newUser = new MyUserObj(newUserId, name, pswd, role);
-    newUser->setModifyStatus(1);
+    newUser->setModifyStatus(StorageUnit::New);
     globalStorageComponent->addAUser(newUser);
     return 1;
 }

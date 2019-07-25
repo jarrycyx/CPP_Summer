@@ -1,3 +1,13 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Model-Interaction
+/************************************************************************************************************************
+类名：     TranslatorPageHandler
+功能：     翻译者页面的后台处理类，通过信号槽和直接唤起函数与QML紧密联动
+日期：     20190722 实现收取文章和报名功能
+                 20190723 实现保存翻译功能
+************************************************************************************************************************/
+
+
 #ifndef TranslatorPageHandler_H
 #define TranslatorPageHandler_H
 
@@ -13,11 +23,6 @@
 
 #include "cpp-Components/globalcomponents.h"
 
-/* 发送者页面后台处理程序
- * 也用于启动一些附属页面
- * 其功能与MyArticleObject紧密相关
- */
-
 class TranslatorPageHandler : public QObject
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
@@ -30,6 +35,7 @@ public :
 
     Q_INVOKABLE void signForTranslatorArticle(int index);
     Q_INVOKABLE void editTranslatedArticle(int index, QString title, QString content);
+    Q_INVOKABLE QString getRegulatorComment(int index);
 
     void loadArticleTranslatorData(int articleId);
 

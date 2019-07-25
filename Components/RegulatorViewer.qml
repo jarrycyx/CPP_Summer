@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
-
 import QtQuick.Controls.Universal 2.12
 
 import "../Resources"
@@ -25,6 +24,7 @@ Rectangle {
         thisContent=content;
         thisTrTitle=translatedTitle;
         thisTrContent=translatedContent;
+        button3.text="查看译文";
 
         mode=1;
         blankText.visible=false;
@@ -39,6 +39,7 @@ Rectangle {
             statusText.text="已上传，招募负责人开始";
             element.text="翻译需求详情";
             button.text="报名";
+            button.enabled=true;
             button2.visible=false;
             button3.visible=false;
             break;
@@ -46,6 +47,7 @@ Rectangle {
             statusText.text="已标记负责人，招募负责人结束";
             element.text="我负责的翻译需求";
             button.text="保存";
+            button.enabled=true;
             button2.visible=true;
             button2.text="开始招募译者";
             button3.visible=false;
@@ -54,6 +56,7 @@ Rectangle {
             statusText.text="开始招募译者";
             element.text="我负责的翻译需求";
             button.text="停止招募";
+            button.enabled=true;
             button2.visible=false;
             element.text="翻译需求详情";
             button3.visible=false;
@@ -61,6 +64,7 @@ Rectangle {
         case 130:
             statusText.text="招募译者结束，即将分配任务";
             button.text="自动拆分";
+            button.enabled=true;
             button2.visible=false;
             element.text="我负责的翻译需求";
             button3.visible=false;
@@ -76,13 +80,42 @@ Rectangle {
         case 200:
             statusText.text="子任务已创建，等待分配译者";
             button.text="分配任务";
+            button.enabled=true;
             button2.visible=false;
             element.text="我负责的子任务";
             button3.visible=false;
             break;
         case 210:
+        case 215:
+        case 220://三种状态相同处理
             statusText.text="已分配译者，译者正在进行翻译";
             button.text="反馈";
+            button.enabled=true;
+            button2.visible=true;
+            button2.text="审核通过"
+            element.text="我负责的子任务";
+            button3.visible=true;
+            break;
+        case 230:
+            statusText.text="翻译已审核通过";
+            button.text="合并译文";
+            button.enabled=true;
+            button2.visible=false;
+            element.text="我负责的子任务";
+            button3.visible=true;
+            break;
+        case 300:
+            statusText.text="翻译内容已合并";
+            button.text="提交给用户";
+            button.enabled=true;
+            button2.visible=false;
+            element.text="我负责的子任务";
+            button3.visible=true;
+            break;
+        case 400:
+            statusText.text="翻译已合并，该子文章将被删除";
+            button.text="合并译文";
+            button.enabled=false;
             button2.visible=false;
             element.text="我负责的子任务";
             button3.visible=true;
@@ -254,8 +287,13 @@ Rectangle {
                 regulatorPageHandler.chooseTranslator(indexInList);
                 break;
             case 210:
+            case 215:
+            case 220://三种状态相同操作
                 var commentWindow=Qt.createComponent("../RegulatorCommentDialog.qml").createObject(RegulatorViewer)
                 commentWindow.currentArticleIndex=indexInList;
+                break;
+            case 230:
+                regulatorPageHandler.mergeRegulatorArticle(indexInList);
                 break;
             }
         }
@@ -277,6 +315,11 @@ Rectangle {
             case 0:
             case 110:
                 regulatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
+                break;
+            case 210:
+            case 215:
+            case 220:
+                regulatorPageHandler.acceptSubarticle(indexInList);
                 break;
             }
         }

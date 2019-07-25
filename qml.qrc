@@ -3,7 +3,6 @@
         <file>SenderPage.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Login.qml</file>
-        <file>Components/LightBlock.qml</file>
         <file>Resources/passage_state_1.svg</file>
         <file>Resources/passage_state_2.svg</file>
         <file>Resources/Strings.qml</file>
@@ -31,7 +30,6 @@
         <file>Resources/status-code/210.svg</file>
         <file>Resources/status-code/215.svg</file>
         <file>Resources/status-code/220.svg</file>
-        <file>Resources/status-code/225.svg</file>
         <file>Components/ThisUserArticleBlock.qml</file>
         <file>Components/OtherUserArticleBlock.qml</file>
         <file>Components/MiniArticleBlock.qml</file>
@@ -39,5 +37,11 @@
         <file>TranslatorPage.qml</file>
         <file>Components/ChooseUserDelegate.qml</file>
         <file>RegulatorCommentDialog.qml</file>
+        <file>TranslatorCommentDialog.qml</file>
+        <file>Resources/status-code/230.svg</file>
+        <file>Resources/status-code/300.svg</file>
+        <file>Resources/status-code/400.svg</file>
+        <file>Resources/status-code/240.svg</file>
+        <file>Components/AcrylicBlock.qml</file>
     </qresource>
 </RCC>
