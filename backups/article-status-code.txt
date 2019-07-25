@@ -21,3 +21,5 @@ article-status-code
 request-type-code
 1	报名为负责人
 2	报名为译者
+3	负责人对译者反馈
+4	状态更新

@@ -39,7 +39,8 @@ class SenderPageHandler : public QObject
      * 所有用户的文章列表
      * 负责人选取列表的数据 */
 
-        public : explicit SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent = nullptr);
+public :
+    explicit SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent = nullptr);
     ~SenderPageHandler();
 
     //从QML唤起的删除文章函数

@@ -8,6 +8,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "senderpagehandler.h"
 #include "regulatorpagehandler.h"
+#include "userinfopagehandler.h"
 
 #include <QSqlDatabase>
 
@@ -80,6 +81,11 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
     case 1:
     {
         emit sendSuccessMessage("登陆成功");
+
+        UserInfoPageHandler* newUserHandler = new UserInfoPageHandler(
+                    globalStorageComponent->searchUserById(searchUser(name, role)),
+                    globalStorageComponent);
+        newUserHandler->startPage(thisEngine);
 
         if (role == 1)
         {

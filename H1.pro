@@ -20,6 +20,7 @@ QT += svg
 SOURCES += \
         cpp-Components/articleslist.cpp \
         cpp-Components/globalcomponents.cpp \
+        cpp-Components/messagelist.cpp \
         cpp-Components/requestuserlist.cpp \
         cppobjs/myarticleobj.cpp \
         cppobjs/myrequestobj.cpp \
@@ -29,7 +30,8 @@ SOURCES += \
         main.cpp \
         regulatorpagehandler.cpp \
         senderpagehandler.cpp \
-        translatorpagehandler.cpp
+        translatorpagehandler.cpp \
+        userinfopagehandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -49,6 +51,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     cpp-Components/articleslist.h \
     cpp-Components/globalcomponents.h \
+    cpp-Components/messagelist.h \
     cpp-Components/requestuserlist.h \
     cppobjs/myarticleobj.h \
     cppobjs/myrequestobj.h \
@@ -57,7 +60,8 @@ HEADERS += \
     loginpagehandler.h \
     regulatorpagehandler.h \
     senderpagehandler.h \
-    translatorpagehandler.h
+    translatorpagehandler.h \
+    userinfopagehandler.h
 
 INCLUDEPATH += $$PWD/cppobjs
 DEPENDPATH += $$PWD/cppobjs

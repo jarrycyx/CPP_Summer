@@ -18,6 +18,7 @@
 
 #include "storageunit.h"
 #include <QString>
+#include <QDateTime>
 
 class MyRequestObj : public StorageUnit
 {
@@ -36,6 +37,9 @@ public:
     //请求内容，尽在type为3时有效
     inline QString getContent() { return content ;}
     void setContent(QString str);
+    //请求上传时间
+    inline QDateTime getTime(){return time;}
+    void setTime(QDateTime newTime);
 
 private:
     int requestId;
@@ -43,6 +47,7 @@ private:
     int userId;
     int type;
     QString content;
+    QDateTime time;
 };
 
 #endif // MYREQUESTOBJ_H

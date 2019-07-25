@@ -13,6 +13,13 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
+
+    property string thisTitle
+    property string thisContent
+    property string thisTrTitle
+    property string thisTrContent
+    property int typeOfThis
+
     function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){
         //type: 1,自己的需求 2,别人的需求
         mode=1;
@@ -24,33 +31,50 @@ Rectangle {
         indexInList=index;
         element.text="修改翻译需求"
 
+
+        thisTitle=title;
+        thisContent=content;
+        thisTrTitle=translatedTitle;
+        thisTrContent=translatedContent;
+        typeOfThis=typeOfArticle;
+
         switch (senderEditorRect.articleStatus){
         case 0:
             statusText.text="未上传";
             button.text="发送";
+            button.enabled=true;
             button2.visible=true;
             break;
         case 100:
             statusText.text="已上传，招募负责人开始";
             button.text="修改";
+            button.enabled=true;
             button2.visible=true;
             button2.text="报名状态";
             break;
         case 110:
             statusText.text="已标记负责人，招募负责人结束";
             button.text="修改";
+            button.enabled=true;
             button2.visible=false;
             break;
         case 120:
             statusText.text="开始招募译者";
             button.text="修改";
+            button.enabled=true;
             button2.visible=false;
             break;
         case 130:
             statusText.text="招募译者结束";
+            button.enabled=false;
             break;
         case 140:
-            statusText.text="已拆分";
+            statusText.text="已拆分，译者紧张工作中";
+            button.enabled=false;
+            button2.visible=false;
+            break;
+        case 300:
+            statusText.text="翻译工作完成，负责人审核中";
             button.enabled=false;
             button2.visible=false;
             break;
@@ -63,7 +87,6 @@ Rectangle {
             titleEdit.enabled=false;
             contentEdit.enabled=false;
         }else {
-            button.enabled=true;
             button2.enabled=true;
             titleEdit.enabled=true;
             contentEdit.enabled=true;
@@ -233,6 +256,7 @@ Rectangle {
             case 140:
                 break;
             }
+
         }
         highlighted: true
         Universal.foreground: "#ffffff"
@@ -253,6 +277,7 @@ Rectangle {
                 senderPageHandler.chooseRegulator(indexInList);
                 break;
             }
+
         }
     }
 
@@ -288,6 +313,18 @@ Rectangle {
             bold: true;
             family: "DengXian";
             pixelSize: 16
+        }
+    }
+
+    ToolButton {
+        id: toolButton
+        x: 563
+        y: 2
+        height: 32
+        text: qsTr("用户信息")
+        font.family: "DengXian";
+        onClicked: {
+
         }
     }
 

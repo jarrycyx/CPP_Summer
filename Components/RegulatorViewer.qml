@@ -17,8 +17,10 @@ Rectangle {
     property string thisContent
     property string thisTrTitle
     property string thisTrContent
+    property int typeOfThis
 
-    function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){
+    function editOrViewAnArticle(title, content, translatedTitle,
+                                 translatedContent, statusCode, index, typeOfArticle){
         //type: 1,自己的需求 2,别人的需求
         thisTitle=title;
         thisContent=content;
@@ -33,6 +35,7 @@ Rectangle {
         contentEdit.text=content;
         articleStatus=statusCode;
         indexInList=index;
+        typeOfThis=typeOfArticle;
 
         switch (senderEditorRect.articleStatus){
         case 100:
@@ -104,6 +107,14 @@ Rectangle {
             element.text="我负责的子任务";
             button3.visible=true;
             break;
+        case 240:
+            statusText.text="子文章已合并，即将删除";
+            button.text="合并译文";
+            button.enabled=false;
+            button2.visible=false;
+            element.text="我负责的子任务";
+            button3.visible=true;
+            break;
         case 300:
             statusText.text="翻译内容已合并";
             button.text="提交给用户";
@@ -112,14 +123,7 @@ Rectangle {
             element.text="我负责的子任务";
             button3.visible=true;
             break;
-        case 400:
-            statusText.text="翻译已合并，该子文章将被删除";
-            button.text="合并译文";
-            button.enabled=false;
-            button2.visible=false;
-            element.text="我负责的子任务";
-            button3.visible=true;
-            break;
+
         }
 
         if (typeOfArticle===2){//如果是查看其他文章
@@ -129,7 +133,6 @@ Rectangle {
             titleEdit.enabled=false;
             contentEdit.enabled=false;
         }else {
-            button.enabled=true;
             button2.enabled=true;
             titleEdit.enabled=true;
             contentEdit.enabled=true;
@@ -322,6 +325,7 @@ Rectangle {
                 regulatorPageHandler.acceptSubarticle(indexInList);
                 break;
             }
+
         }
     }
 
@@ -375,4 +379,5 @@ Rectangle {
             }
         }
     }
+
 }

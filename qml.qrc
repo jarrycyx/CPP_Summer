@@ -43,5 +43,7 @@
         <file>Resources/status-code/400.svg</file>
         <file>Resources/status-code/240.svg</file>
         <file>Components/AcrylicBlock.qml</file>
+        <file>Resources/userinfo.svg</file>
+        <file>UserInfoPage.qml</file>
     </qresource>
 </RCC>

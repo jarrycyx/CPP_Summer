@@ -58,7 +58,7 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
                 biggestUserId = query->value(0).toInt();
         }
 
-        query->exec(QString("SELECT request_id,user_id,article_id,content,type FROM requests"));
+        query->exec(QString("SELECT request_id,user_id,article_id,content,type,time FROM requests"));
         while (query->next())
         {
             MyRequestObj *requestFromDB = new MyRequestObj(
@@ -66,6 +66,7 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
                         query->value(1).toInt(),
                         query->value(2).toInt(),
                         query->value(4).toInt());
+            requestFromDB->setTime(query->value(5).toDateTime());
             requestFromDB->setContent(query->value(3).toString());
             allRequests.append(requestFromDB);
 

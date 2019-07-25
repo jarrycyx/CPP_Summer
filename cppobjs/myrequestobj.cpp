@@ -36,3 +36,9 @@ void MyRequestObj::setContent(QString str)
             setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
     }
 }
+
+
+
+void MyRequestObj::setTime(QDateTime newTime){
+    time = newTime;
+}

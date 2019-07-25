@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtGraphicalEffects 1.12
+import QtQuick.Window 2.0
 
 import "./Components"
 import "./Resources"
@@ -11,8 +12,7 @@ ApplicationWindow {
     id: mainWindow
     objectName: "mainWindow"
     visible: true
-    width: 1280
-    height: 800
+    visibility: Window.Maximized
     title: qsTr("Stack")
     Strings{id: stringsPool}
 

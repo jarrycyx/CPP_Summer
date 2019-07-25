@@ -24,6 +24,7 @@ Rectangle {
     property string thisContent
     property string thisTrTitle
     property string thisTrContent
+    property int typeOfThis
 
     id: translatorEditorRect
 
@@ -41,6 +42,7 @@ Rectangle {
         contentEdit.text=content;
         articleStatus=statusCode;
         indexInList=index;
+        typeOfThis=typeOfArticle;
 
         //针对不同状态号来定制组件
         switch (translatorEditorRect.articleStatus){
@@ -48,6 +50,7 @@ Rectangle {
             statusText.text="正在招募译者";
             element.text="我负责的翻译需求";
             button.text="报名";
+            button.enabled=true;
             button2.visible=false;
             element.text="翻译需求详情";
             button3.visible=false;
@@ -76,6 +79,7 @@ Rectangle {
         case 220://三种状态相同处理
             statusText.text="已分配译者,正在翻译";
             button.text="上传";
+            button.enabled=true;
             button2.visible=false;
             element.text="我负责的子任务";
             button3.visible=true;
@@ -85,6 +89,18 @@ Rectangle {
             break;
         case 230:
             statusText.text="子任务已完成，审核通过";
+            button.text="上传"
+            button.enabled=false;
+            button2.visible=false;
+            element.text="我负责的子任务";
+            button3.visible=false;
+            button4.visible=true;
+            titleEdit.text=translatedTitle;
+            contentEdit.text=translatedContent;
+            break;
+        case 240:
+            statusText.text="子任务已合并，任务完成，等待发放酬金";
+            button.text="上传"
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的子任务";
@@ -102,7 +118,6 @@ Rectangle {
             titleEdit.enabled=false;
             contentEdit.enabled=false;
         }else {
-            button.enabled=true;
             button2.enabled=true;
             titleEdit.enabled=true;
             contentEdit.enabled=true;
@@ -271,6 +286,7 @@ Rectangle {
                 translatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
                 break;
             }
+
         }
     }
 
