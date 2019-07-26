@@ -3,7 +3,7 @@
 #include "regulatorpagehandler.h"
 
 UserInfoPageHandler::UserInfoPageHandler(MyUserObj* thisUser, GlobalComponents *newGlobal, QObject *parent) :
-    AbstractPage(parent), user(thisUser), globalStorageComponent(newGlobal)
+    AbstractPage(-1, newGlobal), user(thisUser)
 {
 
 }

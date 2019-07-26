@@ -3,12 +3,14 @@
 
 #include <QObject>
 #include <QQmlApplicationEngine>
+#include "../CPP_Storage/globalcomponents.h"
 
 class AbstractPage : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractPage(QObject *parent = nullptr);
+    explicit AbstractPage(int newUserId, GlobalComponents *newGlobal, QObject *parent = nullptr);
+    Q_INVOKABLE void showUserInfo();
 
 signals:
     //错误信息信号，向QML发送，使其在界面上显示
@@ -19,6 +21,13 @@ signals:
 public slots:
     //开始渲染主页面
     virtual void startPage(QQmlApplicationEngine *engine)=0;
+
+protected:
+    //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
+    QQmlApplicationEngine *thisEngine;
+    GlobalComponents *globalStorageComponent;
+    //当前负责人身份标识，默认为-1（空）
+    int thisUserId;
 };
 
 #endif // ABSTRACTPAGE_H

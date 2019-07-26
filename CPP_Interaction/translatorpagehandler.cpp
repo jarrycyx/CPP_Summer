@@ -15,8 +15,8 @@
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
 TranslatorPageHandler::TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent)
-    : AbstractPage(parent), translatorSubarticleList(1),
-      allSeekingTranslatorArticle(2), thisUserId(translatorId)
+    : AbstractPage(translatorId, newGlobal), translatorSubarticleList(1),
+      allSeekingTranslatorArticle(2)
 {
 
     globalStorageComponent = newGlobal;
@@ -41,11 +41,11 @@ void TranslatorPageHandler::startLoadingTranslatorArticleList(int userId)
         qDebug() << "Translator article";
 
         MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
-        if (selectedArticle->translatorIdOfArticle() == userId)
+        if (selectedArticle->translatorIdOfArticle() == userId
+                && selectedArticle->statusCodeOfArticle() != 400)
         {
             if (selectedArticle->statusCodeOfArticle() / 100 == 2)
-                if (selectedArticle->statusCodeOfArticle() != 240
-                        && selectedArticle->statusCodeOfArticle() != 400)
+                if (selectedArticle->statusCodeOfArticle() != 240)
                     translatorSubarticleList.addAnArticle(selectedArticle);
         }
 

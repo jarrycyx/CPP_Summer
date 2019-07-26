@@ -20,10 +20,10 @@
 
 class UserInfoPageHandler : public AbstractPage
 {
-    Q_OBJECT
+Q_OBJECT
+
 public:
     explicit UserInfoPageHandler(MyUserObj* thisUser, GlobalComponents *newGlobal, QObject *parent = nullptr);
-    void startPage(QQmlApplicationEngine *engine);
     Q_INVOKABLE QString getUsername();
     Q_INVOKABLE int getMoney();
     Q_INVOKABLE int getCredit();
@@ -35,11 +35,11 @@ public:
 signals:
 
 public slots:
+    void startPage(QQmlApplicationEngine *engine);
 
 private:
     MyUserObj* user;
     MessageList messageList;
-    GlobalComponents *globalStorageComponent;
 };
 
 #endif // USERINFOPAGEHANDLER_H

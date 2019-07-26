@@ -34,8 +34,8 @@
 
 class SenderPageHandler : public AbstractPage
 {
-    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-        /* 以上三个model分别存储
+Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
+    /* 以上三个model分别存储
      * 该用户的文章列表
      * 所有用户的文章列表
      * 负责人选取列表的数据 */
@@ -60,12 +60,6 @@ private:
     ArticlesList senderArticleList, allUserArticleList;
     RequestUserList requestUserList;
 
-    //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
-    QQmlApplicationEngine *thisEngine;
-    GlobalComponents *globalStorageComponent;
-
-    //当前发送者身份标识，默认为-1（空）
-    int thisUserId = -1;
     //当前需要发送的文章身份标识，没有要发送的文章则为-1
     int articleSendingId = -1;
     //当前正在编辑/查看的文章

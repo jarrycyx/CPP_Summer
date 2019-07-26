@@ -15,7 +15,7 @@
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
 SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent)
-    : AbstractPage(parent), senderArticleList(1), allUserArticleList(2), thisUserId(senderId)
+    : AbstractPage(senderId, newGlobal), senderArticleList(1), allUserArticleList(2)
 {
 
     globalStorageComponent = newGlobal;
@@ -40,11 +40,13 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId)
     int len = globalStorageComponent->getArticlesLength();
     for (int i = 0; i < len; i++)
     {
-        qDebug() << "sender article";
-        if (globalStorageComponent->getArticleToEdit(i)->senderIdOfArticle() == userId)
-            senderArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
-        if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
-            allUserArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+        if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() != 400){
+            qDebug() << "sender article";
+            if (globalStorageComponent->getArticleToEdit(i)->senderIdOfArticle() == userId)
+                senderArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+            if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
+                allUserArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+        }
     }
 }
 
@@ -135,7 +137,7 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index)
 {
     loadArticleRegulatorData(senderArticleList.getArticle(index)->articleIdOfArticle());
     currentInViewIndex = index;
-    const QUrl url(QStringLiteral("qrc:/ChooseUserMiniPage.qml"));
+    const QUrl url(QStringLiteral("qrc:/QML/OtherPages/ChooseUserMiniPage.qml"));
     thisEngine->load(url);
 }
 

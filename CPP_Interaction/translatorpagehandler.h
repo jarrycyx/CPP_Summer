@@ -26,7 +26,7 @@
 
 class TranslatorPageHandler : public AbstractPage
 {
-    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
+Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
 public :
     explicit TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent = nullptr);
@@ -43,12 +43,6 @@ public :
 private:
     ArticlesList translatorSubarticleList, allSeekingTranslatorArticle;
 
-    //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
-    QQmlApplicationEngine *thisEngine;
-    GlobalComponents *globalStorageComponent;
-
-    //当前负责人身份标识，默认为-1（空）
-    int thisUserId = -1;
     //当前正在浏览的文章身份标识，没有文章则为-1
     int articleSendingId = -1;
     //当前正在编辑/查看的文章

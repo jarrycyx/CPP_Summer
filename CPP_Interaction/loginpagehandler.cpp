@@ -33,7 +33,8 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190709
 *************************************************************************/
-LoginPageHandler::LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent) : AbstractPage(parent), globalStorageComponent(newGlobalStorageComponent)
+LoginPageHandler::LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent)
+    : AbstractPage(-1, newGlobalStorageComponent)
 {
 }
 

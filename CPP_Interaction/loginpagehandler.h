@@ -42,9 +42,6 @@ class LoginPageHandler : public AbstractPage
     Q_INVOKABLE int userLogin(QString name, QString pswd, int role);
 
 private:
-    //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
-    QQmlApplicationEngine *thisEngine;
-    GlobalComponents *globalStorageComponent;
     SenderPageHandler *newSenderPage;
     RegulatorPageHandler *newRegulatorPage;
     TranslatorPageHandler *newTranslatorPage;

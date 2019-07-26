@@ -390,18 +390,4 @@ Rectangle {
             }
         }
     }
-
-
-    ToolButton {
-        id: toolButton
-        x: parent.width-5-width
-        y: 2
-        height: 32
-        text: qsTr("用户信息")
-        font.family: "DengXian";
-        onClicked: {
-            regulatorPageHandler.showUserInfo();
-        }
-    }
-
 }

@@ -16,8 +16,8 @@
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
 RegulatorPageHandler::RegulatorPageHandler(int regulatorId, GlobalComponents *newGlobal, QObject *parent)
-    : AbstractPage(parent), regulatorSubarticleList(1),
-      regulatorArticleList(1), allSeekingRegulatorArticle(2), thisUserId(regulatorId)
+    : AbstractPage(regulatorId ,newGlobal), regulatorSubarticleList(1),
+      regulatorArticleList(1), allSeekingRegulatorArticle(2)
 {
 
     globalStorageComponent = newGlobal;
@@ -41,11 +41,11 @@ void RegulatorPageHandler::startLoadingRegulatorArticleList(int userId)
     {
         qDebug() << "Regulator article";
         MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
-        if (selectedArticle->regulatorIdOfArticle() == userId)
+        if (selectedArticle->regulatorIdOfArticle() == userId
+                && selectedArticle->statusCodeOfArticle() != 400)
         {
             if (selectedArticle->statusCodeOfArticle() / 100 == 2){
-                if (selectedArticle->statusCodeOfArticle() != 240
-                        && selectedArticle->statusCodeOfArticle() != 400)
+                if (selectedArticle->statusCodeOfArticle() != 240)
                     regulatorSubarticleList.addAnArticle(selectedArticle);
             }
             else regulatorArticleList.addAnArticle(selectedArticle);
@@ -324,12 +324,6 @@ void RegulatorPageHandler::startPage(QQmlApplicationEngine *engine)
 }
 
 
-Q_INVOKABLE void RegulatorPageHandler::showUserInfo(){
-    UserInfoPageHandler* newUserHandler = new UserInfoPageHandler(
-                globalStorageComponent->searchUserById(thisUserId),
-                globalStorageComponent);
-    newUserHandler->startPage(thisEngine);
-}
 
 /*************************************************************************
 【函数名称】  itemMove

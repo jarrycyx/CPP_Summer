@@ -35,8 +35,8 @@
 
 class RegulatorPageHandler : public AbstractPage
 {
-    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-        /* 以上三个model分别存储
+Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
+    /* 以上三个model分别存储
      * 该用户的文章列表
      * 所有用户的文章列表
      * 负责人选取列表的数据 */
@@ -60,7 +60,6 @@ public :
     Q_INVOKABLE void commentToTranslator(int idx, QString comment);
     Q_INVOKABLE QString getHistoryComment(int idx);
     Q_INVOKABLE void acceptSubarticle(int idx);
-    Q_INVOKABLE void showUserInfo();
     Q_INVOKABLE void submitToSender(int idx);
 
     void loadArticleTranslatorData(int originArticleId);
@@ -69,12 +68,6 @@ private:
     ArticlesList regulatorSubarticleList, regulatorArticleList, allSeekingRegulatorArticle;
     RequestUserList translatorList;
 
-    //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
-    QQmlApplicationEngine *thisEngine;
-    GlobalComponents *globalStorageComponent;
-
-    //当前负责人身份标识，默认为-1（空）
-    int thisUserId = -1;
     //当前正在浏览的文章身份标识，没有文章则为-1
     int articleSendingId = -1;
     //当前正在编辑/查看的文章

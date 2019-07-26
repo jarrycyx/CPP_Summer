@@ -45,8 +45,8 @@ public:
     MyArticleObj();
     MyArticleObj(const int &sender); //构造函数，传入必须要素
 
-    int setArticleInfo(const int &newId, const QString &title, const QString &content); //未知文章ID，设置新的文章内容
-
+    //未知文章ID，设置新的文章内容
+    int setArticleInfo(const int &newId, const QString &title, const QString &content);
     //以下为读取和设置文章内容各函数
     //发布者id
     int senderIdOfArticle() const;

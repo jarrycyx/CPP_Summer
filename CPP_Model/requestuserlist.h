@@ -29,9 +29,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void addARequestUser(MyUserObj *newRequestUser);
-
     inline MyUserObj *getRequestUser(int idx) { return requestUsers[idx]; }
-
     inline void removeAllRequestUsers() { requestUsers.clear(); }
 
 

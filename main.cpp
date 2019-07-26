@@ -4,11 +4,10 @@
 #include <QObject>
 #include <QQuickView>
 #include <QQmlContext>
-#include <cppobjs/myarticleobj.h>
-#include <loginpagehandler.h>
 #include <QTimer>
-#include <senderpagehandler.h>
-#include "cpp-Components/globalcomponents.h"
+#include "CPP_Storage/globalcomponents.h"
+#include "CPP_Interaction/loginpagehandler.h"
+
 
 int main(int argc, char *argv[])
 {

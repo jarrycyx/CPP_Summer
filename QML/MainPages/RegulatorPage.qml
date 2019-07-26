@@ -278,4 +278,36 @@ ApplicationWindow {
         }
     }
 
+    ToolButton {
+        width: moreUserInfoText.width + 42
+        height: 32
+        x: parent.width-35-width
+        y: 32
+        z: 40
+        Text {
+            id: moreUserInfoText
+            x: 8
+            y: 9
+            text: qsTr("我的用户信息")
+            font.family: "DengXian";
+        }
+        onClicked: {
+            regulatorPageHandler.showUserInfo();
+        }
+        Image {
+            x: parent.width - 28
+            y: 8
+            z: 40
+            height: 16
+            width: 16
+            sourceSize.height: 16
+            sourceSize.width: 16
+            source: "../../Resources/moreuserinfo.svg"
+        }
+    }
 }
+
+/*##^## Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+ ##^##*/
