@@ -18,24 +18,24 @@ QT += svg
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        cpp-Components/articleslist.cpp \
-        cpp-Components/globalcomponents.cpp \
-        cpp-Components/messagelist.cpp \
-        cpp-Components/requestuserlist.cpp \
-        cppobjs/myarticleobj.cpp \
-        cppobjs/myrequestobj.cpp \
-        cppobjs/myuserobj.cpp \
-        cppobjs/storageunit.cpp \
-        loginpagehandler.cpp \
-        main.cpp \
-        regulatorpagehandler.cpp \
-        senderpagehandler.cpp \
-        translatorpagehandler.cpp \
-        userinfopagehandler.cpp
+        CPP_Data/myarticleobj.cpp \
+        CPP_Data/myrequestobj.cpp \
+        CPP_Data/myuserobj.cpp \
+        CPP_Interaction/loginpagehandler.cpp \
+        CPP_Interaction/regulatorpagehandler.cpp \
+        CPP_Interaction/senderpagehandler.cpp \
+        CPP_Interaction/translatorpagehandler.cpp \
+        CPP_Interaction/userinfopagehandler.cpp \
+        CPP_Model/articleslist.cpp \
+        CPP_Model/messagelist.cpp \
+        CPP_Model/requestuserlist.cpp \
+        CPP_Storage/globalcomponents.cpp \
+        CPP_Storage/storageunit.cpp \
+        main.cpp
 
 RESOURCES += qml.qrc
 
-RC_ICONS = pen.ico
+RC_ICONS = Resources/pen.ico
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -49,21 +49,18 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    cpp-Components/articleslist.h \
-    cpp-Components/globalcomponents.h \
-    cpp-Components/messagelist.h \
-    cpp-Components/requestuserlist.h \
-    cppobjs/myarticleobj.h \
-    cppobjs/myrequestobj.h \
-    cppobjs/myuserobj.h \
-    cppobjs/storageunit.h \
-    loginpagehandler.h \
-    regulatorpagehandler.h \
-    senderpagehandler.h \
-    translatorpagehandler.h \
-    userinfopagehandler.h
-
-INCLUDEPATH += $$PWD/cppobjs
-DEPENDPATH += $$PWD/cppobjs
+    CPP_Data/myarticleobj.h \
+    CPP_Data/myrequestobj.h \
+    CPP_Data/myuserobj.h \
+    CPP_Interaction/loginpagehandler.h \
+    CPP_Interaction/regulatorpagehandler.h \
+    CPP_Interaction/senderpagehandler.h \
+    CPP_Interaction/translatorpagehandler.h \
+    CPP_Interaction/userinfopagehandler.h \
+    CPP_Model/articleslist.h \
+    CPP_Model/messagelist.h \
+    CPP_Model/requestuserlist.h \
+    CPP_Storage/globalcomponents.h \
+    CPP_Storage/storageunit.h
 
 DISTFILES +=

@@ -1,23 +1,15 @@
 <RCC>
     <qresource prefix="/">
-        <file>SenderPage.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>Login.qml</file>
         <file>Resources/passage_state_1.svg</file>
         <file>Resources/passage_state_2.svg</file>
         <file>Resources/Strings.qml</file>
         <file>Resources/add.svg</file>
-        <file>Components/FramlessWindow.qml</file>
         <file>Resources/logintext.svg</file>
         <file>Resources/pen.ico</file>
         <file>Resources/pen.png</file>
-        <file>Components/SenderEditor.qml</file>
-        <file>Components/EditLightBox.qml</file>
         <file>Resources/user-default.svg</file>
-        <file>ChooseUserMiniPage.qml</file>
         <file>Resources/refresh.svg</file>
-        <file>RegulatorPage.qml</file>
-        <file>Components/RegulatorViewer.qml</file>
         <file>Resources/unfold.svg</file>
         <file>Resources/status-code/100.svg</file>
         <file>Resources/status-code/110.svg</file>
@@ -30,20 +22,28 @@
         <file>Resources/status-code/210.svg</file>
         <file>Resources/status-code/215.svg</file>
         <file>Resources/status-code/220.svg</file>
-        <file>Components/ThisUserArticleBlock.qml</file>
-        <file>Components/OtherUserArticleBlock.qml</file>
-        <file>Components/MiniArticleBlock.qml</file>
-        <file>Components/TranslatorEditor.qml</file>
-        <file>TranslatorPage.qml</file>
-        <file>Components/ChooseUserDelegate.qml</file>
-        <file>RegulatorCommentDialog.qml</file>
-        <file>TranslatorCommentDialog.qml</file>
         <file>Resources/status-code/230.svg</file>
         <file>Resources/status-code/300.svg</file>
         <file>Resources/status-code/400.svg</file>
         <file>Resources/status-code/240.svg</file>
-        <file>Components/AcrylicBlock.qml</file>
         <file>Resources/userinfo.svg</file>
-        <file>UserInfoPage.qml</file>
+        <file>QML/OtherPages/ChooseUserDelegate.qml</file>
+        <file>QML/OtherPages/ChooseUserMiniPage.qml</file>
+        <file>QML/OtherPages/Login.qml</file>
+        <file>QML/OtherPages/RegulatorCommentDialog.qml</file>
+        <file>QML/OtherPages/TranslatorCommentDialog.qml</file>
+        <file>QML/OtherPages/UserInfoPage.qml</file>
+        <file>QML/MyWidgets/AcrylicBlock.qml</file>
+        <file>QML/MyWidgets/EditLightBox.qml</file>
+        <file>QML/MyWidgets/FramlessWindow.qml</file>
+        <file>QML/MyWidgets/MiniArticleBlock.qml</file>
+        <file>QML/MyWidgets/OtherUserArticleBlock.qml</file>
+        <file>QML/MyWidgets/ThisUserArticleBlock.qml</file>
+        <file>QML/MainPages/RegulatorPage.qml</file>
+        <file>QML/MainPages/RegulatorViewer.qml</file>
+        <file>QML/MainPages/SenderEditor.qml</file>
+        <file>QML/MainPages/SenderPage.qml</file>
+        <file>QML/MainPages/TranslatorEditor.qml</file>
+        <file>QML/MainPages/TranslatorPage.qml</file>
     </qresource>
 </RCC>
