@@ -33,7 +33,7 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190709
 *************************************************************************/
-LoginPageHandler::LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent) : QObject(parent), globalStorageComponent(newGlobalStorageComponent)
+LoginPageHandler::LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent) : AbstractPage(parent), globalStorageComponent(newGlobalStorageComponent)
 {
 }
 
@@ -79,11 +79,6 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
     case 1:
     {
         emit sendSuccessMessage("登陆成功");
-
-        UserInfoPageHandler* newUserHandler = new UserInfoPageHandler(
-                    globalStorageComponent->searchUserById(searchUser(name, role)),
-                    globalStorageComponent);
-        newUserHandler->startPage(thisEngine);
 
         if (role == 1)
         {

@@ -205,3 +205,15 @@ void MyArticleObj::setTranslatedContent(QString newContent)
     if (getModifyStatus() == StorageUnit::Unchanged)
         setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
 }
+
+
+int MyArticleObj::fee() const
+{
+    return mFee;
+}
+void MyArticleObj::setFee(int newFee)
+{
+    mFee = newFee;
+    if (getModifyStatus() == StorageUnit::Unchanged)
+        setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
+}

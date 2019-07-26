@@ -7,6 +7,7 @@
 #include <QSqlError>
 #include <QtConcurrent/QtConcurrent>
 #include "../CPP_Storage/globalcomponents.h"
+#include "userinfopagehandler.h"
 
 /*************************************************************************
 【函数名称】  RegulatorPageHandler
@@ -15,7 +16,7 @@
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
 RegulatorPageHandler::RegulatorPageHandler(int regulatorId, GlobalComponents *newGlobal, QObject *parent)
-    : QObject(parent), regulatorSubarticleList(1),
+    : AbstractPage(parent), regulatorSubarticleList(1),
       regulatorArticleList(1), allSeekingRegulatorArticle(2), thisUserId(regulatorId)
 {
 
@@ -39,28 +40,33 @@ void RegulatorPageHandler::startLoadingRegulatorArticleList(int userId)
     for (int i = 0; i < len; i++)
     {
         qDebug() << "Regulator article";
-        if (globalStorageComponent->getArticleToEdit(i)
-                ->regulatorIdOfArticle() == userId)
+        MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
+        if (selectedArticle->regulatorIdOfArticle() == userId)
         {
-            if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() / 100 == 2)
-                regulatorSubarticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
-            else
-                regulatorArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+            if (selectedArticle->statusCodeOfArticle() / 100 == 2){
+                if (selectedArticle->statusCodeOfArticle() != 240
+                        && selectedArticle->statusCodeOfArticle() != 400)
+                    regulatorSubarticleList.addAnArticle(selectedArticle);
+            }
+            else regulatorArticleList.addAnArticle(selectedArticle);
         }
 
-        if (globalStorageComponent->getArticleToEdit(i)
-                ->statusCodeOfArticle() == 100)
-            allSeekingRegulatorArticle.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+        if (selectedArticle->statusCodeOfArticle() == 100)
+            allSeekingRegulatorArticle.addAnArticle(selectedArticle);
     }
 }
 
 void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QString content)
 {
     qDebug() << "split" << index;
-    regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(140);
+    MyArticleObj* articleToSplit = regulatorArticleList.getArticle(index);
+
+    articleToSplit->setStatusCodeOfArticle(140);
     globalStorageComponent->sendMessageToRelatedUser(
                 QString("%1").arg(globalStorageComponent->decodeStatusCode(140)),
-                regulatorArticleList.getArticle(index));
+                articleToSplit);
+
+    articleToSplit->setFee(articleToSplit->fee()*0.2);//20%金额分配给负责人
 
     regulatorArticleList.editAnArticle(index); //刷新文章状态
     QStringList subContents = content.split("\n");
@@ -81,7 +87,9 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
                     QString("%1").arg(globalStorageComponent->decodeStatusCode(200)),
                     newSubArticle);
         newSubArticle->setRegulatorIdOfArticle(thisUserId);
-        newSubArticle->setOriginArticleIdOfArticle(regulatorArticleList.getArticle(index)->articleIdOfArticle());
+        newSubArticle->setOriginArticleIdOfArticle(articleToSplit->articleIdOfArticle());
+        float remainFee=float((articleToSplit->fee()*5)*0.8);//剩余80%款项平分给翻译者
+        newSubArticle->setFee(int(remainFee/numOfSubarticles));
         newSubArticle->setModifyStatus(StorageUnit::New);
 
         globalStorageComponent->addAnArticle(newSubArticle);
@@ -94,10 +102,8 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
 
 Q_INVOKABLE void RegulatorPageHandler::mergeRegulatorArticle(int index){
     int originArticleId = regulatorSubarticleList.getArticle(index)->originArticleIdOfArticle();
-
     //通过子文章翻译标题得到原文章翻译标题
     QString subTitle=regulatorSubarticleList.getArticle(index)->translatedTitle();
-
 
     //先用一个list暂存子文章后，再进行排序
     QList<QString> listOfSubContent;
@@ -169,7 +175,7 @@ Q_INVOKABLE void RegulatorPageHandler::chooseTranslator(int index)
 {
     loadArticleTranslatorData(regulatorSubarticleList.getArticle(index)->originArticleIdOfArticle());
     currentInViewIndex = index;
-    const QUrl url(QStringLiteral("qrc:/QML/MainPages/ChooseUserMiniPage.qml"));
+    const QUrl url(QStringLiteral("qrc:/QML/OtherPages/ChooseUserMiniPage.qml"));
     thisEngine->load(url);
 }
 
@@ -196,13 +202,12 @@ Q_INVOKABLE void RegulatorPageHandler::translatorChosen(int idx){
     articleToChoose->setTranslatorIdOfArticle(translatorList.getRequestUser(idx)->userId());
 
     qDebug() << translatorList.getRequestUser(idx)->userId() << "choosen";
-
     articleToChoose->setStatusCodeOfArticle(210);
-
     globalStorageComponent->sendMessageToRelatedUser(
                 QString("%1").arg(globalStorageComponent->decodeStatusCode(210)),
                 articleToChoose);
 
+    regulatorSubarticleList.editAnArticle(currentInViewIndex);
     emit sendSuccessMessage("已确定译者");
 }
 
@@ -227,7 +232,7 @@ Q_INVOKABLE void RegulatorPageHandler::startRecruitingTranslatorForArticle(int i
 
     globalStorageComponent->sendMessageToRelatedUser(
                 QString("%1").arg(globalStorageComponent->decodeStatusCode(120)),
-                regulatorSubarticleList.getArticle(index));
+                regulatorArticleList.getArticle(index));
     regulatorArticleList.editAnArticle(index);
     emit sendSuccessMessage("开始招募");
 }
@@ -291,6 +296,13 @@ Q_INVOKABLE void RegulatorPageHandler::acceptSubarticle(int idx)
     emit sendSuccessMessage("已审核通过");
 }
 
+
+Q_INVOKABLE void RegulatorPageHandler::submitToSender(int idx)
+{
+    regulatorArticleList.getArticle(idx)->setStatusCodeOfArticle(310);
+    regulatorArticleList.editAnArticle(idx);
+}
+
 /*************************************************************************
 【函数名称】  startPage
 【函数功能】  开始渲染主页面
@@ -309,6 +321,14 @@ void RegulatorPageHandler::startPage(QQmlApplicationEngine *engine)
     thisContext->setContextProperty("userListModel", &translatorList);
     const QUrl url1(QStringLiteral("qrc:/QML/MainPages/RegulatorPage.qml"));
     engine->load(url1);
+}
+
+
+Q_INVOKABLE void RegulatorPageHandler::showUserInfo(){
+    UserInfoPageHandler* newUserHandler = new UserInfoPageHandler(
+                globalStorageComponent->searchUserById(thisUserId),
+                globalStorageComponent);
+    newUserHandler->startPage(thisEngine);
 }
 
 /*************************************************************************

@@ -26,13 +26,14 @@
 
 #include "../CPP_Model/requestuserlist.h"
 #include "../CPP_Storage/globalcomponents.h"
+#include "abstractpage.h"
 
 /* 发送者页面后台处理程序
  * 也用于启动一些附属页面
  * 其功能与MyArticleObject紧密相关
  */
 
-class RegulatorPageHandler : public QObject
+class RegulatorPageHandler : public AbstractPage
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
         /* 以上三个model分别存储
@@ -59,6 +60,8 @@ public :
     Q_INVOKABLE void commentToTranslator(int idx, QString comment);
     Q_INVOKABLE QString getHistoryComment(int idx);
     Q_INVOKABLE void acceptSubarticle(int idx);
+    Q_INVOKABLE void showUserInfo();
+    Q_INVOKABLE void submitToSender(int idx);
 
     void loadArticleTranslatorData(int originArticleId);
 
@@ -83,11 +86,6 @@ signals:
     void otherModelChanged(const QVariant &);
     void regulatorListModelChanged(const QVariant &);
     void loadArticlesComplete(int article_id, QString title, QString content);
-    //错误信息信号，向QML发送，使其在界面上显示
-    void sendErrorMessage(QString errStr);
-    //成功信息信号，向QML发送，使其在界面上显示
-    void sendSuccessMessage(QString successStr);
-
     //向QML发送刷新ListView界面信号
     void startRefreshQml();
     void refreshQmlComplete();

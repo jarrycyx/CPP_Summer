@@ -40,6 +40,7 @@ public:
     void setQualification(QString newQuali);
     int money() const;
     void setMoney(int newMoney);
+    void addMoney(int added);
     int credit() const;
     void setCredit(int newCredit);
 

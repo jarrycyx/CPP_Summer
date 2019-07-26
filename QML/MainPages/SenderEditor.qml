@@ -78,6 +78,14 @@ Rectangle {
             button.enabled=false;
             button2.visible=false;
             break;
+        case 310:
+            statusText.text="翻译内容已提交";
+            button.text="确认完成";
+            button.enabled=true;
+            button2.visible=false;
+            element.text="我负责的任务";
+            button3.visible=true;
+            break;
         }
 
         if (typeOfArticle===2){
@@ -257,6 +265,8 @@ Rectangle {
                 break;
             case 140:
                 break;
+            case 310:
+                senderPageHandler.confirmAcceptArticle(indexInList);
             }
 
         }
@@ -315,18 +325,6 @@ Rectangle {
             bold: true;
             family: "DengXian";
             pixelSize: 16
-        }
-    }
-
-    ToolButton {
-        id: toolButton
-        x: 563
-        y: 2
-        height: 32
-        text: qsTr("用户信息")
-        font.family: "DengXian";
-        onClicked: {
-
         }
     }
 

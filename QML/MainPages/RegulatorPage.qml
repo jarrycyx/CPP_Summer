@@ -51,16 +51,6 @@ ApplicationWindow {
         }
     }
 
-    Connections{
-        target: loginPageHandler
-        onRequireComplete: {
-            if (flag==1) mainWindow.visible=true;
-        }
-    }
-
-
-
-
     Rectangle {
         id: root
         anchors.fill: parent

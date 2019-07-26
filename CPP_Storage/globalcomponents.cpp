@@ -23,12 +23,14 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
         query = new QSqlQuery(db);
 
         query->exec(QString("SELECT article_id,title,content,create_time,sender,"
-                            "regulator,translator,curr_status,origin,t_title,t_content "
+                            "regulator,translator,curr_status,origin,t_title,t_content,fee "
                             "from articles"));
         while (query->next())
         {
             MyArticleObj *articleFromDB = new MyArticleObj();
-            articleFromDB->setArticleInfo(query->value(0).toInt(), query->value(1).toString(), query->value(2).toString());
+            articleFromDB->setArticleInfo(query->value(0).toInt(),
+                                          query->value(1).toString(),
+                                          query->value(2).toString());
             articleFromDB->setSenderIdOfArticle(query->value(4).toInt());
             articleFromDB->setRegulatorIdOfArticle(query->value(5).toInt());
             articleFromDB->setTranslatorIdOfArticle(query->value(6).toInt());
@@ -36,6 +38,7 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
             articleFromDB->setOriginArticleIdOfArticle(query->value(8).toInt());
             articleFromDB->setTranslatedTitle(query->value(9).toString());
             articleFromDB->setTranslatedContent(query->value(10).toString());
+            articleFromDB->setFee(query->value(11).toInt());
 
             articleFromDB->setModifyStatus(StorageUnit::Unchanged);
 
@@ -56,6 +59,7 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
             userFromDB->setMoney(query->value(5).toInt());
             userFromDB->setCredit(query->value(6).toInt());
             userFromDB->setQualification(query->value(7).toString());
+            userFromDB->setModifyStatus(StorageUnit::Unchanged);
             allUsers.append(userFromDB);
 
             if (query->value(0).toInt() > biggestUserId)
@@ -97,9 +101,9 @@ void GlobalComponents::uploadAllData()
             qDebug() << "added article";
             query->exec(QString("insert into articles "
                                 "(title,content,create_time,sender,regulator,translator,"
-                                "curr_status,article_id,origin,t_title,t_content) "
+                                "curr_status,article_id,origin,t_title,t_content,fee) "
                                 "values "
-                                "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7, %8, %9, %10)")
+                                "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7, %8, \"%9\", \"%10\", %11)")
                         .arg(allArticles[i]->titleOfArticle())
                         .arg(allArticles[i]->contentOfArticle())
                         .arg(allArticles[i]->senderIdOfArticle())
@@ -109,14 +113,16 @@ void GlobalComponents::uploadAllData()
                         .arg(allArticles[i]->articleIdOfArticle())
                         .arg(allArticles[i]->originArticleIdOfArticle())
                         .arg(allArticles[i]->translatedTitle())
-                        .arg(allArticles[i]->translatedContent()));
+                        .arg(allArticles[i]->translatedContent())
+                        .arg(allArticles[i]->fee()));
         }
         else if (modifyStat == StorageUnit::Changed)
         {
             qDebug() << "modified article";
             query->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, "
-                                "regulator=%4, translator=%5, curr_status=%6, origin=%7, t_title=\"%8\", t_content=\"%9\" "
-                                "WHERE article_id=%10")
+                                "regulator=%4, translator=%5, curr_status=%6, origin=%7, t_title=\"%8\", "
+                                "t_content=\"%9\", fee=%10 "
+                                "WHERE article_id=%11")
                         .arg(allArticles[i]->titleOfArticle())
                         .arg(allArticles[i]->contentOfArticle())
                         .arg(allArticles[i]->senderIdOfArticle())
@@ -126,6 +132,7 @@ void GlobalComponents::uploadAllData()
                         .arg(allArticles[i]->originArticleIdOfArticle())
                         .arg(allArticles[i]->translatedTitle())
                         .arg(allArticles[i]->translatedContent())
+                        .arg(allArticles[i]->fee())
                         .arg(allArticles[i]->articleIdOfArticle()));
         }
         else if (modifyStat == StorageUnit::Deleted)

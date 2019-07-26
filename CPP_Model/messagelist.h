@@ -13,14 +13,9 @@ public:
     explicit MessageList();
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
     void addAMessage(MyRequestObj *newMessage);
-
     inline MyRequestObj *getMessage(int idx) { return messages[idx]; }
-
     inline void removeAllRequestUsers() { messages.clear(); }
-
-    Q_INVOKABLE void removeOne();
 
 protected:
     QVector<MyRequestObj*> messages;

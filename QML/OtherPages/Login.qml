@@ -60,11 +60,6 @@ ApplicationWindow {
             if (successStr==="登陆成功")
                 loginWindow.close();
         }
-        onRequireComplete: {
-            busyIndicator.visible = false;
-            errText.visible = false;
-            if (flag==1) loginWindow.close();
-        }
     }
 
 

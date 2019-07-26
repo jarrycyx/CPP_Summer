@@ -65,7 +65,12 @@ QString MyUserObj::qualification() const
 }
 void MyUserObj::setQualification(QString newQuali)
 {
-    mQualification=newQuali;
+    if (mQualification != newQuali)
+    {
+        mQualification = newQuali;
+        if (getModifyStatus() == StorageUnit::Unchanged)
+            setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
+    }
 }
 int MyUserObj::money() const
 {
@@ -73,13 +78,31 @@ int MyUserObj::money() const
 }
 void MyUserObj::setMoney(int newMoney)
 {
-    mMoney=newMoney;
+    if (mMoney != newMoney)
+    {
+        mMoney = newMoney;
+        if (getModifyStatus() == StorageUnit::Unchanged)
+            setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
+    }
 }
+
+void MyUserObj::addMoney(int added)
+{
+    mMoney += added;
+    if (getModifyStatus() == StorageUnit::Unchanged)
+        setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
+}
+
 int MyUserObj::credit() const
 {
     return mCredit;
 }
 void MyUserObj::setCredit(int newCredit)
 {
-    mCredit=newCredit;
+    if (mCredit != newCredit)
+    {
+        mCredit = newCredit;
+        if (getModifyStatus() == StorageUnit::Unchanged)
+            setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
+    }
 }

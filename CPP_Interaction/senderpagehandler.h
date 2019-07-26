@@ -25,13 +25,14 @@
 
 #include "../CPP_Storage/globalcomponents.h"
 #include "../CPP_Model/requestuserlist.h"
+#include "abstractpage.h"
 
 /* 发送者页面后台处理程序
  * 也用于启动一些附属页面
  * 其功能与MyArticleObject紧密相关
  */
 
-class SenderPageHandler : public QObject
+class SenderPageHandler : public AbstractPage
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
         /* 以上三个model分别存储
@@ -43,21 +44,16 @@ public :
     explicit SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent = nullptr);
     ~SenderPageHandler();
 
-    //从QML唤起的删除文章函数
-    //Q_INVOKABLE void itemMove(int idx);
     //从QML唤起的选择负责人函数
     Q_INVOKABLE void regulatorChosen(int idx);
-    //从QML唤起的增加文章函数
-    //Q_INVOKABLE void addAnArticle(QString title, QString content);
     //从QML唤起的选择负责人函数
     Q_INVOKABLE void chooseRegulator(int index);
-    //从QML唤起的增加文章函数
-    //Q_INVOKABLE void editAnArticle(int index, QString title, QString content);
 
     void startLoadingSenderArticleList(int userId);
     Q_INVOKABLE void addSenderArticle(QString title, QString content);
     Q_INVOKABLE void editSenderArticle(int index, QString title, QString content);
     Q_INVOKABLE void deleteSenderArticle(int index);
+    Q_INVOKABLE void confirmAcceptArticle(int index);
     void loadArticleRegulatorData(int articleId);
 
 private:
@@ -81,10 +77,6 @@ signals:
     void otherModelChanged(const QVariant &);
     void regulatorListModelChanged(const QVariant &);
     void loadArticlesComplete(int article_id, QString title, QString content);
-    //错误信息信号，向QML发送，使其在界面上显示
-    void sendErrorMessage(QString errStr);
-    //成功信息信号，向QML发送，使其在界面上显示
-    void sendSuccessMessage(QString successStr);
 
     //向QML发送刷新ListView界面信号
     void startRefreshQml();

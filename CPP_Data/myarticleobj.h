@@ -79,6 +79,9 @@ public:
     //翻译后内容
     QString translatedContent() const;
     void setTranslatedContent(QString newContent);
+    //酬金
+    int fee() const;
+    void setFee(int newFee);
 
 private:
     //文章内容
@@ -95,6 +98,7 @@ private:
     int mRegulatorId;
     int mStatusCode;
     int mTranslatorId;
+    int mFee;
 };
 
 #endif // MYARTICLEOBJ_H

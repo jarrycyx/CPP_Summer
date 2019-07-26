@@ -15,7 +15,7 @@
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
 SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent)
-    : QObject(parent), senderArticleList(1), allUserArticleList(2), thisUserId(senderId)
+    : AbstractPage(parent), senderArticleList(1), allUserArticleList(2), thisUserId(senderId)
 {
 
     globalStorageComponent = newGlobal;
@@ -176,4 +176,35 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
     senderArticleList.editAnArticle(currentInViewIndex);
 
     emit sendSuccessMessage("已确定负责人");
+}
+
+
+Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
+{
+    MyArticleObj* thisArticle = senderArticleList.getArticle(index);
+    int moneyToRegulator = thisArticle->fee();
+    int regulatorId = thisArticle->regulatorIdOfArticle();
+    int senderId = thisArticle->senderIdOfArticle();
+    globalStorageComponent->searchUserById(regulatorId)->addMoney(moneyToRegulator);
+
+    //应扣款总数
+    int totalMoney = moneyToRegulator;
+
+    //搜索子文章
+    int len = globalStorageComponent->getArticlesLength();
+    for (int i=0;i<len;i++){
+        MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
+        if (selectedArticle->originArticleIdOfArticle() == thisArticle->articleIdOfArticle())
+        {
+            int translatorId = selectedArticle->translatorIdOfArticle();
+            totalMoney += selectedArticle->fee();
+            globalStorageComponent->searchUserById(translatorId)
+                    ->addMoney(selectedArticle->fee());
+            selectedArticle->setStatusCodeOfArticle(400);
+        }
+    }
+
+    globalStorageComponent->searchUserById(senderId)->addMoney(-totalMoney);
+    senderArticleList.getArticle(index)->setStatusCodeOfArticle(400);
+    emit sendSuccessMessage("扣款成功，感谢！");
 }

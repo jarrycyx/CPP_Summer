@@ -1,8 +1,9 @@
 #include "userinfopagehandler.h"
 #include <QDebug>
+#include "regulatorpagehandler.h"
 
 UserInfoPageHandler::UserInfoPageHandler(MyUserObj* thisUser, GlobalComponents *newGlobal, QObject *parent) :
-    QObject(parent), user(thisUser), globalStorageComponent(newGlobal)
+    AbstractPage(parent), user(thisUser), globalStorageComponent(newGlobal)
 {
 
 }
@@ -57,4 +58,20 @@ Q_INVOKABLE QString UserInfoPageHandler::getMultiuserStatus()
         }
     }
     return res;
+}
+
+
+Q_INVOKABLE void UserInfoPageHandler::updateUser(QString name, QString pswd){
+    user->setUsername(name);
+    user->setPassword(pswd);
+
+    qDebug() << "set" << name << " " <<pswd;
+}
+
+
+Q_INVOKABLE void UserInfoPageHandler::addMoney(int addedMoney){
+    if (addedMoney<0 || addedMoney>1000) return;
+    user->setMoney(user->money()+addedMoney);
+
+    qDebug() << "add money " << addedMoney << " to " << user->money();
 }

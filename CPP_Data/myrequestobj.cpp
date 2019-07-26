@@ -41,4 +41,5 @@ void MyRequestObj::setContent(QString str)
 
 void MyRequestObj::setTime(QDateTime newTime){
     time = newTime;
+
 }

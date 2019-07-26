@@ -77,7 +77,7 @@ Rectangle {
             button.text="已拆分";
             button.enabled=false;
             button2.visible=false;
-            element.text="我负责的任务（已拆分为子任务）";
+            element.text="我负责的任务";
             button3.visible=false;
             break;
         case 200:
@@ -120,10 +120,17 @@ Rectangle {
             button.text="提交给用户";
             button.enabled=true;
             button2.visible=false;
-            element.text="我负责的子任务";
+            element.text="我负责的任务";
             button3.visible=true;
             break;
-
+        case 310:
+            statusText.text="翻译内容已合并";
+            button.text="等待收取";
+            button.enabled=false;
+            button2.visible=false;
+            element.text="我负责的任务";
+            button3.visible=true;
+            break;
         }
 
         if (typeOfArticle===2){//如果是查看其他文章
@@ -299,6 +306,9 @@ Rectangle {
             case 230:
                 regulatorPageHandler.mergeRegulatorArticle(indexInList);
                 break;
+            case 300:
+                regulatorPageHandler.submitToSender(indexInList);
+                break;
             }
         }
 
@@ -378,6 +388,19 @@ Rectangle {
                 contentEdit.text=thisTrContent;
                 text="查看原文";
             }
+        }
+    }
+
+
+    ToolButton {
+        id: toolButton
+        x: parent.width-5-width
+        y: 2
+        height: 32
+        text: qsTr("用户信息")
+        font.family: "DengXian";
+        onClicked: {
+            regulatorPageHandler.showUserInfo();
         }
     }
 

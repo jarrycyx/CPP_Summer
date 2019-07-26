@@ -16,8 +16,9 @@
 #include "../CPP_Model/requestuserlist.h"
 #include "../CPP_Storage/globalcomponents.h"
 #include "../CPP_Model/messagelist.h"
+#include "abstractpage.h"
 
-class UserInfoPageHandler : public QObject
+class UserInfoPageHandler : public AbstractPage
 {
     Q_OBJECT
 public:
@@ -28,6 +29,8 @@ public:
     Q_INVOKABLE int getCredit();
     Q_INVOKABLE QString getQualification();
     Q_INVOKABLE QString getMultiuserStatus();
+    Q_INVOKABLE void updateUser(QString name, QString pswd);
+    Q_INVOKABLE void addMoney(int addedMoney);
 
 signals:
 

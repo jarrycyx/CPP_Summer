@@ -34,7 +34,6 @@ public:
 
     inline void removeAllRequestUsers() { requestUsers.clear(); }
 
-    Q_INVOKABLE void removeOne();
 
 protected:
     QVector<MyUserObj *> requestUsers;

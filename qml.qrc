@@ -45,5 +45,6 @@
         <file>QML/MainPages/SenderPage.qml</file>
         <file>QML/MainPages/TranslatorEditor.qml</file>
         <file>QML/MainPages/TranslatorPage.qml</file>
+        <file>Resources/status-code/310.svg</file>
     </qresource>
 </RCC>

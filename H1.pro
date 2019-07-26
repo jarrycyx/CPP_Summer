@@ -21,6 +21,7 @@ SOURCES += \
         CPP_Data/myarticleobj.cpp \
         CPP_Data/myrequestobj.cpp \
         CPP_Data/myuserobj.cpp \
+        CPP_Interaction/abstractpage.cpp \
         CPP_Interaction/loginpagehandler.cpp \
         CPP_Interaction/regulatorpagehandler.cpp \
         CPP_Interaction/senderpagehandler.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     CPP_Data/myarticleobj.h \
     CPP_Data/myrequestobj.h \
     CPP_Data/myuserobj.h \
+    CPP_Interaction/abstractpage.h \
     CPP_Interaction/loginpagehandler.h \
     CPP_Interaction/regulatorpagehandler.h \
     CPP_Interaction/senderpagehandler.h \

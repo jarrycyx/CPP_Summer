@@ -23,8 +23,9 @@
 #include "senderpagehandler.h"
 #include "regulatorpagehandler.h"
 #include "translatorpagehandler.h"
+#include "abstractpage.h"
 
-class LoginPageHandler : public QObject
+class LoginPageHandler : public AbstractPage
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
         public : explicit LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent = nullptr);
@@ -48,13 +49,6 @@ private:
     RegulatorPageHandler *newRegulatorPage;
     TranslatorPageHandler *newTranslatorPage;
 
-signals:
-    //错误信息信号，向QML发送，使其在界面上显示
-    void sendErrorMessage(QString errStr);
-    //成功信息信号，向QML发送，使其在界面上显示
-    void sendSuccessMessage(QString successStr);
-    //向服务器请求完成信号，其中flag为1表示登录请求
-    void requireComplete(int flag, int user_id);
 
 public slots:
     //开始渲染主页面

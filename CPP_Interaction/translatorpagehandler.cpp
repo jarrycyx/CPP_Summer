@@ -15,7 +15,7 @@
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
 TranslatorPageHandler::TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent)
-    : QObject(parent), translatorSubarticleList(1),
+    : AbstractPage(parent), translatorSubarticleList(1),
       allSeekingTranslatorArticle(2), thisUserId(translatorId)
 {
 
@@ -39,16 +39,18 @@ void TranslatorPageHandler::startLoadingTranslatorArticleList(int userId)
     for (int i = 0; i < len; i++)
     {
         qDebug() << "Translator article";
-        if (globalStorageComponent->getArticleToEdit(i)
-                ->translatorIdOfArticle() == userId)
+
+        MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
+        if (selectedArticle->translatorIdOfArticle() == userId)
         {
-            if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() / 100 == 2)
-                translatorSubarticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+            if (selectedArticle->statusCodeOfArticle() / 100 == 2)
+                if (selectedArticle->statusCodeOfArticle() != 240
+                        && selectedArticle->statusCodeOfArticle() != 400)
+                    translatorSubarticleList.addAnArticle(selectedArticle);
         }
 
-        if (globalStorageComponent->getArticleToEdit(i)
-                ->statusCodeOfArticle() == 120)
-            allSeekingTranslatorArticle.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+        if (selectedArticle->statusCodeOfArticle() == 120)
+            allSeekingTranslatorArticle.addAnArticle(selectedArticle);
     }
 }
 

@@ -13,6 +13,8 @@ FramlessWindow {
     objectName: "userInfoWindow"
     width: 700 * 1.2 + 40
     height: 500 * 1.2 + 40
+    x: 1920 - 15 - width
+    y: 80
 
 
     /* 存放两个输入框数据的结构
@@ -35,10 +37,14 @@ FramlessWindow {
     //用户点击窗口外则关闭窗口
     onActiveChanged: {
         if (!active) {
-            //userInfoWindow.close();
+            userInfoWindow.close();
         }
     }
     Component.onCompleted: {
+        refreshText();
+    }
+
+    function refreshText(){
         console.log("userinfo");
         usernameText.text = userPageHandler.getUsername();
         moneyText.text = userPageHandler.getMoney();
@@ -68,36 +74,41 @@ FramlessWindow {
     Component{
         id: messageDelegate
         Rectangle {
-            height: 80
+            height: 100
             width: 360
             id: mainRectInChoose
 
             Text {
                 id: timeText
                 x: 23
-                y: 9
+                y: 26
                 width: 200
                 height: 20
-                text: messageTime
+                text: messageTime === "" ?
+                          Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm") : messageTime
+                color: stringsPool.textGray2
                 font{
                     family: "DengXian";
-                    pixelSize: 20
+                    pixelSize: 20;
+                    bold: true;
                 }
             }
 
             Text {
                 id: usernameText
                 x: 23
-                y: 36
-                width: 310
-                height: 32
+                y: 55
+                width: 303
+                height: 45
                 wrapMode: Text.WrapAnywhere
                 clip: true
                 maximumLineCount: 2
                 text: messageContent
+                lineHeight: 1.3
                 font{
                     family: "DengXian";
-                    pixelSize: 15
+                    pixelSize: 16;
+                    wordSpacing: 4;
                 }
             }
         }
@@ -259,7 +270,9 @@ FramlessWindow {
                 height: 34 * 1.2
                 text: qsTr("保存信息")
                 onClicked: {
-
+                    userPageHandler.updateUser(updateModel.get(0).textInEdit,
+                                               updateModel.get(1).textInEdit);
+                    refreshText();
                 }
                 font.family: "DengXian"
                 highlighted: true
@@ -274,7 +287,8 @@ FramlessWindow {
                 height: 34 * 1.2
                 text: qsTr("充值")
                 onClicked: {
-
+                    userPageHandler.addMoney(100);
+                    refreshText();
                 }
                 font.family: "DengXian"
             }
