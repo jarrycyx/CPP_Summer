@@ -19,8 +19,11 @@ Rectangle {
     property string thisTrTitle
     property string thisTrContent
     property int typeOfThis
+    property int idOfThis
 
-    function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){
+    function editOrViewAnArticle(id, title, content, translatedTitle,
+                                 translatedContent, statusCode, index, typeOfArticle){
+        idOfThis=id;
         //type: 1,自己的需求 2,别人的需求
         mode=1;
         blankText.visible=false;
@@ -248,7 +251,8 @@ Rectangle {
         onClicked: {
             switch (senderEditorRect.articleStatus){
             case 0:
-                senderPageHandler.addSenderArticle(titleEdit.text, contentEdit.text);
+                var moneyWindow=Qt.createComponent("../OtherPages/DetermineMoneyDialog.qml")
+                                    .createObject(RegulatorViewer)
                 senderEditorRect.articleStatus=100;
                 break;
             case 100:
@@ -325,6 +329,34 @@ Rectangle {
             bold: true;
             family: "DengXian";
             pixelSize: 16
+        }
+    }
+
+    ToolButton {
+        width: moreUserInfoText.width + 42
+        height: 32
+        x: parent.width-150-width
+        y: 2
+        z: 40
+        Text {
+            id: moreUserInfoText
+            x: 8
+            y: 9
+            text: qsTr("更多信息")
+            font.family: "DengXian";
+        }
+        onClicked: {
+            senderPageHandler.showArticleInfo(idOfThis);
+        }
+        Image {
+            x: parent.width - 28
+            y: 8
+            z: 40
+            height: 16
+            width: 16
+            sourceSize.height: 16
+            sourceSize.width: 16
+            source: "../../Resources/moreuserinfo.svg"
         }
     }
 

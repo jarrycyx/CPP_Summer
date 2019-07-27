@@ -325,7 +325,15 @@ ApplicationWindow {
             anchors.centerIn: parent
         }
     }
-
+    DropShadow {
+        anchors.fill: messageBoxImg
+        radius: 10
+        samples: 5
+        visible: messageBoxImg.visible
+        z: 10
+        color: "#66999999"
+        source: messageBoxImg
+    }
 
     ToolButton {
         width: moreUserInfoText.width + 42
@@ -355,4 +363,36 @@ ApplicationWindow {
         }
     }
 
+
+    Rectangle{
+        id: dragTargetImage
+        x: mainWindow.width - 120 - 40
+        y: (mainWindow.height - 120) / 2
+        z: 50
+        color: "#00000000"
+        visible: false
+        height: 120
+        width: 120
+        property string imageSource: "../../Resources/delete.svg"
+
+        Image {
+            height: 120
+            width: 120
+            visible: dragTargetImage.visible
+            sourceSize.height: 120
+            sourceSize.width: 120
+            source: dragTargetImage.imageSource
+        }
+    }
+
+
+    DropShadow {
+        anchors.fill: dragTargetImage
+        radius: 20
+        samples: 17
+        visible: dragTargetImage.visible
+        z: 50
+        color: "#88999999"
+        source: dragTargetImage
+    }
 }

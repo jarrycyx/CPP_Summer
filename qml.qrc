@@ -47,5 +47,9 @@
         <file>QML/MainPages/TranslatorPage.qml</file>
         <file>Resources/status-code/310.svg</file>
         <file>Resources/moreuserinfo.svg</file>
+        <file>Resources/articleinfo.svg</file>
+        <file>QML/OtherPages/ArticleInfoPage.qml</file>
+        <file>QML/OtherPages/DetermineMoneyDialog.qml</file>
+        <file>Resources/deletedrag.svg</file>
     </qresource>
 </RCC>

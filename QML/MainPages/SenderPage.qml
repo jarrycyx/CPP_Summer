@@ -52,14 +52,6 @@ ApplicationWindow {
         }
     }
 
-    Connections{
-        target: loginPageHandler
-        onRequireComplete: {
-            if (flag==1) mainWindow.visible=true;
-        }
-    }
-
-
     Rectangle {
         id: root
         anchors.fill: parent
@@ -299,7 +291,7 @@ ApplicationWindow {
     Image {
         id: messageBoxImg
         x: (mainWindow.width-160)/2
-        y: -40
+        y: -50
         z: 10
         height: 35
         width: messageText.width+30
@@ -312,7 +304,7 @@ ApplicationWindow {
             running: false
             NumberAnimation { target: messageBoxImg; property: "y"; to: 0; duration: 200 }
             PauseAnimation { duration: 2000 }
-            NumberAnimation { target: messageBoxImg; property: "y"; to: -40; duration: 200 }
+            NumberAnimation { target: messageBoxImg; property: "y"; to: -50; duration: 200 }
         }
 
         Text {
@@ -325,6 +317,16 @@ ApplicationWindow {
             }
             anchors.centerIn: parent
         }
+    }
+
+    DropShadow {
+        anchors.fill: messageBoxImg
+        radius: 10
+        samples: 5
+        visible: messageBoxImg.visible
+        z: 10
+        color: "#66999999"
+        source: messageBoxImg
     }
 
 
@@ -354,6 +356,37 @@ ApplicationWindow {
             sourceSize.width: 16
             source: "../../Resources/moreuserinfo.svg"
         }
+    }
+
+    Rectangle{
+        id: dragTargetImage
+        x: mainWindow.width - 120 - 40
+        y: (mainWindow.height - 120) / 2
+        z: 50
+        color: "#00000000"
+        visible: false
+        height: 120
+        width: 120
+        property string imageSource: "../../Resources/delete.svg"
+
+        Image {
+            height: 120
+            width: 120
+            visible: dragTargetImage.visible
+            sourceSize.height: 120
+            sourceSize.width: 120
+            source: dragTargetImage.imageSource
+        }
+    }
+
+    DropShadow {
+        anchors.fill: dragTargetImage
+        radius: 20
+        samples: 17
+        visible: dragTargetImage.visible
+        z: 50
+        color: "#66999999"
+        source: dragTargetImage
     }
 
 }

@@ -33,8 +33,8 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190709
 *************************************************************************/
-LoginPageHandler::LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent)
-    : AbstractPage(-1, newGlobalStorageComponent)
+LoginPageHandler::LoginPageHandler(QObject *parent)
+    : AbstractPage(-1)
 {
 }
 
@@ -83,16 +83,16 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 
         if (role == 1)
         {
-            newSenderPage = new SenderPageHandler(searchUser(name, role), globalStorageComponent);
+            newSenderPage = new SenderPageHandler(searchUser(name, role), storage);
             newSenderPage->startPage(thisEngine);
         }
         else if (role == 2)
         {
-            newRegulatorPage = new RegulatorPageHandler(searchUser(name, role), globalStorageComponent);
+            newRegulatorPage = new RegulatorPageHandler(searchUser(name, role), storage);
             newRegulatorPage->startPage(thisEngine);
         }else if (role == 3)
         {
-            newTranslatorPage = new TranslatorPageHandler(searchUser(name, role), globalStorageComponent);
+            newTranslatorPage = new TranslatorPageHandler(searchUser(name, role), storage);
             newTranslatorPage->startPage(thisEngine);
         }
         break;
@@ -138,18 +138,18 @@ Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd, int role)
 
 int LoginPageHandler::userLogin(QString name, QString pswd, int role)
 {
-    int len = globalStorageComponent->getUsersLength();
+    int len = storage->getUsersLength();
     int ifUnRegistered = true;
     int ifRoleNotExist = true;
     for (int i = 0; i < len; i++)
     {
-        if (name == globalStorageComponent->getUserToEdit(i)->username())
+        if (name == storage->getUserToEdit(i)->username())
         {
             ifUnRegistered = false;
-            if (role == globalStorageComponent->getUserToEdit(i)->role())
+            if (role == storage->getUserToEdit(i)->role())
             {
                 ifRoleNotExist = false;
-                if (pswd == globalStorageComponent->getUserToEdit(i)->password())
+                if (pswd == storage->getUserToEdit(i)->password())
                     return 1;
                 else
                     return 2; //密码不匹配
@@ -166,29 +166,29 @@ int LoginPageHandler::userLogin(QString name, QString pswd, int role)
 
 int LoginPageHandler::searchUser(QString name, int role)
 {
-    int len = globalStorageComponent->getUsersLength();
+    int len = storage->getUsersLength();
     for (int i = 0; i < len; i++)
     {
-        if (name == globalStorageComponent->getUserToEdit(i)->username())
-            if (role == globalStorageComponent->getUserToEdit(i)->role())
-                return globalStorageComponent->getUserToEdit(i)->userId();
+        if (name == storage->getUserToEdit(i)->username())
+            if (role == storage->getUserToEdit(i)->role())
+                return storage->getUserToEdit(i)->userId();
     }
     return -1;
 }
 
 int LoginPageHandler::addUser(QString name, QString pswd, int role)
 {
-    int len = globalStorageComponent->getUsersLength();
+    int len = storage->getUsersLength();
     for (int i = 0; i < len; i++)
     {
-        if (globalStorageComponent->getUserToEdit(i)->username() == name &&
-                globalStorageComponent->getUserToEdit(i)->role() == role)
+        if (storage->getUserToEdit(i)->username() == name &&
+                storage->getUserToEdit(i)->role() == role)
             return 0; //用户已存在
     }
-    int newUserId = globalStorageComponent->getAUserId();
+    int newUserId = storage->getAUserId();
     qDebug() << "注册ID" << newUserId;
     MyUserObj *newUser = new MyUserObj(newUserId, name, pswd, role);
     newUser->setModifyStatus(StorageUnit::New);
-    globalStorageComponent->addAUser(newUser);
+    storage->addAUser(newUser);
     return 1;
 }

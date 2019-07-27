@@ -8,7 +8,7 @@ Component{
         height: 80
         width: 450
         id: mainRectInChoose
-
+        color: "#f2f2f2"
         property int indexOfThisDelegate: index
 
         ToolButton{

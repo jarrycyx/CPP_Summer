@@ -40,6 +40,7 @@ FramlessWindow {
             userInfoWindow.close();
         }
     }
+
     Component.onCompleted: {
         refreshText();
     }
@@ -122,7 +123,7 @@ FramlessWindow {
             id: userRect
             height: 500 * 1.2
             width: 400 * 1.2
-            color: "#000000"
+            color: "#00000000"
             Image {
                 height: 500 * 1.2
                 width: 400 * 1.2

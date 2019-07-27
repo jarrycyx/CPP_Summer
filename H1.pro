@@ -22,6 +22,7 @@ SOURCES += \
         CPP_Data/myrequestobj.cpp \
         CPP_Data/myuserobj.cpp \
         CPP_Interaction/abstractpage.cpp \
+        CPP_Interaction/articleinfopagehandler.cpp \
         CPP_Interaction/loginpagehandler.cpp \
         CPP_Interaction/regulatorpagehandler.cpp \
         CPP_Interaction/senderpagehandler.cpp \
@@ -30,7 +31,7 @@ SOURCES += \
         CPP_Model/articleslist.cpp \
         CPP_Model/messagelist.cpp \
         CPP_Model/requestuserlist.cpp \
-        CPP_Storage/globalcomponents.cpp \
+        CPP_Storage/globalstoragecomponents.cpp \
         CPP_Storage/storageunit.cpp \
         main.cpp
 
@@ -54,6 +55,7 @@ HEADERS += \
     CPP_Data/myrequestobj.h \
     CPP_Data/myuserobj.h \
     CPP_Interaction/abstractpage.h \
+    CPP_Interaction/articleinfopagehandler.h \
     CPP_Interaction/loginpagehandler.h \
     CPP_Interaction/regulatorpagehandler.h \
     CPP_Interaction/senderpagehandler.h \
@@ -62,7 +64,7 @@ HEADERS += \
     CPP_Model/articleslist.h \
     CPP_Model/messagelist.h \
     CPP_Model/requestuserlist.h \
-    CPP_Storage/globalcomponents.h \
+    CPP_Storage/globalstoragecomponents.h \
     CPP_Storage/storageunit.h
 
 DISTFILES +=

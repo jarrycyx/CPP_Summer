@@ -18,9 +18,12 @@ Rectangle {
     property string thisTrTitle
     property string thisTrContent
     property int typeOfThis
+    property int idOfThis
 
-    function editOrViewAnArticle(title, content, translatedTitle,
+    function editOrViewAnArticle(id, title, content, translatedTitle,
                                  translatedContent, statusCode, index, typeOfArticle){
+        idOfThis=id;
+
         //type: 1,自己的需求 2,别人的需求
         thisTitle=title;
         thisContent=content;
@@ -152,7 +155,6 @@ Rectangle {
         id: element
         x: 5
         y: 2
-        width: 224
         height: 28
         text: qsTr("翻译需求详情")
         color: stringsPool.textGray1
@@ -160,6 +162,18 @@ Rectangle {
             bold: true
             family: "DengXian";
             pixelSize: 28
+        }
+    }
+
+    Text {
+        id: infoText
+        y: 14
+        x: 5 + element.width + 10
+        text: qsTr("")
+        color: stringsPool.textGray2
+        font{
+            family: "DengXian";
+            pixelSize: 16
         }
     }
 
@@ -388,6 +402,34 @@ Rectangle {
                 contentEdit.text=thisTrContent;
                 text="查看原文";
             }
+        }
+    }
+
+    ToolButton {
+        width: moreUserInfoText.width + 42
+        height: 32
+        x: parent.width-150-width
+        y: 2
+        z: 40
+        Text {
+            id: moreUserInfoText
+            x: 8
+            y: 9
+            text: qsTr("更多信息")
+            font.family: "DengXian";
+        }
+        onClicked: {
+            regulatorPageHandler.showArticleInfo(idOfThis);
+        }
+        Image {
+            x: parent.width - 28
+            y: 8
+            z: 40
+            height: 16
+            width: 16
+            sourceSize.height: 16
+            sourceSize.width: 16
+            source: "../../Resources/moreuserinfo.svg"
         }
     }
 }

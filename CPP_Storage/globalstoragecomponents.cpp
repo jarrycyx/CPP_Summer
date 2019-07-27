@@ -1,4 +1,4 @@
-#include "globalcomponents.h"
+#include "globalstoragecomponents.h"
 #include "../CPP_Model/articleslist.h"
 #include "../CPP_Data/MyArticleObj.h"
 #include <QQmlContext>
@@ -8,7 +8,7 @@
 #include "../CPP_Data/myuserobj.h"
 #include "../CPP_Data/myrequestobj.h"
 
-GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
+GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(parent)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("39.106.107.241");
@@ -84,12 +84,12 @@ GlobalComponents::GlobalComponents(QObject *parent) : QObject(parent)
     }
 }
 
-GlobalComponents::~GlobalComponents()
+GlobalStorageComponents::~GlobalStorageComponents()
 {
     uploadAllData();
 }
 
-void GlobalComponents::uploadAllData()
+void GlobalStorageComponents::uploadAllData()
 {
     qDebug() << "uploading";
     int artiLen = allArticles.length();
@@ -195,7 +195,7 @@ void GlobalComponents::uploadAllData()
     }
 }
 
-MyUserObj *GlobalComponents::searchUserById(int thisUserId)
+MyUserObj *GlobalStorageComponents::searchUserById(int thisUserId)
 {
     int len = allUsers.length();
     for (int i = 0; i < len; i++)
@@ -204,7 +204,7 @@ MyUserObj *GlobalComponents::searchUserById(int thisUserId)
     return nullptr;
 }
 
-MyArticleObj *GlobalComponents::searchArticleById(int thisArticleId)
+MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
 {
     int len = allArticles.length();
     for (int i = 0; i < len; i++)
@@ -215,7 +215,7 @@ MyArticleObj *GlobalComponents::searchArticleById(int thisArticleId)
 
 
 
-void GlobalComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)
+void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)
 {
     QString titleStr=articleInChange->titleOfArticle();
     if (titleStr.length()>12) titleStr=titleStr.mid(0,12)+"...";
@@ -250,7 +250,7 @@ void GlobalComponents::sendMessageToRelatedUser(QString str, MyArticleObj* artic
 }
 
 
-QString GlobalComponents::decodeStatusCode(int code){
+QString GlobalStorageComponents::decodeStatusCode(int code){
     switch (code) {
     case (100): return "已上传，招募负责人开始";
     case (110): return "已标记负责人，招募负责人结束";

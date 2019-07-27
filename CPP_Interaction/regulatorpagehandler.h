@@ -25,7 +25,7 @@
 #include <QAbstractListModel>
 
 #include "../CPP_Model/requestuserlist.h"
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 #include "abstractpage.h"
 
 /* 发送者页面后台处理程序
@@ -42,7 +42,7 @@ Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
      * 负责人选取列表的数据 */
 
 public :
-    explicit RegulatorPageHandler(int regulatorId, GlobalComponents *newGlobal, QObject *parent = nullptr);
+    explicit RegulatorPageHandler(int regulatorId, QObject *parent = nullptr);
     ~RegulatorPageHandler();
 
     void startLoadingRegulatorArticleList(int userId);

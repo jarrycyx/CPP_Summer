@@ -21,7 +21,7 @@
 #include <QSqlQuery>
 #include <QAbstractListModel>
 
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 #include "abstractpage.h"
 
 class TranslatorPageHandler : public AbstractPage
@@ -29,7 +29,7 @@ class TranslatorPageHandler : public AbstractPage
 Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
 public :
-    explicit TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent = nullptr);
+    explicit TranslatorPageHandler(int translatorId, QObject *parent = nullptr);
     ~TranslatorPageHandler();
 
     void startLoadingTranslatorArticleList(int userId);

@@ -6,7 +6,7 @@
 #include <QQmlContext>
 #include <QSqlError>
 #include <QtConcurrent/QtConcurrent>
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 
 /*************************************************************************
 【函数名称】  TranslatorPageHandler
@@ -14,12 +14,10 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-TranslatorPageHandler::TranslatorPageHandler(int translatorId, GlobalComponents *newGlobal, QObject *parent)
-    : AbstractPage(translatorId, newGlobal), translatorSubarticleList(1),
+TranslatorPageHandler::TranslatorPageHandler(int translatorId, QObject *parent)
+    : AbstractPage(translatorId), translatorSubarticleList(1),
       allSeekingTranslatorArticle(2)
 {
-
-    globalStorageComponent = newGlobal;
     startLoadingTranslatorArticleList(translatorId);
 }
 
@@ -35,12 +33,12 @@ TranslatorPageHandler::~TranslatorPageHandler()
 void TranslatorPageHandler::startLoadingTranslatorArticleList(int userId)
 {
     qDebug() << "Translator" << userId;
-    int len = globalStorageComponent->getArticlesLength();
+    int len = storage->getArticlesLength();
     for (int i = 0; i < len; i++)
     {
         qDebug() << "Translator article";
 
-        MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
+        MyArticleObj* selectedArticle = storage->getArticleToEdit(i);
         if (selectedArticle->translatorIdOfArticle() == userId
                 && selectedArticle->statusCodeOfArticle() != 400)
         {
@@ -59,8 +57,8 @@ Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString
     qDebug() << "save" << index;
     translatorSubarticleList.getArticle(index)->setTranslatedTitle(tTitle);
     translatorSubarticleList.getArticle(index)->setStatusCodeOfArticle(215);
-    globalStorageComponent->sendMessageToRelatedUser(
-                QString("%1").arg(globalStorageComponent->decodeStatusCode(215)),
+    storage->sendMessageToRelatedUser(
+                QString("%1").arg(storage->decodeStatusCode(215)),
                 translatorSubarticleList.getArticle(index));
 
     translatorSubarticleList.getArticle(index)->setTranslatedContent(tContent);
@@ -73,12 +71,12 @@ Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
 {
     qDebug() << "sign up for" << index;
     MyRequestObj *sendNewRequest = new MyRequestObj(
-                globalStorageComponent->getARequestId(),
+                storage->getARequestId(),
                 thisUserId,
                 allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
                 2); //2表示成为译者的请求
     sendNewRequest->setModifyStatus(StorageUnit::New);
-    globalStorageComponent->addARequest(sendNewRequest);
+    storage->addARequest(sendNewRequest);
     emit sendSuccessMessage("报名成功");
 }
 
@@ -86,11 +84,11 @@ Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
 Q_INVOKABLE QString TranslatorPageHandler::getRegulatorComment(int index)//此处index指在正在翻译的文章列表中的索引
 {
     qDebug() << "get comment " << index;
-    int numOfRequest = globalStorageComponent->getRequestsLength();
+    int numOfRequest = storage->getRequestsLength();
     QString commentStr = "";
     for (int i = 0; i < numOfRequest; i++)
     {
-        MyRequestObj *getRequest = globalStorageComponent->getRequest(i);
+        MyRequestObj *getRequest = storage->getRequest(i);
         if (getRequest->getArticleId() == translatorSubarticleList.getArticle(index)->articleIdOfArticle()
                 && getRequest->getType() == 3)
         {

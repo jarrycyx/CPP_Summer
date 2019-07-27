@@ -10,12 +10,11 @@
 
 
 import QtQuick 2.0
+import QtGraphicalEffects 1.12
 import "../../Resources"
 
 Component {
     //id: dragDelegate
-
-
     MouseArea {
         Strings{id: stringsPool}
         //FontLoader { id: pingfangFont; source: "../../Resources/PingFang Regular.ttf" }
@@ -27,7 +26,6 @@ Component {
         property bool movedToTarget: false
         property int indexOfThisDelegate: index
         default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
-
 
         //anchors { left: content.left; right: content.right }
         //anchors.centerIn: parent
@@ -48,7 +46,7 @@ Component {
         onReleased: {
             if (held) released=true;
             held = false;
-            if (dragArea.mouseX>500) {
+            if (dragArea.mouseX>1600) {
                 movedToTarget=true;
                 senderPageHandler.deleteSenderArticle(indexOfThisDelegate);
             }
@@ -64,7 +62,8 @@ Component {
                 senderSubarticlesList.currentIndex=-1;
 
             content.changeStatus(content.released);
-            newEditor.editOrViewAnArticle(titleOfArticle, contentOfArticle, translatedTitle, translatedContent,
+            newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
+                                          translatedTitle, translatedContent,
                                           statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
 
@@ -75,8 +74,38 @@ Component {
         }
         hoverEnabled: true
 
-        onMouseXChanged: content.chaseLight(mouseX,-1)
-        onMouseYChanged: content.chaseLight(-1,mouseY)
+        property int lastX: -1
+
+        onHeldChanged: {
+            if (!held) {
+                content.layer.enabled = false;
+                dragTargetImage.visible = false;
+            }
+        }
+
+        onMouseXChanged: {
+            content.chaseLight(mouseX,-1);
+            if (held) {
+                if (lastX != -1 && (mouseX - lastX > 1 || mouseX - lastX < -1)){
+                    content.layer.enabled = true;
+                    if (typeof dragTargetImage!=='undefined'){
+                        dragTargetImage.visible = true;
+                        if (mouseX > 1600)
+                            dragTargetImage.imageSource = "../../Resources/deletedrag.svg";
+                        else
+                            dragTargetImage.imageSource = "../../Resources/delete.svg";
+                    }
+                }
+            }else {
+                if (typeof dragTargetImage!=='undefined')
+                    dragTargetImage.visible = false;
+                content.layer.enabled = false;
+            }
+            lastX = mouseX;
+        }
+        onMouseYChanged: {
+            content.chaseLight(-1,mouseY);
+        }
         onEntered: {
             console.log("en");
             content.changeStatus(content.hovered);
@@ -94,6 +123,16 @@ Component {
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 verticalCenter: parent.verticalCenter
+            }
+
+            layer.enabled: false
+            layer.effect: DropShadow {
+                id: acrylicBlockShadow
+                radius: 15
+                visible: false
+                samples: 17
+                z: 50
+                color: "#66999999"
             }
 
             color: "#fdfdfd"//dragArea.held ? "#bbbbbb" : "#dddddd"
@@ -156,7 +195,6 @@ Component {
                 }
             ]
         }
-
 
     }
 

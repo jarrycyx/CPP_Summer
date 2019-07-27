@@ -14,7 +14,7 @@
 #include <QObject>
 #include "../CPP_Data/myuserobj.h"
 #include "../CPP_Model/requestuserlist.h"
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 #include "../CPP_Model/messagelist.h"
 #include "abstractpage.h"
 
@@ -23,7 +23,7 @@ class UserInfoPageHandler : public AbstractPage
 Q_OBJECT
 
 public:
-    explicit UserInfoPageHandler(MyUserObj* thisUser, GlobalComponents *newGlobal, QObject *parent = nullptr);
+    explicit UserInfoPageHandler(MyUserObj* thisUser, QObject *parent = nullptr);
     Q_INVOKABLE QString getUsername();
     Q_INVOKABLE int getMoney();
     Q_INVOKABLE int getCredit();

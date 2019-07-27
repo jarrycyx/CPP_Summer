@@ -26,11 +26,13 @@ Rectangle {
     property string thisTrTitle
     property string thisTrContent
     property int typeOfThis
+    property int idOfThis
 
     id: translatorEditorRect
 
-    function editOrViewAnArticle(title, content, translatedTitle, translatedContent, statusCode, index, typeOfArticle){ //type: 1,自己的需求 2,别人的需求
-        thisTitle=title;
+    function editOrViewAnArticle(id, title, content, translatedTitle,
+                                 translatedContent, statusCode, index, typeOfArticle){
+        idOfThis=id;thisTitle=title;
         thisContent=content;
         thisTrTitle=translatedTitle;
         thisTrContent=translatedContent;
@@ -362,5 +364,31 @@ Rectangle {
         }
     }
 
-
+    ToolButton {
+        width: moreUserInfoText.width + 42
+        height: 32
+        x: parent.width-150-width
+        y: 2
+        z: 40
+        Text {
+            id: moreUserInfoText
+            x: 8
+            y: 9
+            text: qsTr("更多信息")
+            font.family: "DengXian";
+        }
+        onClicked: {
+            translatorPageHandler.showArticleInfo(idOfThis);
+        }
+        Image {
+            x: parent.width - 28
+            y: 8
+            z: 40
+            height: 16
+            width: 16
+            sourceSize.height: 16
+            sourceSize.width: 16
+            source: "../../Resources/moreuserinfo.svg"
+        }
+    }
 }

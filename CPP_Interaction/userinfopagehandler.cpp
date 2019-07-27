@@ -2,8 +2,8 @@
 #include <QDebug>
 #include "regulatorpagehandler.h"
 
-UserInfoPageHandler::UserInfoPageHandler(MyUserObj* thisUser, GlobalComponents *newGlobal, QObject *parent) :
-    AbstractPage(-1, newGlobal), user(thisUser)
+UserInfoPageHandler::UserInfoPageHandler(MyUserObj* thisUser, QObject *parent) :
+    AbstractPage(-1), user(thisUser)
 {
 
 }
@@ -15,12 +15,12 @@ void UserInfoPageHandler::startPage(QQmlApplicationEngine *engine)
     engine->load(QUrl(QStringLiteral("qrc:/QML/OtherPages/UserInfoPage.qml")));
 
     qDebug() << "load user messagebox";
-    int len = globalStorageComponent->getRequestsLength();
+    int len = storage->getRequestsLength();
     for (int i = 0; i < len; i++)
     {
-        if (globalStorageComponent->getRequest(i)->getUserId() == user->userId()
-                && globalStorageComponent->getRequest(i)->getType() == 4){
-            messageList.addAMessage(globalStorageComponent->getRequest(i));
+        if (storage->getRequest(i)->getUserId() == user->userId()
+                && storage->getRequest(i)->getType() == 4){
+            messageList.addAMessage(storage->getRequest(i));
         }
     }
 }
@@ -49,11 +49,11 @@ Q_INVOKABLE QString UserInfoPageHandler::getMultiuserStatus()
     //一共四位，分别表示发布者、负责人、翻译者、监管者
     //0为无权限，1为未注册，2为已注册，3为当前用户
     res[user->role()-1]='3';
-    int len = globalStorageComponent->getUsersLength();
+    int len = storage->getUsersLength();
     for (int i=0;i<len;i++){
-        if (globalStorageComponent->getUserToEdit(i)->username() == user->username()){
-            if (globalStorageComponent->getUserToEdit(i)->userId() != user->userId()){
-                res[globalStorageComponent->getUserToEdit(i)->role()-1]='2';
+        if (storage->getUserToEdit(i)->username() == user->username()){
+            if (storage->getUserToEdit(i)->userId() != user->userId()){
+                res[storage->getUserToEdit(i)->role()-1]='2';
             }
         }
     }

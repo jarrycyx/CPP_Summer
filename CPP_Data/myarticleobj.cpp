@@ -37,7 +37,7 @@
 #include <QString>
 #include <QVariant>
 #include <QDebug>
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 
 #include "../CPP_Data/myrequestobj.h"
 
@@ -58,6 +58,7 @@ MyArticleObj::MyArticleObj() : StorageUnit(StorageUnit::Unchanged)
 MyArticleObj::MyArticleObj(const int &sender) : StorageUnit(StorageUnit::Unchanged), mSenderId(sender)
   //初始更改状态为0：未更改
 {
+    mFee = 500;//酬金默认为500
 }
 
 /*************************************************************************

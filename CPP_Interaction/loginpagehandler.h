@@ -19,7 +19,7 @@
 #include <QQuickView>
 #include <QSqlQuery>
 
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 #include "senderpagehandler.h"
 #include "regulatorpagehandler.h"
 #include "translatorpagehandler.h"
@@ -28,7 +28,9 @@
 class LoginPageHandler : public AbstractPage
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-        public : explicit LoginPageHandler(GlobalComponents *newGlobalStorageComponent, QObject *parent = nullptr);
+
+public :
+    explicit LoginPageHandler(QObject *parent = nullptr);
     ~LoginPageHandler();
     //登录
     Q_INVOKABLE void loginInit(QString name, QString pswd, int role = 1);

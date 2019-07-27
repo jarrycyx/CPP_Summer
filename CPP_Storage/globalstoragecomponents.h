@@ -1,7 +1,7 @@
 //总体框架：     Storage - Data - Model - Interaction - View
 //所处层级：     Storage-Data
 /************************************************************************************************************************
-类名：     GlobalComponents，通用存储封装类
+类名：     GlobalStorageComponents，通用存储封装类
 功能：     封装数据库存取操作，也是所有数据实体的存储地
 备注：     根据需求对数据库进行整存整取，程序开始时和结束时分别调用构造和析构函数进行下载上传操作
 日期：     20190718 初步实现Sender和Regulator
@@ -19,12 +19,12 @@
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
 
-class GlobalComponents : public QObject
+class GlobalStorageComponents : public QObject
 {
     Q_OBJECT
 public:
-    explicit GlobalComponents(QObject *parent = nullptr);
-    virtual ~GlobalComponents();
+    explicit GlobalStorageComponents(QObject *parent = nullptr);
+    virtual ~GlobalStorageComponents();
 
     //文章状态改变，通知给相关用户
     void sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange);

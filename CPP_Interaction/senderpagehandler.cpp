@@ -6,7 +6,7 @@
 #include <QQmlContext>
 #include <QSqlError>
 #include <QtConcurrent/QtConcurrent>
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 
 /*************************************************************************
 【函数名称】  SenderPageHandler
@@ -14,11 +14,9 @@
 【参数】    parent，可以为空
 【开发者及日期】    jarrycyx 20190712
 *************************************************************************/
-SenderPageHandler::SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent)
-    : AbstractPage(senderId, newGlobal), senderArticleList(1), allUserArticleList(2)
+SenderPageHandler::SenderPageHandler(int senderId, QObject *parent)
+    : AbstractPage(senderId), senderArticleList(1), allUserArticleList(2)
 {
-
-    globalStorageComponent = newGlobal;
     startLoadingSenderArticleList(senderId);
 }
 
@@ -37,36 +35,37 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId)
     allUserArticleList.removeAllArticles();
 
     qDebug() << "sender" << userId;
-    int len = globalStorageComponent->getArticlesLength();
+    int len = storage->getArticlesLength();
     for (int i = 0; i < len; i++)
     {
-        if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() != 400){
+        if (storage->getArticleToEdit(i)->statusCodeOfArticle() != 400){
             qDebug() << "sender article";
-            if (globalStorageComponent->getArticleToEdit(i)->senderIdOfArticle() == userId)
-                senderArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
-            if (globalStorageComponent->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
-                allUserArticleList.addAnArticle(globalStorageComponent->getArticleToEdit(i));
+            if (storage->getArticleToEdit(i)->senderIdOfArticle() == userId)
+                senderArticleList.addAnArticle(storage->getArticleToEdit(i));
+            if (storage->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
+                allUserArticleList.addAnArticle(storage->getArticleToEdit(i));
         }
     }
 }
 
-void SenderPageHandler::addSenderArticle(QString title, QString content)
+void SenderPageHandler::addSenderArticle(QString title, QString content, int money)
 {
     MyArticleObj *newSenderArticle = new MyArticleObj(thisUserId);
-    newSenderArticle->setArticleInfo(globalStorageComponent->getAnArticleId(), title, content);
+    newSenderArticle->setArticleInfo(storage->getAnArticleId(), title, content);
     newSenderArticle->setStatusCodeOfArticle(100);
+    newSenderArticle->setFee(money);
 
-    globalStorageComponent->sendMessageToRelatedUser(
-                QString("%1").arg(globalStorageComponent->decodeStatusCode(100)),
+    storage->sendMessageToRelatedUser(
+                QString("%1").arg(storage->decodeStatusCode(100)),
                 newSenderArticle);
 
     newSenderArticle->setModifyStatus(StorageUnit::New);
     //由于需要显示两处，保存一处，故需要增加三处
     //allArticles.push_front(newSenderArticle);
-    globalStorageComponent->addAnArticle(newSenderArticle);
+    storage->addAnArticle(newSenderArticle);
     senderArticleList.addAnArticle(newSenderArticle);
     allUserArticleList.addAnArticle(newSenderArticle);
-    emit sendSuccessMessage("文章已上传");
+    emit sendSuccessMessage(QString("文章已上传，酬金为%1元").arg(money));
 }
 
 void SenderPageHandler::editSenderArticle(int index, QString title, QString content)
@@ -146,13 +145,13 @@ void SenderPageHandler::loadArticleRegulatorData(int articleId)
     qDebug() << "choose" << articleId;
 
     requestUserList.removeAllRequestUsers();
-    int numOfRequest = globalStorageComponent->getRequestsLength();
+    int numOfRequest = storage->getRequestsLength();
     for (int i = 0; i < numOfRequest; i++)
     {
-        MyRequestObj *getRequest = globalStorageComponent->getRequest(i);
+        MyRequestObj *getRequest = storage->getRequest(i);
         if (getRequest->getArticleId() == articleId && getRequest->getType() == 1)
         {
-            MyUserObj *requestUser = globalStorageComponent->searchUserById(getRequest->getUserId());
+            MyUserObj *requestUser = storage->searchUserById(getRequest->getUserId());
             requestUserList.addARequestUser(requestUser);
         }
     }
@@ -171,8 +170,8 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
     articleToChoose->setRegulatorIdOfArticle(requestUserList.getRequestUser(idx)->userId());
     articleToChoose->setStatusCodeOfArticle(110);
 
-    globalStorageComponent->sendMessageToRelatedUser(
-                QString("%1").arg(globalStorageComponent->decodeStatusCode(110)),
+    storage->sendMessageToRelatedUser(
+                QString("%1").arg(storage->decodeStatusCode(110)),
                 articleToChoose);
 
     senderArticleList.editAnArticle(currentInViewIndex);
@@ -187,26 +186,26 @@ Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
     int moneyToRegulator = thisArticle->fee();
     int regulatorId = thisArticle->regulatorIdOfArticle();
     int senderId = thisArticle->senderIdOfArticle();
-    globalStorageComponent->searchUserById(regulatorId)->addMoney(moneyToRegulator);
+    storage->searchUserById(regulatorId)->addMoney(moneyToRegulator);
 
     //应扣款总数
     int totalMoney = moneyToRegulator;
 
     //搜索子文章
-    int len = globalStorageComponent->getArticlesLength();
+    int len = storage->getArticlesLength();
     for (int i=0;i<len;i++){
-        MyArticleObj* selectedArticle = globalStorageComponent->getArticleToEdit(i);
+        MyArticleObj* selectedArticle = storage->getArticleToEdit(i);
         if (selectedArticle->originArticleIdOfArticle() == thisArticle->articleIdOfArticle())
         {
             int translatorId = selectedArticle->translatorIdOfArticle();
             totalMoney += selectedArticle->fee();
-            globalStorageComponent->searchUserById(translatorId)
+            storage->searchUserById(translatorId)
                     ->addMoney(selectedArticle->fee());
             selectedArticle->setStatusCodeOfArticle(400);
         }
     }
 
-    globalStorageComponent->searchUserById(senderId)->addMoney(-totalMoney);
+    storage->searchUserById(senderId)->addMoney(-totalMoney);
     senderArticleList.getArticle(index)->setStatusCodeOfArticle(400);
     emit sendSuccessMessage("扣款成功，感谢！");
 }

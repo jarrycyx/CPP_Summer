@@ -1,17 +1,34 @@
 #include "abstractpage.h"
 #include "userinfopagehandler.h"
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
+#include "articleinfopagehandler.h"
 #include <QObject>
+#include <QDebug>
 
-AbstractPage::AbstractPage(int newUserId,GlobalComponents *newGlobal, QObject *parent)
-    :QObject(parent), globalStorageComponent(newGlobal), thisUserId(newUserId)
+GlobalStorageComponents* AbstractPage::storage = new GlobalStorageComponents;
+
+AbstractPage::AbstractPage(int newUserId, QObject *parent)
+    :QObject(parent), thisUserId(newUserId)
 {
 
 }
 
-Q_INVOKABLE void AbstractPage::showUserInfo(){
+AbstractPage::~AbstractPage(){
+    if (storage!=nullptr) delete storage;
+}
+
+Q_INVOKABLE void AbstractPage::showUserInfo()
+{
     UserInfoPageHandler* newUserHandler = new UserInfoPageHandler(
-                globalStorageComponent->searchUserById(thisUserId),
-                globalStorageComponent);
+                storage->searchUserById(thisUserId));
     newUserHandler->startPage(thisEngine);
+}
+
+
+Q_INVOKABLE void AbstractPage::showArticleInfo(int articleId)
+{
+    qDebug() << "show article" << articleId;
+    ArticleInfoPageHandler* newArticlePage = new ArticleInfoPageHandler(
+                storage->searchArticleById(articleId));
+    newArticlePage->startPage(thisEngine);
 }

@@ -23,7 +23,7 @@
 #include <QSqlQuery>
 #include <QAbstractListModel>
 
-#include "../CPP_Storage/globalcomponents.h"
+#include "../CPP_Storage/globalstoragecomponents.h"
 #include "../CPP_Model/requestuserlist.h"
 #include "abstractpage.h"
 
@@ -41,7 +41,7 @@ Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
      * 负责人选取列表的数据 */
 
 public :
-    explicit SenderPageHandler(int senderId, GlobalComponents *newGlobal, QObject *parent = nullptr);
+    explicit SenderPageHandler(int senderId, QObject *parent = nullptr);
     ~SenderPageHandler();
 
     //从QML唤起的选择负责人函数
@@ -50,7 +50,7 @@ public :
     Q_INVOKABLE void chooseRegulator(int index);
 
     void startLoadingSenderArticleList(int userId);
-    Q_INVOKABLE void addSenderArticle(QString title, QString content);
+    Q_INVOKABLE void addSenderArticle(QString title, QString content, int money);
     Q_INVOKABLE void editSenderArticle(int index, QString title, QString content);
     Q_INVOKABLE void deleteSenderArticle(int index);
     Q_INVOKABLE void confirmAcceptArticle(int index);
