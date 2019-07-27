@@ -67,6 +67,7 @@ Component {
 
             //通知AcrylicBlock改变状态
             content.changeStatus(content.released);
+
             newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
                                           translatedTitle, translatedContent,
                                           statusCodeOfArticle, indexOfThisDelegate, typeOfList);

@@ -252,8 +252,8 @@ Rectangle {
             switch (senderEditorRect.articleStatus){
             case 0:
                 var moneyWindow=Qt.createComponent("../OtherPages/DetermineMoneyDialog.qml")
-                                    .createObject(RegulatorViewer)
-                senderEditorRect.articleStatus=100;
+                                    .createObject(SenderEditor);
+                //senderEditorRect.articleStatus=100;
                 break;
             case 100:
                 senderPageHandler.editSenderArticle(indexInList, titleEdit.text, contentEdit.text)

@@ -291,7 +291,10 @@ Q_INVOKABLE void RegulatorPageHandler::acceptSubarticle(int idx)
                 QString("%1").arg(storage->decodeStatusCode(230)),
                 regulatorSubarticleList.getArticle(idx));
     regulatorSubarticleList.editAnArticle(idx);
-    emit sendSuccessMessage("已审核通过");
+    int translatorId = regulatorSubarticleList.getArticle(idx)->translatorIdOfArticle();
+    storage->searchUserById(translatorId)->addCredit(1);
+
+    emit sendSuccessMessage("已审核通过，译者积分+1");
 }
 
 

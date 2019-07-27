@@ -83,16 +83,16 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 
         if (role == 1)
         {
-            newSenderPage = new SenderPageHandler(searchUser(name, role), storage);
+            newSenderPage = new SenderPageHandler(searchUser(name), storage);
             newSenderPage->startPage(thisEngine);
         }
         else if (role == 2)
         {
-            newRegulatorPage = new RegulatorPageHandler(searchUser(name, role), storage);
+            newRegulatorPage = new RegulatorPageHandler(searchUser(name), storage);
             newRegulatorPage->startPage(thisEngine);
         }else if (role == 3)
         {
-            newTranslatorPage = new TranslatorPageHandler(searchUser(name, role), storage);
+            newTranslatorPage = new TranslatorPageHandler(searchUser(name), storage);
             newTranslatorPage->startPage(thisEngine);
         }
         break;
@@ -127,13 +127,33 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 【返回值】   无
 【开发者及日期】    jarrycyx 20190714
 *************************************************************************/
-Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd, int role)
+Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd)
 {
-    int signupResult = addUser(name, pswd, role);
-    if (!signupResult)
+    QList<MyUserObj*> searchSubUserRes = storage->searchSubUsers(name);
+    MyUserObj* newUser = addUser(name, pswd);
+    if (newUser == nullptr)
         emit sendErrorMessage("用户已存在");
-    else
+    else {
         emit sendSuccessMessage("注册成功");
+        const QUrl url1(QStringLiteral("qrc:/QML/OtherPages/UserQualifyDialog.qml"));
+        thisEngine->load(url1);
+        newSignupUser = newUser;
+    }
+}
+
+
+Q_INVOKABLE void LoginPageHandler::setUserQualification(QString quali){
+    newSignupUser->setQualification(quali);
+    if (quali == "TOFEL 90分")
+        newSignupUser->setCredit(10);
+    else if (quali == "TOFEL 100分")
+        newSignupUser->setCredit(20);
+    else if (quali == "TOFEL 110分")
+        newSignupUser->setCredit(30);
+    else if (quali == "英语六级")
+        newSignupUser->setCredit(8);
+    else if (quali == "英语专业八级")
+        newSignupUser->setCredit(40);
 }
 
 int LoginPageHandler::userLogin(QString name, QString pswd, int role)
@@ -146,14 +166,11 @@ int LoginPageHandler::userLogin(QString name, QString pswd, int role)
         if (name == storage->getUserToEdit(i)->username())
         {
             ifUnRegistered = false;
-            if (role == storage->getUserToEdit(i)->role())
-            {
-                ifRoleNotExist = false;
-                if (pswd == storage->getUserToEdit(i)->password())
-                    return 1;
-                else
-                    return 2; //密码不匹配
-            }
+            ifRoleNotExist = false;
+            if (pswd == storage->getUserToEdit(i)->password())
+                return 1;
+            else
+                return 2; //密码不匹配
         }
     }
 
@@ -164,31 +181,29 @@ int LoginPageHandler::userLogin(QString name, QString pswd, int role)
     return 0;
 }
 
-int LoginPageHandler::searchUser(QString name, int role)
+int LoginPageHandler::searchUser(QString name)
 {
     int len = storage->getUsersLength();
     for (int i = 0; i < len; i++)
     {
         if (name == storage->getUserToEdit(i)->username())
-            if (role == storage->getUserToEdit(i)->role())
-                return storage->getUserToEdit(i)->userId();
+            return storage->getUserToEdit(i)->userId();
     }
     return -1;
 }
 
-int LoginPageHandler::addUser(QString name, QString pswd, int role)
+MyUserObj* LoginPageHandler::addUser(QString name, QString pswd)
 {
     int len = storage->getUsersLength();
     for (int i = 0; i < len; i++)
     {
-        if (storage->getUserToEdit(i)->username() == name &&
-                storage->getUserToEdit(i)->role() == role)
-            return 0; //用户已存在
+        if (storage->getUserToEdit(i)->username() == name)
+            return nullptr; //用户已存在
     }
     int newUserId = storage->getAUserId();
     qDebug() << "注册ID" << newUserId;
-    MyUserObj *newUser = new MyUserObj(newUserId, name, pswd, role);
+    MyUserObj *newUser = new MyUserObj(newUserId, name, pswd);
     newUser->setModifyStatus(StorageUnit::New);
     storage->addAUser(newUser);
-    return 1;
+    return newUser;
 }

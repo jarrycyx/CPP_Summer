@@ -37,7 +37,7 @@ Rectangle {
         thisTrTitle=translatedTitle;
         thisTrContent=translatedContent;
 
-        button3.text="查看译文";
+        button3.text="查看原文";
         mode=1;
         blankText.visible=false;
         visible=true;
@@ -96,7 +96,7 @@ Rectangle {
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的子任务";
-            button3.visible=false;
+            button3.visible=true;
             button4.visible=true;
             titleEdit.text=translatedTitle;
             contentEdit.text=translatedContent;
@@ -107,7 +107,7 @@ Rectangle {
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的子任务";
-            button3.visible=false;
+            button3.visible=true;
             button4.visible=true;
             titleEdit.text=translatedTitle;
             contentEdit.text=translatedContent;
@@ -268,6 +268,8 @@ Rectangle {
                 translatorPageHandler.editTranslatedArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
             }
+            translatorEditorRect.visible = false;
+            blankText.visible =true;
         }
 
         highlighted: true
@@ -284,10 +286,6 @@ Rectangle {
         font.family: "DengXian"
         onClicked: {
             switch (translatorEditorRect.articleStatus){
-            case 0:
-            case 110:
-                translatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
-                break;
             }
 
         }

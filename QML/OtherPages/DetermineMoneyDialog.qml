@@ -16,19 +16,11 @@ FramlessWindow {
     x: 550
     y: 800
 
-    property int currentArticleIndex: -1
-
     //用户点击窗口外则关闭窗口
     onActiveChanged: {
         if (!active) {
             dialogWindow.close();
         }
-    }
-
-    onCurrentArticleIndexChanged: {
-        contentEdit.text = Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
-        contentEdit.text += ": \n\t"
-        console.log(Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd"));
     }
 
 

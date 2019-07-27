@@ -35,18 +35,22 @@ public :
     //登录
     Q_INVOKABLE void loginInit(QString name, QString pswd, int role = 1);
     //注册
-    Q_INVOKABLE void signUp(QString name, QString pswd, int role);
+    Q_INVOKABLE void signUp(QString name, QString pswd);
     //增加用户，调用Model
-    Q_INVOKABLE int addUser(QString name, QString pswd, int role);
+    Q_INVOKABLE MyUserObj* addUser(QString name, QString pswd);
     //调用Storage查找用户
-    Q_INVOKABLE int searchUser(QString name, int role);
+    Q_INVOKABLE int searchUser(QString name);
     //用户登录
     Q_INVOKABLE int userLogin(QString name, QString pswd, int role);
+
+    Q_INVOKABLE void setUserQualification(QString quali);
 
 private:
     SenderPageHandler *newSenderPage;
     RegulatorPageHandler *newRegulatorPage;
     TranslatorPageHandler *newTranslatorPage;
+
+    MyUserObj* newSignupUser;
 
 
 public slots:

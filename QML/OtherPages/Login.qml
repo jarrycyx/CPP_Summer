@@ -115,7 +115,8 @@ ApplicationWindow {
         text: qsTr("注册")
         font.family: "DengXian"
         onClicked: {
-            loginPageHandler.signUp(loginModel.get(0).textInEdit,loginModel.get(1).textInEdit, selectRoleBox.currentIndex+1);
+            loginPageHandler.signUp(loginModel.get(0).textInEdit,
+                                    loginModel.get(1).textInEdit)
         }
     }
 

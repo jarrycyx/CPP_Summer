@@ -4,13 +4,14 @@ MyUserObj::MyUserObj() : StorageUnit(StorageUnit::Unchanged)
 {
 }
 
-MyUserObj::MyUserObj(const int &user_id, const QString &name, const QString &password, int role)
-    : StorageUnit(StorageUnit::Unchanged), mUsername(name), mPassword(password),
-      mUserId(user_id), mRole(role)
+MyUserObj::MyUserObj(const int &user_id, const QString &name, const QString &password)
+    : StorageUnit(StorageUnit::Unchanged),
+      mUsername(name), mPassword(password),
+      mUserId(user_id),
+      mCredit(0), mMoney(0)
     //初始更改状态为0：未更改
 {
 }
-
 
 /*************************************************************************
 名称：     username等
@@ -51,13 +52,6 @@ int MyUserObj::userId() const
 {
     return mUserId;
 }
-
-int MyUserObj::role() const
-{
-    return mRole;
-}
-
-
 
 QString MyUserObj::qualification() const
 {
@@ -105,4 +99,11 @@ void MyUserObj::setCredit(int newCredit)
         if (getModifyStatus() == StorageUnit::Unchanged)
             setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
     }
+}
+
+
+void MyUserObj::addCredit(int added){
+    mCredit += added;
+    if (getModifyStatus() == StorageUnit::Unchanged)
+        setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
 }

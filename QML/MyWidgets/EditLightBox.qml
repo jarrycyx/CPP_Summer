@@ -87,11 +87,5 @@ Component {
                     font{family: "DengXian"}
                 }
             }
-
-
     }
-
-
-
-
 }

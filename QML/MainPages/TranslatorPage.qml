@@ -52,13 +52,6 @@ ApplicationWindow {
         }
     }
 
-    Connections{
-        target: loginPageHandler
-        onRequireComplete: {
-            if (flag==1) mainWindow.visible=true;
-        }
-    }
-
 
     Rectangle {
         id: root
@@ -94,35 +87,17 @@ ApplicationWindow {
             height: parent.height
             color: "#f2f2f2"
 
-            Rectangle {
-                color: "#f2f2f2"
-                x:0
-                y:0
-                z:0.5
-                width:388
-                height: 77
-            }
-
-            Rectangle {
-                color: stringsPool.textGray3
-                x:41
-                y:76
-                z:0.5
-                width: 350*articlesRect.columnNum-45
-                height: 1
-            }
 
             ScrollView{
                 width: articlesRect.width - 24
-                height: parent.height-77
+                height: parent.height
                 clip: true
-                y: 77
                 ScrollBar.vertical.policy: ScrollBar.AsNeeded
 
                 contentHeight: senderSubarticlesList.height + 47 + otherArticlesList.height + 30
                 //z:0.2
 
-                Text{
+                Text {
                     text: qsTr("我正在翻译的文章")
                     x: 41
                     y: 16
@@ -133,7 +108,7 @@ ApplicationWindow {
                     font{family: "DengXian";pixelSize: 16}
                 }
 
-                GridView{
+                GridView {
                     property int flag: 1
                     interactive: false
                     id: senderSubarticlesList
@@ -149,7 +124,7 @@ ApplicationWindow {
                     currentIndex: -1
                 }
 
-                Text{
+                Text {
                     text: qsTr("其他正在招募的文章")
                     x: 41
                     y: senderSubarticlesList.height + 16 + 19
@@ -180,48 +155,6 @@ ApplicationWindow {
                 }
 
             }
-
-            Rectangle {
-                x: 41
-                y: 21
-                z:1
-                width: 305
-                height: 48
-                color: "#f2f2f2"
-                ToolButton {
-                    id: toolButton
-                    x: 0
-                    y: 0
-                    anchors.fill: parent
-                    Text{
-                        x: 60
-                        y: 13
-                        height: 22
-                        text: qsTr("新的文章需求")
-                        font{
-                            family: "DengXian";
-                            pixelSize: 22
-                        }
-                    }
-                    onClicked: {
-                        newEditor.addAnArticle();
-                        translatorArticlesList.currentIndex=-1;
-                        otherArticlesList.currentIndex=-1;
-                    }
-                }
-
-                Image {
-                    id: borderImage
-                    x: 8
-                    y: 8
-                    width: 32
-                    height: 32
-                    sourceSize.width: 32
-                    sourceSize.height: 32
-                    source: "Resources/add.svg"
-                }
-            }
-
             ToolButton {
                 id: expandButton
                 x: articlesRect.width-21
@@ -233,7 +166,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     sourceSize.width: 21
                     sourceSize.height: 36
-                    source: "Resources/unfold.svg"
+                    source: "../../Resources/unfold.svg"
                 }
                 onClicked: {
                     if (articlesRect.columnNum<2){
@@ -304,7 +237,7 @@ ApplicationWindow {
         width: messageText.width+30
         sourceSize.height: 35
         sourceSize.width: messageText.width+30
-        source: "Resources/messagebox.svg"
+        source: "../../Resources/messagebox.svg"
 
         SequentialAnimation {
             id: messageBoxAnimation

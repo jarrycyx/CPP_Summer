@@ -40,7 +40,8 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId)
     {
         if (storage->getArticleToEdit(i)->statusCodeOfArticle() != 400){
             qDebug() << "sender article";
-            if (storage->getArticleToEdit(i)->senderIdOfArticle() == userId)
+            if (storage->getArticleToEdit(i)->senderIdOfArticle() == userId
+                    && storage->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
                 senderArticleList.addAnArticle(storage->getArticleToEdit(i));
             if (storage->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
                 allUserArticleList.addAnArticle(storage->getArticleToEdit(i));

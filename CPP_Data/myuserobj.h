@@ -7,6 +7,7 @@
                     1	发送者
                     2	负责人
                     3   翻译者
+          credit在25分以上可以做翻译者，在45分以上可以做负责人
 
 日期：     20190709 初步实现该类的Sender，Regulator部分
                  20190717 架构大调整，移除数据库操作，调整到Storage层级
@@ -26,14 +27,12 @@ class MyUserObj : public StorageUnit
 
 public:
     MyUserObj();
-    MyUserObj(const int &user_id, const QString &name, const QString &password, int role);
-
+    MyUserObj(const int &user_id, const QString &name, const QString &password);
 
     //设置和读取各信息
     QString username() const;
     void setUsername(const QString &name);
     int userId() const;
-    int role() const;
     QString password() const;
     void setPassword(const QString &color);
     QString qualification() const;
@@ -43,6 +42,7 @@ public:
     void addMoney(int added);
     int credit() const;
     void setCredit(int newCredit);
+    void addCredit(int added);
 
 private:
     QString mUsername;
@@ -51,6 +51,5 @@ private:
     int mMoney;
     int mCredit;
     int mUserId;
-    int mRole;
 };
 #endif // MYUSEROBJ_H

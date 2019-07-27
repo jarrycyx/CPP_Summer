@@ -51,5 +51,6 @@
         <file>QML/OtherPages/ArticleInfoPage.qml</file>
         <file>QML/OtherPages/DetermineMoneyDialog.qml</file>
         <file>Resources/deletedrag.svg</file>
+        <file>QML/OtherPages/UserQualifyDialog.qml</file>
     </qresource>
 </RCC>

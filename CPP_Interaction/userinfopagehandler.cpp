@@ -45,19 +45,11 @@ Q_INVOKABLE QString UserInfoPageHandler::getQualification()
 }
 Q_INVOKABLE QString UserInfoPageHandler::getMultiuserStatus()
 {
-    QString res="1110";
     //一共四位，分别表示发布者、负责人、翻译者、监管者
-    //0为无权限，1为未注册，2为已注册，3为当前用户
-    res[user->role()-1]='3';
-    int len = storage->getUsersLength();
-    for (int i=0;i<len;i++){
-        if (storage->getUserToEdit(i)->username() == user->username()){
-            if (storage->getUserToEdit(i)->userId() != user->userId()){
-                res[storage->getUserToEdit(i)->role()-1]='2';
-            }
-        }
-    }
-    return res;
+    //0为无权限，1为有权限
+    if (user->credit()>=25) return QString("1100");
+    if (user->credit()>=45) return QString("1110");
+    return QString("1000");
 }
 
 

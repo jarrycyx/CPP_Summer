@@ -59,6 +59,8 @@ public:
     inline void addAUser(MyUserObj *newUser) { allUsers.push_front(newUser); }
     //通过id查找user，性能较低
     MyUserObj* searchUserById(int thisUserId);
+
+    QList<MyUserObj*> searchSubUsers(QString name);
     //通过id查找article，性能较低
     MyArticleObj* searchArticleById(int thisUserId);
 

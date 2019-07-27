@@ -47,18 +47,17 @@ GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(pare
             allArticles.append(articleFromDB);
         }
 
-        query->exec(QString("SELECT user_id,user_name,create_time,password,role,money,credit,quali"
+        query->exec(QString("SELECT user_id,user_name,create_time,password,money,credit,quali"
                             " from users"));
         while (query->next())
         {
             MyUserObj *userFromDB = new MyUserObj(
                         query->value(0).toInt(),
                         query->value(1).toString(),
-                        query->value(3).toString(),
-                        query->value(4).toInt());
-            userFromDB->setMoney(query->value(5).toInt());
-            userFromDB->setCredit(query->value(6).toInt());
-            userFromDB->setQualification(query->value(7).toString());
+                        query->value(3).toString());
+            userFromDB->setMoney(query->value(4).toInt());
+            userFromDB->setCredit(query->value(5).toInt());
+            userFromDB->setQualification(query->value(6).toString());
             userFromDB->setModifyStatus(StorageUnit::Unchanged);
             allUsers.append(userFromDB);
 
@@ -150,12 +149,11 @@ void GlobalStorageComponents::uploadAllData()
         {
             qDebug() << "added user";
             query->exec(QString("insert into users "
-                                "(user_id,user_name,create_time,password,role,money,credit,quali) values "
-                                "(%1, \"%2\", NOW(), \"%3\", %4, %5, %6, \"%7\")")
+                                "(user_id,user_name,create_time,password,money,credit,quali) values "
+                                "(%1, \"%2\", NOW(), \"%3\", %4, %5, \"%6\")")
                         .arg(allUsers[i]->userId())
                         .arg(allUsers[i]->username())
                         .arg(allUsers[i]->password())
-                        .arg(allUsers[i]->role())
                         .arg(allUsers[i]->money())
                         .arg(allUsers[i]->credit())
                         .arg(allUsers[i]->qualification()));
@@ -164,11 +162,10 @@ void GlobalStorageComponents::uploadAllData()
         {
             qDebug() << "modified user";
             query->exec(QString("UPDATE users SET user_name=\"%2\" ,password=\"%3\", "
-                                "role=%4 ,money=%5, credit=%6, quali=\"%7\" WHERE user_id=%1")
+                                "money=%4, credit=%5, quali=\"%6\" WHERE user_id=%1")
                         .arg(allUsers[i]->userId())
                         .arg(allUsers[i]->username())
                         .arg(allUsers[i]->password())
-                        .arg(allUsers[i]->role())
                         .arg(allUsers[i]->money())
                         .arg(allUsers[i]->credit())
                         .arg(allUsers[i]->qualification()));
@@ -213,6 +210,17 @@ MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
     return nullptr;
 }
 
+
+
+QList<MyUserObj*> GlobalStorageComponents::searchSubUsers(QString name){
+    QList<MyUserObj*> res;
+    int len = allUsers.length();
+    for (int i=0;i<len;i++){
+        if (allUsers[i]->username() == name)
+            res.push_back(allUsers[i]);
+    }
+    return res;
+}
 
 
 void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)

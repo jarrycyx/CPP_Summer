@@ -53,17 +53,14 @@ FramlessWindow {
         qualiText.text = userPageHandler.getQualification();
         var resStr = userPageHandler.getMultiuserStatus();
         console.log(resStr);
-        if (resStr[0] === '1') senderStatus.text = "未激活";
-        else if (resStr[0] === '2') senderStatus.text = "已激活";
-        else if (resStr[0] === '3') senderStatus.text = "当前用户";
+        if (resStr[0] === '0') senderStatus.text = "无权限";
+        else if (resStr[0] === '1') senderStatus.text = "有权限";
 
-        if (resStr[1] === '1') regulatorStatus.text = "未激活";
-        else if (resStr[1] === '2') regulatorStatus.text = "已激活";
-        else if (resStr[1] === '3') regulatorStatus.text = "当前用户";
+        if (resStr[1] === '0') regulatorStatus.text = "无权限";
+        else if (resStr[1] === '1') regulatorStatus.text = "有权限";
 
-        if (resStr[2] === '1') translatorStatus.text = "未激活";
-        else if (resStr[2] === '2') translatorStatus.text = "已激活";
-        else if (resStr[2] === '3') translatorStatus.text = "当前用户";
+        if (resStr[2] === '0') translatorStatus.text = "无权限";
+        else if (resStr[2] === '1') translatorStatus.text = "有权限";
     }
 
     Strings{
