@@ -21,13 +21,11 @@ Rectangle {
     property int typeOfThis
     property int idOfThis
 
-    function editOrViewAnArticle(id, title, content, translatedTitle,
-                                 translatedContent, statusCode, index, typeOfArticle){
+   function refreshEdit(id, title, content, translatedTitle,
+                         translatedContent, statusCode, index, typeOfArticle){
         idOfThis=id;
         //type: 1,自己的需求 2,别人的需求
         mode=1;
-        blankText.visible=false;
-        visible=true;
         titleEdit.text=title;
         contentEdit.text=content;
         articleStatus=statusCode;
@@ -87,7 +85,6 @@ Rectangle {
             button.enabled=true;
             button2.visible=false;
             element.text="我负责的任务";
-            button3.visible=true;
             break;
         }
 
@@ -104,11 +101,20 @@ Rectangle {
         }
     }
 
+   function editOrViewAnArticle(id, title, content, translatedTitle,
+                                translatedContent, statusCode, index, typeOfArticle){
+       visible=true;
+       blankText.visible=false;
+       refreshEdit(id, title, content, translatedTitle,
+                   translatedContent, statusCode, index, typeOfArticle);
+   }
+
     function addAnArticle(){
         mode=0;
         blankText.visible=false;
         visible=true;
-        contentEdit.text="新文章的内容，是一大段需要翻译的不知道在说什么的文字。"+Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd");
+        contentEdit.text="新文章的内容，是一大段需要翻译的不知道在说什么的文字。"
+                +Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd");
         titleEdit.text="新文章"+Qt.formatDateTime(new Date(), "yyyy-MM-dd");
         element.text="发布翻译需求"
         senderEditorRect.articleStatus=0;
@@ -116,6 +122,7 @@ Rectangle {
         button.enabled=true;
         button2.visible=false;
         statusText.text="未上传";
+        contentEdit.enabled=true;
     }
 
     Strings{id: stringsPool}
@@ -273,6 +280,8 @@ Rectangle {
                 senderPageHandler.confirmAcceptArticle(indexInList);
             }
 
+
+
         }
         highlighted: true
         Universal.foreground: "#ffffff"
@@ -293,7 +302,6 @@ Rectangle {
                 senderPageHandler.chooseRegulator(indexInList);
                 break;
             }
-
         }
     }
 

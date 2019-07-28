@@ -14,11 +14,13 @@ Component{
         ToolButton{
             anchors.fill:parent
             onClicked: {
-                if (typeof senderPageHandler!=='undefined')
-                    senderPageHandler.regulatorChosen(mainRectInChoose.indexOfThisDelegate);
-                if (typeof regulatorPageHandler!=='undefined')
-                    regulatorPageHandler.translatorChosen(mainRectInChoose.indexOfThisDelegate);
-                chooseRegulatorWindow.close();
+                if (mainRectInChoose.indexOfThisDelegate != -1){
+                    if (typeof senderPageHandler!=='undefined')
+                        senderPageHandler.regulatorChosen(mainRectInChoose.indexOfThisDelegate);
+                    if (typeof regulatorPageHandler!=='undefined')
+                        regulatorPageHandler.translatorChosen(mainRectInChoose.indexOfThisDelegate);
+                    chooseRegulatorWindow.close();
+                }
             }
         }
 
@@ -52,35 +54,11 @@ Component{
             y: 47
             width: 257
             height: 12
-            text: "资质说明"
+            wrapMode: Text.WrapAnywhere
+            text: "资质："+qualificationOfUser+" 积分："+credits
             font{
                 family: "DengXian";
-                pixelSize: 12
-            }
-        }
-
-        Text {
-            id: translatorInProgressNumber
-            x: 383
-            y: 13
-            width: 28
-            height: 28
-            text: qsTr("3")
-            color: "#27ae60"
-            font{
-                family: "DengXian";
-                pixelSize: 28
-            }
-        }
-
-        Text {
-            x: 362
-            y: 47
-            width: 70
-            text: qsTr("正在进行中")
-            font{
-                family: "DengXian";
-                pixelSize: 12
+                pixelSize: 14
             }
         }
     }

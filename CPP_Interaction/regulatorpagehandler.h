@@ -54,6 +54,7 @@ public :
     Q_INVOKABLE void editArticle(int index, QString title, QString content);
     Q_INVOKABLE void stopRecruitingTranslatorForArticle(int index);
     Q_INVOKABLE void chooseTranslator(int index);
+    Q_INVOKABLE void viewTranslator(int index);
     //从QML唤起的选择译者函数
     Q_INVOKABLE void translatorChosen(int idx);
     //向翻译者进行反馈

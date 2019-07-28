@@ -184,13 +184,16 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
 Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
 {
     MyArticleObj* thisArticle = senderArticleList.getArticle(index);
-    int moneyToRegulator = thisArticle->fee();
+    int moneyToRegulator = int(thisArticle->fee()*0.2);
     int regulatorId = thisArticle->regulatorIdOfArticle();
     int senderId = thisArticle->senderIdOfArticle();
     storage->searchUserById(regulatorId)->addMoney(moneyToRegulator);
 
+    //向发送者、负责人发送金额改变通知
+    storage->sendUserModifiedMessage(regulatorId, QString("您的账户余额已改变，请注意"));
+
     //应扣款总数
-    int totalMoney = moneyToRegulator;
+    int totalMoney = thisArticle->fee();
 
     //搜索子文章
     int len = storage->getArticlesLength();
@@ -199,14 +202,18 @@ Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
         if (selectedArticle->originArticleIdOfArticle() == thisArticle->articleIdOfArticle())
         {
             int translatorId = selectedArticle->translatorIdOfArticle();
-            totalMoney += selectedArticle->fee();
             storage->searchUserById(translatorId)
                     ->addMoney(selectedArticle->fee());
             selectedArticle->setStatusCodeOfArticle(400);
+
+            //向翻译者发送金额改变通知
+            storage->sendUserModifiedMessage(translatorId, QString("您的账户余额已改变，请注意"));
         }
     }
 
     storage->searchUserById(senderId)->addMoney(-totalMoney);
+    //向发送者、负责人发送金额改变通知
+    storage->sendUserModifiedMessage(senderId, QString("您的账户余额已改变，请注意"));
     senderArticleList.getArticle(index)->setStatusCodeOfArticle(400);
     emit sendSuccessMessage("扣款成功，感谢！");
 }

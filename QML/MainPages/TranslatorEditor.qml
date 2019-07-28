@@ -30,8 +30,9 @@ Rectangle {
 
     id: translatorEditorRect
 
-    function editOrViewAnArticle(id, title, content, translatedTitle,
-                                 translatedContent, statusCode, index, typeOfArticle){
+
+    function refreshEdit(id, title, content, translatedTitle,
+                         translatedContent, statusCode, index, typeOfArticle){
         idOfThis=id;thisTitle=title;
         thisContent=content;
         thisTrTitle=translatedTitle;
@@ -39,8 +40,6 @@ Rectangle {
 
         button3.text="查看原文";
         mode=1;
-        blankText.visible=false;
-        visible=true;
         titleEdit.text=title;
         contentEdit.text=content;
         articleStatus=statusCode;
@@ -125,6 +124,14 @@ Rectangle {
             titleEdit.enabled=true;
             contentEdit.enabled=true;
         }
+    }
+
+    function editOrViewAnArticle(id, title, content, translatedTitle,
+                                 translatedContent, statusCode, index, typeOfArticle){
+        visible=true;
+        blankText.visible=false;
+        refreshEdit(id, title, content, translatedTitle,
+                    translatedContent, statusCode, index, typeOfArticle);
     }
 
     Strings{id: stringsPool}
@@ -268,8 +275,6 @@ Rectangle {
                 translatorPageHandler.editTranslatedArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
             }
-            translatorEditorRect.visible = false;
-            blankText.visible =true;
         }
 
         highlighted: true

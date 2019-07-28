@@ -11,7 +11,7 @@ Rectangle {
     property int mode: 0 //0: new 1:edit/view
     property int articleStatus: 0
     property int indexInList: -1
-    id: senderEditorRect
+    id: regulatorEditorRect
 
     property string thisTitle
     property string thisContent
@@ -20,8 +20,8 @@ Rectangle {
     property int typeOfThis
     property int idOfThis
 
-    function editOrViewAnArticle(id, title, content, translatedTitle,
-                                 translatedContent, statusCode, index, typeOfArticle){
+    function refreshEdit(id, title, content, translatedTitle,
+                         translatedContent, statusCode, index, typeOfArticle){
         idOfThis=id;
 
         //type: 1,自己的需求 2,别人的需求
@@ -32,15 +32,13 @@ Rectangle {
         button3.text="查看译文";
 
         mode=1;
-        blankText.visible=false;
-        visible=true;
         titleEdit.text=title;
         contentEdit.text=content;
         articleStatus=statusCode;
         indexInList=index;
         typeOfThis=typeOfArticle;
 
-        switch (senderEditorRect.articleStatus){
+        switch (regulatorEditorRect.articleStatus){
         case 100:
             statusText.text="已上传，招募负责人开始";
             element.text="翻译需求详情";
@@ -63,7 +61,8 @@ Rectangle {
             element.text="我负责的翻译需求";
             button.text="停止招募";
             button.enabled=true;
-            button2.visible=false;
+            button2.visible=true;
+            button2.text="报名情况";
             element.text="翻译需求详情";
             button3.visible=false;
             break;
@@ -147,6 +146,14 @@ Rectangle {
             titleEdit.enabled=true;
             contentEdit.enabled=true;
         }
+    }
+
+    function editOrViewAnArticle(id, title, content, translatedTitle,
+                                 translatedContent, statusCode, index, typeOfArticle){
+        visible=true;
+        blankText.visible=false;
+        refreshEdit(id, title, content, translatedTitle,
+                    translatedContent, statusCode, index, typeOfArticle);
     }
 
     Strings{id: stringsPool}
@@ -291,7 +298,7 @@ Rectangle {
         text: qsTr("报名")
         font{family: "DengXian"}
         onClicked: {
-            switch (senderEditorRect.articleStatus){
+            switch (regulatorEditorRect.articleStatus){
             case 100:
                 regulatorPageHandler.signForRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
@@ -339,10 +346,13 @@ Rectangle {
         text: qsTr("选择负责人")
         font.family: "DengXian"
         onClicked: {
-            switch (senderEditorRect.articleStatus){
+            switch (regulatorEditorRect.articleStatus){
             case 0:
             case 110:
                 regulatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
+                break;
+            case 120:
+                regulatorPageHandler.viewTranslator(indexInList);
                 break;
             case 210:
             case 215:
@@ -350,13 +360,12 @@ Rectangle {
                 regulatorPageHandler.acceptSubarticle(indexInList);
                 break;
             }
-
         }
     }
 
     Text {
         x: button2.visible ? 275 : 142
-        y: senderEditorRect.height - 25 - 16
+        y: regulatorEditorRect.height - 25 - 16
         width: 74
         height: 16
         text: qsTr("当前状态:")
@@ -369,7 +378,7 @@ Rectangle {
     Text {
         id: statusText
         x: button2.visible ? 349 : 216
-        y: senderEditorRect.height - 25 - 16
+        y: regulatorEditorRect.height - 25 - 16
         width: 200
         height: 16
         text: qsTr("正在招募译者")

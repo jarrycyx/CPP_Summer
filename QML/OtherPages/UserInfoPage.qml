@@ -260,6 +260,23 @@ FramlessWindow {
                 }
             }
 
+            HintDialog {
+                id: warningBox
+                visible: false
+                titleOfDialog: "警告"
+                contentOfDialog: "确定要修改用户名和密码吗？"
+                cancelButtonVisible: true
+                function onAccept() {
+                    userPageHandler.updateUser(updateModel.get(0).textInEdit,
+                                               updateModel.get(1).textInEdit);
+                    refreshText();
+                    close();
+                }
+                function onCancel() {
+                    close();
+                }
+            }
+
             Button {
                 id: button1
                 x: 29 * 1.2
@@ -268,9 +285,7 @@ FramlessWindow {
                 height: 34 * 1.2
                 text: qsTr("保存信息")
                 onClicked: {
-                    userPageHandler.updateUser(updateModel.get(0).textInEdit,
-                                               updateModel.get(1).textInEdit);
-                    refreshText();
+                    warningBox.visible = true;
                 }
                 font.family: "DengXian"
                 highlighted: true

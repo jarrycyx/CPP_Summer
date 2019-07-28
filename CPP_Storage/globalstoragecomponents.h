@@ -75,7 +75,8 @@ public:
     //获取一个请求对象指针
     inline MyRequestObj *getRequest(int index) { return allRequests[index]; }
     //增加一个请求实体，注意这里只是在后台存储中增加，不代表视图会显示
-    inline void addARequest(MyRequestObj *newRequest) { allRequests.push_front(newRequest); }
+    inline void addARequest(MyRequestObj *newRequest) { allRequests.push_back(newRequest); }
+    void sendUserModifiedMessage(int userId ,QString content);
 
 private:
     //实际存储所有数据

@@ -20,6 +20,10 @@ QVariant RequestUserList::data(const QModelIndex &index, int role) const
     {
     case 1:
         return requestUsers.at(index.row())->username();
+    case 2:
+        return requestUsers.at(index.row())->qualification();
+    case 3:
+        return requestUsers.at(index.row())->credit();
     }
 }
 
@@ -27,6 +31,8 @@ QHash<int, QByteArray> RequestUserList::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[1] = "nameOfUser";
+    roles[2] = "qualificationOfUser";
+    roles[3] = "credits";
     return roles;
 }
 

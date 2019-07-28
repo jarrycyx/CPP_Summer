@@ -12,6 +12,7 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.12
 import "../../Resources"
+import "../OtherPages"
 
 Component {
     MouseArea {
@@ -23,6 +24,14 @@ Component {
         property bool movedToTarget: false
         property int indexOfThisDelegate: index
         default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
+        property int codeOfThisBlock: statusCodeOfArticle
+
+        onCodeOfThisBlockChanged: {
+            console.log("changed "+codeOfThisBlock+" "+held);
+            newEditor.refreshEdit(articleId, titleOfArticle, contentOfArticle,
+                                  translatedTitle, translatedContent,
+                                  statusCodeOfArticle, indexOfThisDelegate, typeOfList);
+        }
 
         //计算边距
         height: content.height+45
@@ -41,6 +50,8 @@ Component {
             //通知AcrylicBlock改变状态
             content.changeStatus(content.pressed);
         }
+
+
         onReleased: {
             if (held) released=true;
             held = false;
@@ -55,7 +66,7 @@ Component {
             }
             else movedToTarget=false;
 
-            console.log("r"+ListView.delegate+ListView.flag);
+            console.log("click "+indexOfThisDelegate);
 
             //为了能够被多处调用，通过判断是否存在来调用不同来源的类似方法
             if (typeof senderArticlesList!=='undefined')
@@ -67,13 +78,20 @@ Component {
 
             //通知AcrylicBlock改变状态
             content.changeStatus(content.released);
-
-            newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
-                                          translatedTitle, translatedContent,
-                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
-
+            foldTimer.running=true;//开始计时
         }
+        //文章列表折叠后，选中指定文章的计时器，防止错乱
+        //目前也找不到更好的解决这个BUG的方法了
+        Timer {
+            id: foldTimer
+            interval: 160; running: false; repeat: false
+            onTriggered:
+                newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
+                                              translatedTitle, translatedContent,
+                                              statusCodeOfArticle, indexOfThisDelegate, typeOfList);
+        }
+
         onSelectedChanged: {
             //更新选中状态
             //通知AcrylicBlock组件进行高亮显示

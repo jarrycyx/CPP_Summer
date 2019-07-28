@@ -22,6 +22,15 @@ Component {
         property bool movedToTarget: false
         property int indexOfThisDelegate: index
         default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
+        property int codeOfThisBlock: statusCodeOfArticle
+
+        onCodeOfThisBlockChanged: {
+            console.log("changed "+titleOfArticle+" "+codeOfThisBlock);
+
+            newEditor.refreshEdit(articleId, titleOfArticle, contentOfArticle,
+                                          translatedTitle, translatedContent,
+                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
+        }
 
         height: content.height+45
         width: content.width+30
@@ -50,10 +59,19 @@ Component {
                 senderSubarticlesList.currentIndex=-1;
 
             content.changeStatus(content.released);
-            newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
-                                          translatedTitle, translatedContent,
-                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
+
+            foldTimer.running=true;//开始计时
+        }
+        //文章列表折叠后，选中指定文章的计时器，防止错乱
+        //目前也找不到更好的解决这个BUG的方法了
+        Timer {
+            id: foldTimer
+            interval: 160; running: false; repeat: false
+            onTriggered:
+                newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
+                                              translatedTitle, translatedContent,
+                                              statusCodeOfArticle, indexOfThisDelegate, typeOfList);
         }
         onSelectedChanged: {
             content.selected=GridView.isCurrentItem;

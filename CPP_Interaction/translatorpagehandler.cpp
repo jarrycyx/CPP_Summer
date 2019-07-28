@@ -69,15 +69,38 @@ Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString
 
 Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
 {
-    qDebug() << "sign up for" << index;
-    MyRequestObj *sendNewRequest = new MyRequestObj(
-                storage->getARequestId(),
-                thisUserId,
-                allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
-                2); //2表示成为译者的请求
-    sendNewRequest->setModifyStatus(StorageUnit::New);
-    storage->addARequest(sendNewRequest);
-    emit sendSuccessMessage("报名成功");
+    int thisUserCredit = storage->searchUserById(thisUserId)->credit();
+    if (thisUserCredit >= 25){
+        //检查是否已报名
+        int alreadySigned = false;
+        int len = storage->getRequestsLength();
+        for (int i=0;i<len;i++){
+            MyRequestObj* selected = storage->getRequest(i);
+            if (selected->getUserId() == thisUserId
+                    && selected->getType() == 2
+                    && selected->getArticleId() ==
+                    allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle())
+            {
+                alreadySigned = true;
+            }
+        }
+
+        if (!alreadySigned){
+            qDebug() << "sign up for" << index;
+            MyRequestObj *sendNewRequest = new MyRequestObj(
+                        storage->getARequestId(),
+                        thisUserId,
+                        allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
+                        2); //2表示成为译者的请求
+            sendNewRequest->setModifyStatus(StorageUnit::New);
+            storage->addARequest(sendNewRequest);
+            emit sendSuccessMessage("报名成功");
+        }else {
+            emit sendErrorMessage("已经报名");
+        }
+    }else {
+        emit sendErrorMessage("抱歉，积分25以上才能报名成为翻译者");
+    }
 }
 
 

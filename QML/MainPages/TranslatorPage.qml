@@ -231,7 +231,7 @@ ApplicationWindow {
     Image {
         id: messageBoxImg
         x: (mainWindow.width-160)/2
-        y: -40
+        y: -60
         z: 10
         height: 35
         width: messageText.width+30
@@ -244,7 +244,7 @@ ApplicationWindow {
             running: false
             NumberAnimation { target: messageBoxImg; property: "y"; to: 0; duration: 200 }
             PauseAnimation { duration: 2000 }
-            NumberAnimation { target: messageBoxImg; property: "y"; to: -40; duration: 200 }
+            NumberAnimation { target: messageBoxImg; property: "y"; to: -60; duration: 200 }
         }
 
         Text {

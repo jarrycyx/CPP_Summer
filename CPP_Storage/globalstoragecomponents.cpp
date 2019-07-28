@@ -258,6 +258,18 @@ void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj
 }
 
 
+void GlobalStorageComponents::sendUserModifiedMessage(int userId ,QString content){
+    MyRequestObj* newRequest = new MyRequestObj(
+                getARequestId(),
+                userId,
+                -1,
+                4);
+    newRequest->setContent(content);
+    newRequest->setModifyStatus(StorageUnit::New);
+    addARequest(newRequest);
+}
+
+
 QString GlobalStorageComponents::decodeStatusCode(int code){
     switch (code) {
     case (100): return "已上传，招募负责人开始";

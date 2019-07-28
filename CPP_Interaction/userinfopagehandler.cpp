@@ -57,6 +57,9 @@ Q_INVOKABLE void UserInfoPageHandler::updateUser(QString name, QString pswd){
     user->setUsername(name);
     user->setPassword(pswd);
 
+
+    storage->sendUserModifiedMessage(user->userId(), QString("您的账户名或密码已改变，请牢记"));
+
     qDebug() << "set" << name << " " <<pswd;
 }
 

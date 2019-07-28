@@ -12,6 +12,7 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.12
 import "../../Resources"
+import "../OtherPages"
 
 Component {
     //id: dragDelegate
@@ -26,7 +27,15 @@ Component {
         property bool movedToTarget: false
         property int indexOfThisDelegate: index
         default property bool selected: GridView.isCurrentItem//ListView.isCurrentItem
+        property int codeOfThisBlock: statusCodeOfArticle
 
+        onCodeOfThisBlockChanged: {
+            console.log("changed "+codeOfThisBlock+" "+held);
+
+            newEditor.refreshEdit(articleId, titleOfArticle, contentOfArticle,
+                                          translatedTitle, translatedContent,
+                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
+        }
         //anchors { left: content.left; right: content.right }
         //anchors.centerIn: parent
         height: content.height+45
@@ -43,12 +52,32 @@ Component {
             console.log("p");
             content.changeStatus(content.pressed);
         }
+
+
+
+        HintDialog {
+            id: warningBox
+            visible: false
+            titleOfDialog: "警告"
+            x: 1400
+            y: 400
+            contentOfDialog: "确定要删除吗？"
+            cancelButtonVisible: true
+            function onAccept() {
+                senderPageHandler.deleteSenderArticle(indexOfThisDelegate);
+                close();
+            }
+            function onCancel() {
+                close();
+            }
+        }
+
         onReleased: {
             if (held) released=true;
             held = false;
             if (dragArea.mouseX>1600) {
                 movedToTarget=true;
-                senderPageHandler.deleteSenderArticle(indexOfThisDelegate);
+                warningBox.visible=true;
             }
             else movedToTarget=false;
 
@@ -62,11 +91,19 @@ Component {
                 senderSubarticlesList.currentIndex=-1;
 
             content.changeStatus(content.released);
-            newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
-                                          translatedTitle, translatedContent,
-                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
             mainWindow.foldList();
 
+            foldTimer.running=true;//开始计时
+        }
+        //文章列表折叠后，选中指定文章，防止错乱
+        //目前也找不到更好的解决这个BUG的方法了
+        Timer {
+            id: foldTimer
+            interval: 160; running: false; repeat: false
+            onTriggered:
+                newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
+                                              translatedTitle, translatedContent,
+                                              statusCodeOfArticle, indexOfThisDelegate, typeOfList);
         }
         onSelectedChanged: {
             content.selected=GridView.isCurrentItem;
