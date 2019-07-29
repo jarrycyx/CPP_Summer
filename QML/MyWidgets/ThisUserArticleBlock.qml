@@ -33,8 +33,8 @@ Component {
             console.log("changed "+codeOfThisBlock+" "+held);
 
             newEditor.refreshEdit(articleId, titleOfArticle, contentOfArticle,
-                                          translatedTitle, translatedContent,
-                                          statusCodeOfArticle, indexOfThisDelegate, typeOfList);
+                                  translatedTitle, translatedContent,
+                                  statusCodeOfArticle, indexOfThisDelegate, typeOfList);
         }
         //anchors { left: content.left; right: content.right }
         //anchors.centerIn: parent
@@ -77,7 +77,9 @@ Component {
             held = false;
             if (dragArea.mouseX>1600) {
                 movedToTarget=true;
-                warningBox.visible=true;
+                if (typeof senderPageHandler !== "undefined"){
+                    warningBox.visible=true;
+                }
             }
             else movedToTarget=false;
 

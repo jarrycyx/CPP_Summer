@@ -1,6 +1,5 @@
 QT += quick
 CONFIG += c++11
-CONFIG += console
 
 QT += sql
 

@@ -9,10 +9,10 @@
 #include "../CPP_Storage/globalstoragecomponents.h"
 
 /*************************************************************************
-【函数名称】  SenderPageHandler
-【函数功能】  构造函数，同时创建数据库连接
-【参数】    parent，可以为空
-【开发者及日期】    jarrycyx 20190712
+名称：    SenderPageHandler
+功能：    构造函数
+参数：    parent，可以为空
+日期：    20190712
 *************************************************************************/
 SenderPageHandler::SenderPageHandler(int senderId, QObject *parent)
     : AbstractPage(senderId), senderArticleList(1), allUserArticleList(2)
@@ -21,14 +21,23 @@ SenderPageHandler::SenderPageHandler(int senderId, QObject *parent)
 }
 
 /*************************************************************************
-【函数名称】  ~SenderPageHandler
-【函数功能】  析构函数，删除动态分配的内存
-【开发者及日期】    jarrycyx 20190718
+名称：     ~SenderPageHandler
+功能：     析构函数，删除动态分配的内存
+日期：     jarrycyx 20190718
 *************************************************************************/
 SenderPageHandler::~SenderPageHandler()
 {
 }
 
+
+/*************************************************************************
+名称：     startLoadingSenderArticleList
+功能：     加载所需显示的数据，根据需求将Data组合为Model
+参数：     发布者用户Id
+返回：     无
+日期：     20190712 初步实现
+          20190715 增加查看其他人的文章功能
+*************************************************************************/
 void SenderPageHandler::startLoadingSenderArticleList(int userId)
 {
     senderArticleList.removeAllArticles();
@@ -49,6 +58,15 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId)
     }
 }
 
+
+/*************************************************************************
+名称：     addSenderArticle
+功能：     发布一篇文章
+参数：     从QML读取的描述（标题）和内容，以及设定的酬金
+返回：     无
+日期：     20190709 初步实现发布文章
+          20190718 增加选择酬金功能
+*************************************************************************/
 void SenderPageHandler::addSenderArticle(QString title, QString content, int money)
 {
     MyArticleObj *newSenderArticle = new MyArticleObj(thisUserId);
@@ -69,6 +87,14 @@ void SenderPageHandler::addSenderArticle(QString title, QString content, int mon
     emit sendSuccessMessage(QString("文章已上传，酬金为%1元").arg(money));
 }
 
+
+/*************************************************************************
+名称：     editAnArticle
+功能：     修改文章
+参数：     文章标题和内容
+返回：     无
+日期：     20190712
+*************************************************************************/
 void SenderPageHandler::editSenderArticle(int index, QString title, QString content)
 {
     //由于数据实体只保存一份，只需编辑一处即可
@@ -77,6 +103,15 @@ void SenderPageHandler::editSenderArticle(int index, QString title, QString cont
     emit sendSuccessMessage("已保存");
 }
 
+
+/*************************************************************************
+名称：     deleteSenderArticle
+功能：     删除文章，执行MyArticleObj的删除操作
+参数：     idx，该文章在model中的位置
+返回：     无
+日期：     20190710 实现拖动删除
+          20190719 更改函数名
+*************************************************************************/
 void SenderPageHandler::deleteSenderArticle(int index)
 {
     senderArticleList.deleteAnArticle(index);
@@ -84,11 +119,11 @@ void SenderPageHandler::deleteSenderArticle(int index)
 }
 
 /*************************************************************************
-【函数名称】  startPage
-【函数功能】  开始渲染主页面
-【参数】    QQmlApplicationEngine *engine
-【返回值】   无
-【开发者及日期】    jarrycyx 20190712
+名称：     startPage
+功能：     开始渲染主页面
+参数：     QQmlApplicationEngine *engine
+返回：     无
+日期：     20190712
 *************************************************************************/
 void SenderPageHandler::startPage(QQmlApplicationEngine *engine)
 {
@@ -103,54 +138,41 @@ void SenderPageHandler::startPage(QQmlApplicationEngine *engine)
 }
 
 /*************************************************************************
-【函数名称】  itemMove
-【函数功能】  删除文章，执行MyArticleObj的删除操作
-【参数】    idx，该文章在model中的位置
-【返回值】   无
-【开发者及日期】    jarrycyx 20190716
-*************************************************************************/
-
-/*************************************************************************
-【函数名称】  addAnArticle
-【函数功能】  增加文章，先创建文章的Object存取信息，再交给MyArticleObj去同步数据
-【参数】    文章标题和内容
-【返回值】   无
-【开发者及日期】    jarrycyx 20190717
-*************************************************************************/
-
-/*************************************************************************
-【函数名称】  editAnArticle
-【函数功能】  修改文章
-【参数】    文章标题和内容
-【返回值】   无
-【开发者及日期】    jarrycyx 20190717
-*************************************************************************/
-
-/*************************************************************************
-【函数名称】  chooseRegulator
-【函数功能】  添加/修改文章负责人
-【参数】    文章在列表中的位置index
-【返回值】   无
-【开发者及日期】    jarrycyx 20190717
+名称：     chooseRegulator
+功能：     启动添加/修改文章负责人页面
+参数：     文章在列表中的位置index
+返回：     无
+日期：     20190717
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index)
 {
+    //加载报名的负责人列表
     loadArticleRegulatorData(senderArticleList.getArticle(index)->articleIdOfArticle());
+    //暂存正在浏览的文章index
     currentInViewIndex = index;
     const QUrl url(QStringLiteral("qrc:/QML/OtherPages/ChooseUserMiniPage.qml"));
     thisEngine->load(url);
 }
 
+
+/*************************************************************************
+名称：     loadArticleRegulatorData
+功能：     根据选中的文章，加载报名的负责人列表
+参数：     选中的文章Id
+返回：     无
+日期：     20190717
+*************************************************************************/
 void SenderPageHandler::loadArticleRegulatorData(int articleId)
 {
     qDebug() << "choose" << articleId;
-
     requestUserList.removeAllRequestUsers();
     int numOfRequest = storage->getRequestsLength();
     for (int i = 0; i < numOfRequest; i++)
     {
+        //轮询查找
         MyRequestObj *getRequest = storage->getRequest(i);
-        if (getRequest->getArticleId() == articleId && getRequest->getType() == 1)
+        if (getRequest->getArticleId() == articleId
+                && getRequest->getType() == 1)//Type为1代表是申请做负责人的请求
         {
             MyUserObj *requestUser = storage->searchUserById(getRequest->getUserId());
             requestUserList.addARequestUser(requestUser);
@@ -159,11 +181,11 @@ void SenderPageHandler::loadArticleRegulatorData(int articleId)
 }
 
 /*************************************************************************
-【函数名称】  regulatorChosen
-【函数功能】  交给MyArticleObj存储并同步负责人信息
-【参数】    idx，选中的负责人在model中的位置
-【返回值】   无
-【开发者及日期】    jarrycyx 20190717
+名称：     regulatorChosen
+功能：     选中负责人后，交给MyArticleObj存储并同步负责人信息
+参数：     idx，选中的负责人在model中的位置
+返回：     无
+日期：     20190717
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
 {
@@ -176,11 +198,17 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
                 articleToChoose);
 
     senderArticleList.editAnArticle(currentInViewIndex);
-
+    //向QML发送信号，显示成功提示
     emit sendSuccessMessage("已确定负责人");
 }
 
-
+/*************************************************************************
+名称：     confirmAcceptArticle
+功能：     发送者确认翻译任务完成，修改状态，分配酬金
+参数：     文章在列表中的index
+返回：     无
+日期：     20190725
+*************************************************************************/
 Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
 {
     MyArticleObj* thisArticle = senderArticleList.getArticle(index);
@@ -188,15 +216,10 @@ Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
     int regulatorId = thisArticle->regulatorIdOfArticle();
     int senderId = thisArticle->senderIdOfArticle();
     storage->searchUserById(regulatorId)->addMoney(moneyToRegulator);
-
-    //向发送者、负责人发送金额改变通知
+                                                                        //向发送者、负责人发送金额改变通知
     storage->sendUserModifiedMessage(regulatorId, QString("您的账户余额已改变，请注意"));
-
-    //应扣款总数
-    int totalMoney = thisArticle->fee();
-
-    //搜索子文章
-    int len = storage->getArticlesLength();
+    int totalMoney = thisArticle->fee();                                //应扣款总数
+    int len = storage->getArticlesLength();                             //搜索对应的子文章
     for (int i=0;i<len;i++){
         MyArticleObj* selectedArticle = storage->getArticleToEdit(i);
         if (selectedArticle->originArticleIdOfArticle() == thisArticle->articleIdOfArticle())
@@ -205,14 +228,12 @@ Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
             storage->searchUserById(translatorId)
                     ->addMoney(selectedArticle->fee());
             selectedArticle->setStatusCodeOfArticle(400);
-
-            //向翻译者发送金额改变通知
+                                                                        //向翻译者发送金额改变通知
             storage->sendUserModifiedMessage(translatorId, QString("您的账户余额已改变，请注意"));
         }
     }
-
     storage->searchUserById(senderId)->addMoney(-totalMoney);
-    //向发送者、负责人发送金额改变通知
+                                                                        //向发送者、负责人发送金额改变通知
     storage->sendUserModifiedMessage(senderId, QString("您的账户余额已改变，请注意"));
     senderArticleList.getArticle(index)->setStatusCodeOfArticle(400);
     emit sendSuccessMessage("扣款成功，感谢！");

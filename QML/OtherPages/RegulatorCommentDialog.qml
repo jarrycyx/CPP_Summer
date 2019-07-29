@@ -27,6 +27,7 @@ FramlessWindow {
         contentEdit.text = Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss");
         contentEdit.text += ": \n\t"
         console.log(Qt.formatDateTime(new Date(), "yyyy-MM-dd hh:mm:ss.zzz ddd"));
+        contentEdit.cursorPosition=contentEdit.text.length-1;
     }
 
 
@@ -54,10 +55,15 @@ FramlessWindow {
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                 selectByMouse: true
-                font{family: "DengXian";pixelSize: 17}
+                font{
+                    family: "DengXian";
+                    pixelSize: 17;
+                    wordSpacing: 4;
+                }
                 property string placeholderText: "在此输入反馈内容"
-
-
+                onTextChanged: {
+                    cursorPosition = text.length - 1
+                }
                 Text {
                     text: contentEdit.placeholderText
                     color: stringsPool.textGray3

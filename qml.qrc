@@ -55,5 +55,7 @@
         <file>QML/OtherPages/HintDialog.qml</file>
         <file>QML/MainPages/SupervisorPage.qml</file>
         <file>QML/MainPages/SupervisorEditor.qml</file>
+        <file>Resources/allocate.svg</file>
+        <file>Resources/allocatedrag.svg</file>
     </qresource>
 </RCC>

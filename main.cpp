@@ -14,8 +14,6 @@
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication::addLibraryPath("./sqldrivers");
-
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 

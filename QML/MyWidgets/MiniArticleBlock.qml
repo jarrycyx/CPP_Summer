@@ -58,7 +58,10 @@ Component {
             if (dragArea.mouseX>1600) {
                 movedToTarget=true;
                 if (typeof regulatorPageHandler!=='undefined'){
-
+                    //拖拽并释放
+                    if (statusCodeOfArticle == 200)
+                        regulatorPageHandler.chooseTranslator(indexOfThisDelegate);
+                    else emit: regulatorPageHandler.sendErrorMessage("无法对当前文章分配译者");
                 }
                 if (typeof translatorPageHandler!=='undefined'){
 
@@ -81,7 +84,7 @@ Component {
             mainWindow.foldList();
             foldTimer.running=true;//开始计时
         }
-        //文章列表折叠后，选中指定文章的计时器，防止错乱
+        //文章列表折叠后，选中指定文章的延时，防止错乱
         //目前也找不到更好的解决这个BUG的方法了
         Timer {
             id: foldTimer
@@ -113,14 +116,25 @@ Component {
             //通知AcrylicBlock进行追光
             content.chaseLight(mouseX,-1);
             if (held) {
+                //正在拖拽
                 if (lastX != -1 && (mouseX - lastX > 1 || mouseX - lastX < -1)){
+                    //添加阴影，体现“拿起”效果
                     content.layer.enabled = true;
                     if (typeof dragTargetImage!=='undefined'){
                         dragTargetImage.visible = true;
-                        if (mouseX > 1600)
-                            dragTargetImage.imageSource = "../../Resources/deletedrag.svg";
-                        else
-                            dragTargetImage.imageSource = "../../Resources/delete.svg";
+                        //拖放到位
+                        if (mouseX > 1600){
+                            if (typeof senderPageHandler!=='undefined')
+                                dragTargetImage.imageSource = "../../Resources/deletedrag.svg";
+                            else if (typeof regulatorPageHandler !=='undefined')
+                                dragTargetImage.imageSource = "../../Resources/allocatedrag.svg";
+                        }
+                        else{
+                            if (typeof senderPageHandler!=='undefined')
+                                dragTargetImage.imageSource = "../../Resources/delete.svg";
+                            else if (typeof regulatorPageHandler!=='undefined')
+                                dragTargetImage.imageSource = "../../Resources/allocate.svg";
+                        }
                     }
                 }
             }else {

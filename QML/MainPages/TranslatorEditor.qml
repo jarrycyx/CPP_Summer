@@ -165,7 +165,10 @@ Rectangle {
         height: 18
         color: stringsPool.textGray2
         text: qsTr("标题：")
-        font{family: "DengXian";pixelSize: 20}
+        font{
+            family: "DengXian";
+            pixelSize: 20
+        }
     }
 
     TextEdit {

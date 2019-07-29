@@ -25,6 +25,7 @@ FramlessWindow {
 
     onCurrentArticleIndexChanged: {  //已设置文章id，则向CPP请求内容
         contentEdit.text=translatorPageHandler.getRegulatorComment(currentArticleIndex);
+        contentEdit.cursorPosition=contentEdit.text.length-1;
     }
 
 
@@ -54,10 +55,12 @@ FramlessWindow {
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                 selectByMouse: true
-                font{family: "DengXian";pixelSize: 17}
+                font{
+                    family: "DengXian";
+                    pixelSize: 17;
+                    wordSpacing: 4;
+                }
                 property string placeholderText: "暂时还没有反馈"
-
-
                 Text {
                     text: contentEdit.placeholderText
                     color: stringsPool.textGray3

@@ -1,7 +1,15 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Model-Interaction
+/************************************************************************************************************************
+类名：     SupervisorPageHandler
+功能：     审核人页面的后台处理类，通过信号槽和直接唤起函数与QML紧密联动
+日期：     20190727 初步实现
+************************************************************************************************************************/
+
+
+
 #ifndef SUPERVISORPAGEHANDLER_H
 #define SUPERVISORPAGEHANDLER_H
-
-
 
 #include <QObject>
 #include <QGuiApplication>
