@@ -47,8 +47,9 @@ Q_INVOKABLE QString UserInfoPageHandler::getMultiuserStatus()
 {
     //一共四位，分别表示发布者、负责人、翻译者、监管者
     //0为无权限，1为有权限
-    if (user->credit()>=25) return QString("1100");
+    if (user->credit()>=65) return QString("1111");
     if (user->credit()>=45) return QString("1110");
+    if (user->credit()>=25) return QString("1010");
     return QString("1000");
 }
 

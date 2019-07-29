@@ -85,7 +85,7 @@ Component {
         //目前也找不到更好的解决这个BUG的方法了
         Timer {
             id: foldTimer
-            interval: 160; running: false; repeat: false
+            interval: 81; running: false; repeat: false
             onTriggered:
                 newEditor.editOrViewAnArticle(articleId, titleOfArticle, contentOfArticle,
                                               translatedTitle, translatedContent,

@@ -25,18 +25,6 @@ ApplicationWindow {
 
     Connections {
         target: senderPageHandler
-        //开始刷新QML
-        onStartRefreshQml: {
-            thisBusyIndicator.visible = true;
-        }
-        //QML刷新完成
-        onRefreshQmlComplete: {
-            console.log("refresh");
-            thisBusyIndicator.visible = false;
-            if (newEditor.visible===false) blankText.visible=true;
-            senderArticlesList.model=senderPageHandler.thisModel;
-            otherArticlesList.model=senderPageHandler.otherModel;
-        }
 
         onSendErrorMessage: {
             console.log(errStr);
@@ -80,7 +68,7 @@ ApplicationWindow {
             id: articlesRect
             width: 350*articlesRect.columnNum-45 + 41 + 41 + 8//1133//388
             Behavior on width {
-                NumberAnimation{duration: 150}
+                NumberAnimation{duration: 80}
             }
 
             height: parent.height

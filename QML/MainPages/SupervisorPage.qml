@@ -7,7 +7,7 @@ import "../MyWidgets"
 import "../../Resources"
 
 ApplicationWindow {
-    property string name: "translatorpage"
+    property string name: "regulatorpage"
 
     id: mainWindow
     objectName: "mainWindow"
@@ -16,7 +16,6 @@ ApplicationWindow {
     title: qsTr("Stack")
     Strings{id: stringsPool}
 
-
     function foldList(){
         editorCover.color="#00000000"
         articlesRect.columnNum=1;
@@ -24,7 +23,7 @@ ApplicationWindow {
     }
 
     Connections {
-        target: translatorPageHandler
+        target: supervisorPageHandler
         onSendErrorMessage: {
             console.log(errStr);
             messageText.text=errStr;
@@ -39,24 +38,19 @@ ApplicationWindow {
         }
     }
 
-
     Rectangle {
         id: root
         anchors.fill: parent
-        z: 1
+
         MiniArticleBlock {
-            id: dragDelegate1
+            id: dragDelegate0
         }
 
-        OtherUserArticleBlock {
-            id: dragDelegate2
-        }
 
         RectangularGlow {
             id: effect
             anchors.fill: articlesRect
             glowRadius: 10
-            z: 1
             spread: 0
             color: "#66999999"
             cornerRadius: articlesRect.radius + glowRadius
@@ -64,9 +58,11 @@ ApplicationWindow {
 
         Rectangle {
             property int columnNum: 1
-            z:1
+
+            z: 2
             id: articlesRect
-            width: 350*articlesRect.columnNum-45 + 41 + 41 + 8//1133//388
+            width: 350*articlesRect.columnNum-45 + 41 + 41 +12//1133//388
+
             Behavior on width {
                 NumberAnimation{duration: 80}
             }
@@ -74,20 +70,17 @@ ApplicationWindow {
             height: parent.height
             color: "#f2f2f2"
 
-
             ScrollView{
                 width: articlesRect.width - 24
                 height: parent.height
-                clip: true
-                ScrollBar.vertical.policy: ScrollBar.AsNeeded
-
-                contentHeight: senderSubarticlesList.height + 47 + otherArticlesList.height + 30
+                ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                contentHeight: senderSubarticlesList.height + 47
                 //z:0.2
 
-                Text {
-                    text: qsTr("我正在翻译的文章")
+                Text{
+                    text: qsTr("子任务列表")
                     x: 41
-                    y: 16
+                    y: 27
                     //z:0.3
                     width: 261
                     height: 18
@@ -95,53 +88,30 @@ ApplicationWindow {
                     font{family: "DengXian";pixelSize: 16}
                 }
 
-                GridView {
+                GridView{
                     property int flag: 1
                     interactive: false
                     id: senderSubarticlesList
                     width: parent.width
                     x: 41-15
-                    y: 32
+                    y: 43
                     height: contentHeight + 40
-                    model: translatorSubarticleList
-                    delegate: dragDelegate1
+                    model: supervisorSubarticleList
+                    delegate: dragDelegate0
                     cellWidth: 350
                     cellHeight: 92
                     cacheBuffer: 50
                     currentIndex: -1
                 }
 
-                Text {
-                    text: qsTr("其他正在招募的文章")
-                    x: 41
-                    y: senderSubarticlesList.height + 16 + 19
-                    //z:0.3
-                    width: 261
-                    height: 18
-                    color: stringsPool.textGray1
-                    font{family: "DengXian"; pixelSize: 16}
-                }
-
-                GridView {
-                    property int flag: 2
-                    interactive: false
-                    id: otherArticlesList
-                    width: parent.width
-                    x:41-15
-                    y: senderSubarticlesList.height + 32 + 19
-                    height: contentHeight+40
-                    model: allSeekingTranslatorArticle
-                    delegate: dragDelegate2
-                    currentIndex: -1
-
-                    cellWidth: 350
-                    cellHeight: 227
-
-                    cacheBuffer: 50
-
+                Rectangle{
+                    x: 41 - 15
+                    y: senderSubarticlesList.height + 41
+                    height: 100
                 }
 
             }
+
             ToolButton {
                 id: expandButton
                 x: articlesRect.width-21
@@ -167,10 +137,9 @@ ApplicationWindow {
                     }
                 }
             }
-
         }
 
-        TranslatorEditor {
+        SupervisorEditor {
             x: 388+30
             y: 30
             z: 0
@@ -198,7 +167,7 @@ ApplicationWindow {
             visible: true
             y: (mainWindow.height-80)/2
             x: (mainWindow.width-388-160)/2+388
-            text: "可以在左侧查看或添加翻译需求"
+            text: "可以在左侧查看翻译需求"
             color: stringsPool.textGray2
             width: 160
             height: 80
@@ -212,7 +181,6 @@ ApplicationWindow {
 
 
     }
-
 
 
     Image {
@@ -269,7 +237,7 @@ ApplicationWindow {
             font.family: "DengXian";
         }
         onClicked: {
-            translatorPageHandler.showUserInfo();
+            supervisorPageHandler.showUserInfo();
         }
         Image {
             x: parent.width - 28
@@ -305,7 +273,6 @@ ApplicationWindow {
         }
     }
 
-
     DropShadow {
         anchors.fill: dragTargetImage
         radius: 20
@@ -316,3 +283,8 @@ ApplicationWindow {
         source: dragTargetImage
     }
 }
+
+/*##^## Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+ ##^##*/

@@ -27,6 +27,7 @@ SOURCES += \
         CPP_Interaction/loginpagehandler.cpp \
         CPP_Interaction/regulatorpagehandler.cpp \
         CPP_Interaction/senderpagehandler.cpp \
+        CPP_Interaction/supervisorpagehandler.cpp \
         CPP_Interaction/translatorpagehandler.cpp \
         CPP_Interaction/userinfopagehandler.cpp \
         CPP_Model/articleslist.cpp \
@@ -60,6 +61,7 @@ HEADERS += \
     CPP_Interaction/loginpagehandler.h \
     CPP_Interaction/regulatorpagehandler.h \
     CPP_Interaction/senderpagehandler.h \
+    CPP_Interaction/supervisorpagehandler.h \
     CPP_Interaction/translatorpagehandler.h \
     CPP_Interaction/userinfopagehandler.h \
     CPP_Model/articleslist.h \

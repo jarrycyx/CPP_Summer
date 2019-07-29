@@ -5,6 +5,7 @@
 功能：     登录、注册页面的后台处理类，通过信号槽和直接唤起函数与QML紧密联动
 日期：     20190710 初步实现登录注册功能
           20190720 增加一些便于调试的功能
+          20190725 调整用户的多种身份登录
 ************************************************************************************************************************/
 
 #ifndef LOGINPAGEHANDLER_H
@@ -24,6 +25,7 @@
 #include "regulatorpagehandler.h"
 #include "translatorpagehandler.h"
 #include "abstractpage.h"
+#include "supervisorpagehandler.h"
 
 class LoginPageHandler : public AbstractPage
 {
@@ -42,13 +44,14 @@ public :
     Q_INVOKABLE int searchUser(QString name);
     //用户登录
     Q_INVOKABLE int userLogin(QString name, QString pswd, int role);
-
+    //唤起设置认证信息界面
     Q_INVOKABLE void setUserQualification(QString quali);
 
 private:
     SenderPageHandler *newSenderPage;
     RegulatorPageHandler *newRegulatorPage;
     TranslatorPageHandler *newTranslatorPage;
+    SupervisorPageHandler *newSupervisorPage;
 
     MyUserObj* newSignupUser;
 

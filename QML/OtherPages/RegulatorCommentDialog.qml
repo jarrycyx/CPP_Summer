@@ -93,7 +93,10 @@ FramlessWindow {
                 text: qsTr("提交")
                 font.family: "DengXian"
                 onClicked: {
-                    regulatorPageHandler.commentToTranslator(currentArticleIndex, contentEdit.text);
+                    if (typeof regulatorPageHandler !== "undefined")
+                        regulatorPageHandler.commentToTranslator(currentArticleIndex, contentEdit.text);
+                    if (typeof supervisorPageHandler !== "undefined")
+                        supervisorPageHandler.commentToTranslator(currentArticleIndex, contentEdit.text);
                     commentWindow.close();
                 }
             }

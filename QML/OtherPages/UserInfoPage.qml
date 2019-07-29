@@ -61,6 +61,9 @@ FramlessWindow {
 
         if (resStr[2] === '0') translatorStatus.text = "无权限";
         else if (resStr[2] === '1') translatorStatus.text = "有权限";
+
+        if (resStr[3] === '0') supervisorStatus.text = "无权限";
+        else if (resStr[3] === '1') supervisorStatus.text = "有权限";
     }
 
     Strings{

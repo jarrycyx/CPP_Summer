@@ -39,58 +39,6 @@ Rectangle {
         typeOfThis=typeOfArticle;
 
         switch (regulatorEditorRect.articleStatus){
-        case 100:
-            statusText.text="已上传，招募负责人开始";
-            element.text="翻译需求详情";
-            button.text="报名";
-            button.enabled=true;
-            button2.visible=false;
-            button3.visible=false;
-            break;
-        case 110:
-            statusText.text="已标记负责人，招募负责人结束";
-            element.text="我负责的翻译需求";
-            button.text="保存";
-            button.enabled=true;
-            button2.visible=true;
-            button2.text="开始招募译者";
-            button3.visible=false;
-            break;
-        case 120:
-            statusText.text="开始招募译者";
-            element.text="我负责的翻译需求";
-            button.text="停止招募";
-            button.enabled=true;
-            button2.visible=true;
-            button2.text="报名情况";
-            element.text="翻译需求详情";
-            button3.visible=false;
-            break;
-        case 130:
-            statusText.text="招募译者结束，即将分配任务";
-            button.text="自动拆分";
-            button.enabled=true;
-            button2.visible=false;
-            element.text="我负责的翻译需求";
-            button3.visible=false;
-            break;
-        case 140:
-            statusText.text="已被拆分，请查看子任务";
-            button.text="已拆分";
-            button.enabled=false;
-            button2.visible=false;
-            element.text="我负责的任务";
-            button3.visible=false;
-            break;
-        case 200:
-            statusText.text="子任务已创建，等待分配译者";
-            button.text="分配任务";
-            button.enabled=true;
-            button2.visible=false;
-            element.text="我负责的子任务";
-            button3.visible=false;
-            break;
-        case 210:
         case 215:
         case 220://三种状态相同处理
             statusText.text="已分配译者，译者正在进行翻译";
@@ -104,48 +52,16 @@ Rectangle {
         case 230:
             statusText.text="翻译已审核通过";
             button.text="合并译文";
-            button.enabled=true;
-            button2.visible=false;
-            element.text="我负责的子任务";
-            button3.visible=true;
-            break;
-        case 240:
-            statusText.text="子文章已合并，即将删除";
-            button.text="合并译文";
             button.enabled=false;
             button2.visible=false;
             element.text="我负责的子任务";
-            button3.visible=true;
-            break;
-        case 300:
-            statusText.text="翻译内容已合并";
-            button.text="提交给用户";
-            button.enabled=true;
-            button2.visible=false;
-            element.text="我负责的任务";
-            button3.visible=true;
-            break;
-        case 310:
-            statusText.text="翻译内容已提交给发布者，等待确认";
-            button.text="等待收取";
-            button.enabled=false;
-            button2.visible=false;
-            element.text="我负责的任务";
             button3.visible=true;
             break;
         }
 
-        if (typeOfArticle===2){//如果是查看其他文章
-            element.text="查看需求";
-            button.enabled=true;//允许报名
-            button2.enabled=false;
-            titleEdit.enabled=false;
-            contentEdit.enabled=false;
-        }else {
-            button2.enabled=true;
-            titleEdit.enabled=true;
-            contentEdit.enabled=true;
-        }
+        button2.enabled=true;
+        titleEdit.enabled=true;
+        contentEdit.enabled=true;
     }
 
     function editOrViewAnArticle(id, title, content, translatedTitle,
@@ -299,36 +215,11 @@ Rectangle {
         font{family: "DengXian"}
         onClicked: {
             switch (regulatorEditorRect.articleStatus){
-            case 100:
-                regulatorPageHandler.signForRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
-                break;
-            case 110:
-                regulatorPageHandler.editArticle(indexInList, titleEdit.text, contentEdit.text);
-                break;
-            case 120:
-                regulatorPageHandler.stopRecruitingTranslatorForArticle(indexInList);
-                break;
-            case 130:
-                regulatorPageHandler.splitRegulatorArticle(indexInList, titleEdit.text, contentEdit.text);
-                break;
-            case 140:
-                emit: regulatorPageHandler.sendErrorMessage("已拆分，请查看子任务");
-                break;
-            case 200:
-                regulatorPageHandler.chooseTranslator(indexInList);
-                break;
-            case 210:
             case 215:
             case 220://三种状态相同操作
                 var commentWindow=Qt.createComponent("../OtherPages/RegulatorCommentDialog.qml")
-                                    .createObject(RegulatorViewer);
+                .createObject(RegulatorViewer);
                 commentWindow.currentArticleIndex=indexInList;
-                break;
-            case 230:
-                regulatorPageHandler.mergeRegulatorArticle(indexInList);
-                break;
-            case 300:
-                regulatorPageHandler.submitToSender(indexInList);
                 break;
             }
         }
@@ -347,17 +238,9 @@ Rectangle {
         font.family: "DengXian"
         onClicked: {
             switch (regulatorEditorRect.articleStatus){
-            case 0:
-            case 110:
-                regulatorPageHandler.startRecruitingTranslatorForArticle(indexInList);
-                break;
-            case 120:
-                regulatorPageHandler.viewTranslator(indexInList);
-                break;
-            case 210:
             case 215:
             case 220:
-                regulatorPageHandler.acceptSubarticle(indexInList);
+                supervisorPageHandler.acceptSubarticle(indexInList);
                 break;
             }
         }
@@ -428,7 +311,7 @@ Rectangle {
             font.family: "DengXian";
         }
         onClicked: {
-            regulatorPageHandler.showArticleInfo(idOfThis);
+            supervisorPageHandler.showArticleInfo(idOfThis);
         }
         Image {
             x: parent.width - 28

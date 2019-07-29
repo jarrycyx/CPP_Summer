@@ -10,8 +10,9 @@
           credit在25分以上可以做翻译者，在45分以上可以做负责人
 
 日期：     20190709 初步实现该类的Sender，Regulator部分
-                 20190717 架构大调整，移除数据库操作，调整到Storage层级
-                 20190720 实现Translator部分
+          20190717 架构大调整，移除数据库操作，调整到Storage层级
+          20190720 实现Translator部分
+          20190722 增加积分、认证信息功能
 ************************************************************************************************************************/
 
 //TO-DO: 增添认证信息，积分，余额等信息
@@ -32,14 +33,18 @@ public:
     //设置和读取各信息
     QString username() const;
     void setUsername(const QString &name);
+    //用户ID
     int userId() const;
     QString password() const;
     void setPassword(const QString &color);
+    //认证信息，目前只有少数几种
     QString qualification() const;
     void setQualification(QString newQuali);
+    //余额
     int money() const;
     void setMoney(int newMoney);
     void addMoney(int added);
+    //积分
     int credit() const;
     void setCredit(int newCredit);
     void addCredit(int added);

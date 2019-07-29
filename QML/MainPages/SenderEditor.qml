@@ -94,10 +94,14 @@ Rectangle {
             button2.enabled=false;
             titleEdit.enabled=false;
             contentEdit.enabled=false;
+            //若为浏览他人文章，则只显示部分内容
+            //var contentStr = content;
+            //contentEdit.text=content.length()>50 ? content.slice(0, 50) : content;
         }else {
             button2.enabled=true;
             titleEdit.enabled=true;
             contentEdit.enabled=true;
+            contentEdit.text=content;
         }
     }
 

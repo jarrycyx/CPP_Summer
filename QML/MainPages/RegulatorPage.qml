@@ -24,19 +24,6 @@ ApplicationWindow {
 
     Connections {
         target: regulatorPageHandler
-        //开始刷新QML
-        onStartRefreshQml: {
-            thisBusyIndicator.visible = true;
-        }
-        //QML刷新完成
-        onRefreshQmlComplete: {
-            console.log("refresh");
-            thisBusyIndicator.visible = false;
-            if (newEditor.visible===false) blankText.visible=true;
-            senderArticlesList.model=senderPageHandler.thisModel;
-            otherArticlesList.model=senderPageHandler.otherModel;
-        }
-
         onSendErrorMessage: {
             console.log(errStr);
             messageText.text=errStr;
@@ -85,7 +72,7 @@ ApplicationWindow {
             width: 350*articlesRect.columnNum-45 + 41 + 41 +12//1133//388
 
             Behavior on width {
-                NumberAnimation{duration: 150}
+                NumberAnimation{duration: 80}
             }
 
             height: parent.height
@@ -95,7 +82,9 @@ ApplicationWindow {
                 width: articlesRect.width - 24
                 height: parent.height
                 ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-                contentHeight: senderArticlesList.height + 47 + otherArticlesList.height + 47
+                contentHeight: senderSubarticlesList.height + 47
+                               + senderArticlesList.height + 47
+                               + otherArticlesList.height + 47
                 //z:0.2
 
                 Text{

@@ -7,9 +7,34 @@
 #include <QSqlQuery>
 #include "../CPP_Data/myuserobj.h"
 #include "../CPP_Data/myrequestobj.h"
+#include <QtConcurrent/QtConcurrent>
 
 GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(parent)
 {
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    f = QtConcurrent::run(this, &GlobalStorageComponents::refreshDataInNewThread);
+    //f.waitForFinished();
+}
+
+GlobalStorageComponents::~GlobalStorageComponents()
+{
+    ifEndingApp = true;
+    //uploadAllData();
+    f.waitForFinished();
+}
+
+void GlobalStorageComponents::refreshDataInNewThread(){
+    downloadAllData();
+    while (!ifEndingApp){
+        QThread::msleep(200);
+        uploadAllData();
+    }
+}
+
+void GlobalStorageComponents::downloadAllData()
+{
+    QMutex mutex;
+    mutex.lock();
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("39.106.107.241");
     db.setDatabaseName("cyxcpp");
@@ -81,16 +106,14 @@ GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(pare
                 biggestRequestId = query->value(0).toInt();
         }
     }
-}
-
-GlobalStorageComponents::~GlobalStorageComponents()
-{
-    uploadAllData();
+    mutex.unlock();
 }
 
 void GlobalStorageComponents::uploadAllData()
 {
-    qDebug() << "uploading";
+    QMutex mutex;
+    mutex.lock();
+    //qDebug() << "uploading";
     int artiLen = allArticles.length();
     for (int i = 0; i < artiLen; i++)
     {
@@ -139,6 +162,7 @@ void GlobalStorageComponents::uploadAllData()
             qDebug() << "deleted article";
             query->exec(QString("DELETE FROM articles WHERE article_id=%1").arg(allArticles[i]->articleIdOfArticle()));
         }
+        allArticles[i]->setModifyStatus(StorageUnit::Unchanged);
     }
 
     int userLen = allUsers.length();
@@ -170,6 +194,7 @@ void GlobalStorageComponents::uploadAllData()
                         .arg(allUsers[i]->credit())
                         .arg(allUsers[i]->qualification()));
         }
+        allUsers[i]->setModifyStatus(StorageUnit::Unchanged);
     }
 
     int requestLen = allRequests.length();
@@ -189,7 +214,10 @@ void GlobalStorageComponents::uploadAllData()
                         .arg(allRequests[i]->getContent())
                         .arg(allRequests[i]->getType()));
         }
+
+        allRequests[i]->setModifyStatus(StorageUnit::Unchanged);
     }
+    mutex.unlock();
 }
 
 MyUserObj *GlobalStorageComponents::searchUserById(int thisUserId)
@@ -211,16 +239,6 @@ MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
 }
 
 
-
-QList<MyUserObj*> GlobalStorageComponents::searchSubUsers(QString name){
-    QList<MyUserObj*> res;
-    int len = allUsers.length();
-    for (int i=0;i<len;i++){
-        if (allUsers[i]->username() == name)
-            res.push_back(allUsers[i]);
-    }
-    return res;
-}
 
 
 void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)

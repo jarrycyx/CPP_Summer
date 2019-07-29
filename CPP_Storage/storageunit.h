@@ -19,6 +19,7 @@
 class StorageUnit
 {
 public:
+    //枚举，标记修改状态
     enum ModifyStatus{
         Unchanged = 0,
         New,

@@ -49,14 +49,21 @@ public :
     //从QML唤起的选择负责人函数
     Q_INVOKABLE void chooseRegulator(int index);
 
+    //从Storage层级查询发布者任务列表
     void startLoadingSenderArticleList(int userId);
+    //新发布文章
     Q_INVOKABLE void addSenderArticle(QString title, QString content, int money);
+    //编辑并提交更新文章
     Q_INVOKABLE void editSenderArticle(int index, QString title, QString content);
+    //拖动删除文章
     Q_INVOKABLE void deleteSenderArticle(int index);
+    //确定任务完成并分配酬金
     Q_INVOKABLE void confirmAcceptArticle(int index);
+    //根据当前正在查看的文章，加载报名的负责人列表
     void loadArticleRegulatorData(int articleId);
 
 private:
+    //分别为我发布的文章列表，其他用户的文章列表
     ArticlesList senderArticleList, allUserArticleList;
     RequestUserList requestUserList;
 
@@ -64,17 +71,6 @@ private:
     int articleSendingId = -1;
     //当前正在编辑/查看的文章
     int currentInViewIndex = 0;
-
-signals:
-    //以下四项为各model向QML暴露的信号接口
-    void thisModelChanged(const QVariant &);
-    void otherModelChanged(const QVariant &);
-    void regulatorListModelChanged(const QVariant &);
-    void loadArticlesComplete(int article_id, QString title, QString content);
-
-    //向QML发送刷新ListView界面信号
-    void startRefreshQml();
-    void refreshQmlComplete();
 
 public slots:
     //开始渲染页面

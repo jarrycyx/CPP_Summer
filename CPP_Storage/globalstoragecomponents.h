@@ -18,6 +18,7 @@
 #include "../CPP_Data/myrequestobj.h"
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
+#include <QtConcurrent/QtConcurrent>
 
 class GlobalStorageComponents : public QObject
 {
@@ -31,6 +32,9 @@ public:
     //返回状态值对应的含义
     QString decodeStatusCode(int code);
 
+    void refreshDataInNewThread();
+
+    void downloadAllData();
     //程序结束前，析构函数调用以上传所有更改数据
     void uploadAllData();
     //自动生成一个文章ID，比所有其他ID都大
@@ -60,7 +64,6 @@ public:
     //通过id查找user，性能较低
     MyUserObj* searchUserById(int thisUserId);
 
-    QList<MyUserObj*> searchSubUsers(QString name);
     //通过id查找article，性能较低
     MyArticleObj* searchArticleById(int thisUserId);
 
@@ -87,6 +90,9 @@ private:
     QSqlQuery *query;
     //最大的ID，用于生成新的ID
     int biggestArticleId = 0, biggestUserId = 0, biggestRequestId = 0;
+    int ifEndingApp = false;
+
+    QFuture<void> f;
 
 signals:
 

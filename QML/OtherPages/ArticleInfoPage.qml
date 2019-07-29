@@ -121,7 +121,7 @@ FramlessWindow {
                 color: "#00000000"
                 Text{
                     id: supervisorStatus
-                    text: qsTr("无权限")
+                    text: qsTr("未绑定")
                     color: stringsPool.textGray1
                     anchors.centerIn: parent
                     font{family: "DengXian";pixelSize: 18;bold: true}

@@ -53,5 +53,7 @@
         <file>Resources/deletedrag.svg</file>
         <file>QML/OtherPages/UserQualifyDialog.qml</file>
         <file>QML/OtherPages/HintDialog.qml</file>
+        <file>QML/MainPages/SupervisorPage.qml</file>
+        <file>QML/MainPages/SupervisorEditor.qml</file>
     </qresource>
 </RCC>

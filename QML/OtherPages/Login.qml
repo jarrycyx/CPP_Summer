@@ -22,7 +22,7 @@ ApplicationWindow {
         z: 1
         height: 48
         width: 121
-        model: ["发布者", "负责人", "翻译者"]
+        model: ["发布者", "负责人", "翻译者", "监管者"]
         font.family: "DengXian"
         currentIndex: 1
     }

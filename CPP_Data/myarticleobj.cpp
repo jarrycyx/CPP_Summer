@@ -28,9 +28,11 @@
           20190715 实现Regulator部分
           20190716 将数据库操作封装在该类，并修改数据传入方式
           20190717 架构大调整，移除数据库部分操作，分离到Storage层级
+          20190719 增加酬金部分
+          20190723 修改变量名
 ************************************************************************************************************************/
 
-//TO-DO: 将拆分文章方法封装在此类中
+/* 备注：本类中article_id不能改变，只能为未设置状态或已设置状态 */
 
 #include "myarticleobj.h"
 #include <QSqlQuery>
@@ -65,6 +67,7 @@ MyArticleObj::MyArticleObj(const int &sender) : StorageUnit(StorageUnit::Unchang
 名称：     setNewArticleInfo
 功能：     新增文章，直接导入文章部分信息
 参数：     文章内容
+返回：     新增文章的ID
 日期：     20190716
 *************************************************************************/
 int MyArticleObj::setArticleInfo(const int &newId, const QString &title, const QString &content)

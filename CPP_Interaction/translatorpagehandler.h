@@ -31,16 +31,17 @@ Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 public :
     explicit TranslatorPageHandler(int translatorId, QObject *parent = nullptr);
     ~TranslatorPageHandler();
-
+    //开始加载文章列表
     void startLoadingTranslatorArticleList(int userId);
-
+    //报名做翻译者
     Q_INVOKABLE void signForTranslatorArticle(int index);
+    //翻译文章，注意翻译内容最初与原文相同，需翻译者进行逐步替换
     Q_INVOKABLE void editTranslatedArticle(int index, QString title, QString content);
+    //查看负责人的历史反馈信息
     Q_INVOKABLE QString getRegulatorComment(int index);
 
-    void loadArticleTranslatorData(int articleId);
-
 private:
+    //分别为我负责的子任务和其他正在招募翻译者的任务
     ArticlesList translatorSubarticleList, allSeekingTranslatorArticle;
 
     //当前正在浏览的文章身份标识，没有文章则为-1

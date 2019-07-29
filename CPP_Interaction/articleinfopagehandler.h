@@ -1,3 +1,12 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     Interaction
+/************************************************************************************************************************
+类名：     ArticleInfoPageHandler
+功能：     文章信息弹出框后台处理类，通过信号槽和直接唤起函数与QML紧密联动
+日期：     20190726 实现查看文章信息
+************************************************************************************************************************/
+
+
 #ifndef ARTICLEINFOPAGEHANDLER_H
 #define ARTICLEINFOPAGEHANDLER_H
 
@@ -9,6 +18,7 @@ class ArticleInfoPageHandler: public AbstractPage
 Q_OBJECT
 public:
     explicit ArticleInfoPageHandler(MyArticleObj* thisArticle, QObject *parent = nullptr);
+    //QML界面获取信息
     Q_INVOKABLE QString getSenderName();
     Q_INVOKABLE QString getRegulatorName();
     Q_INVOKABLE QString getTranslatorName();

@@ -10,6 +10,7 @@
 #include "senderpagehandler.h"
 #include "regulatorpagehandler.h"
 #include "userinfopagehandler.h"
+#include "supervisorpagehandler.h"
 #include <QSqlDatabase>
 #include <QDebug>
 #include <QSqlQuery>
@@ -51,11 +52,11 @@ LoginPageHandler::~LoginPageHandler()
 }
 
 /*************************************************************************
-【函数名称】  startPage
-【函数功能】  开始渲染主页面
-【参数】    QQmlApplicationEngine *engine
-【返回值】   无
-【开发者及日期】    jarrycyx 20190712
+名称：     startPage
+功能：     开始渲染主页面
+参数：     QQmlApplicationEngine *engine
+返回：     无
+日期：     jarrycyx 20190712
 *************************************************************************/
 void LoginPageHandler::startPage(QQmlApplicationEngine *engine)
 {
@@ -66,23 +67,24 @@ void LoginPageHandler::startPage(QQmlApplicationEngine *engine)
 }
 
 /*************************************************************************
-【函数名称】  loginInit，loginInNewThread
-【函数功能】  QML从界面中唤起该函数，执行登录操作（loginInNewThread）
-【参数】    从界面中读取的用户名和密码
-【返回值】   无
-【开发者及日期】    jarrycyx 20190714
+名称：     loginInit，loginInNewThread
+功能：     QML从界面中唤起该函数，执行登录操作（loginInNewThread）
+参数：     从界面中读取的用户名和密码
+返回：     无
+日期：     20190714 增加翻译者
+          20190726 修改用户多种身份登陆方式
 *************************************************************************/
 Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int role)
 {
     int loginResult = userLogin(name, pswd, role);
     switch (loginResult)
     {
-    case 1:
+    case 1://登陆成功
     {
         emit sendSuccessMessage("登陆成功");
-
         if (role == 1)
         {
+            //翻译者，则加载翻译者界面
             newSenderPage = new SenderPageHandler(searchUser(name), storage);
             newSenderPage->startPage(thisEngine);
         }
@@ -90,10 +92,16 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
         {
             newRegulatorPage = new RegulatorPageHandler(searchUser(name), storage);
             newRegulatorPage->startPage(thisEngine);
-        }else if (role == 3)
+        }
+        else if (role == 3)
         {
             newTranslatorPage = new TranslatorPageHandler(searchUser(name), storage);
             newTranslatorPage->startPage(thisEngine);
+        }
+        else if (role == 4)
+        {
+            newSupervisorPage = new SupervisorPageHandler(searchUser(name), storage);
+            newSupervisorPage->startPage(thisEngine);
         }
         break;
     }
@@ -121,15 +129,16 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 }
 
 /*************************************************************************
-【函数名称】  signUp，signUpInNewThread
-【函数功能】  QML从界面中唤起该函数，创建新线程执行注册操作（signUpInNewThread）
-【参数】    从界面中读取的用户名和密码
-【返回值】   无
-【开发者及日期】    jarrycyx 20190714
+名称：     signUp，signUpInNewThread
+功能：     QML从界面中唤起该函数，执行注册操作
+参数：     从界面中读取的用户名和密码
+返回：     无
+日期：     20190714 实现该函数
+          20190715 实现多线程增加流畅度
+          20190716 取消多线程以匹配大作业要求
 *************************************************************************/
 Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd)
 {
-    QList<MyUserObj*> searchSubUserRes = storage->searchSubUsers(name);
     MyUserObj* newUser = addUser(name, pswd);
     if (newUser == nullptr)
         emit sendErrorMessage("用户已存在");
@@ -181,6 +190,14 @@ int LoginPageHandler::userLogin(QString name, QString pswd, int role)
     return 0;
 }
 
+
+/*************************************************************************
+名称：     searchUser
+功能：     通过用户名查找用户，用于检查用户名是否可以注册或查找用户的ID
+参数：     用户名
+返回：     返回用户id，如果没找到则返回-1
+日期：     *
+*************************************************************************/
 int LoginPageHandler::searchUser(QString name)
 {
     int len = storage->getUsersLength();
@@ -192,6 +209,13 @@ int LoginPageHandler::searchUser(QString name)
     return -1;
 }
 
+/*************************************************************************
+名称：     addUser
+功能：     注册函数，判断是否可以注册
+参数：     用户名与密码
+返回：     用户对象指针，未找到则是空指针
+日期：     20190710
+*************************************************************************/
 MyUserObj* LoginPageHandler::addUser(QString name, QString pswd)
 {
     int len = storage->getUsersLength();
@@ -203,6 +227,7 @@ MyUserObj* LoginPageHandler::addUser(QString name, QString pswd)
     int newUserId = storage->getAUserId();
     qDebug() << "注册ID" << newUserId;
     MyUserObj *newUser = new MyUserObj(newUserId, name, pswd);
+    //标记用户对象存储状态为新增，结束时上传
     newUser->setModifyStatus(StorageUnit::New);
     storage->addAUser(newUser);
     return newUser;
