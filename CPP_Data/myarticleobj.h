@@ -84,6 +84,21 @@ public:
     int fee() const;
     void setFee(int newFee);
 
+    MyArticleObj& operator=(const MyArticleObj &newObj)
+    {
+        mTitleOfArticle = newObj.titleOfArticle();
+        mTranslatedTitle = newObj.translatedTitle();
+        mContentOfArticle = newObj.contentOfArticle();
+        mTranslatedContent = newObj.translatedContent();
+        mOriginArticleId = newObj.originArticleIdOfArticle();
+        mArticleId = newObj.articleIdOfArticle();
+        mSenderId = newObj.senderIdOfArticle();
+        mRegulatorId = newObj.regulatorIdOfArticle();
+        mTranslatorId = newObj.translatorIdOfArticle();
+        mFee = newObj.fee();
+        return *this;
+    }
+
 private:
     //文章内容
     QString mTitleOfArticle, mTranslatedTitle;
@@ -94,7 +109,7 @@ private:
     int mArticleId;
     /* 备注：本类中article_id不能改变，只能为未设置状态或已设置状态 */
 
-    //定义并设置默认发送者和负责人
+    //定义并设置发送者和负责人
     int mSenderId;
     int mRegulatorId;
     int mStatusCode;

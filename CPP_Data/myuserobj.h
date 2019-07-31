@@ -49,6 +49,18 @@ public:
     void setCredit(int newCredit);
     void addCredit(int added);
 
+
+    MyUserObj& operator=(const MyUserObj& newObj)
+    {
+        mUsername = newObj.username();
+        mPassword = newObj.password();
+        mQualification = newObj.qualification();
+        mMoney = newObj.money();
+        mCredit = newObj.credit();
+        mUserId = newObj.userId();
+        return *this;
+    }
+
 private:
     QString mUsername;
     QString mPassword;

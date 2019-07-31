@@ -32,7 +32,7 @@ class LoginPageHandler : public AbstractPage
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
 public :
-    explicit LoginPageHandler(QObject *parent = nullptr);
+    explicit LoginPageHandler();
     ~LoginPageHandler();
     //登录
     Q_INVOKABLE void loginInit(QString name, QString pswd, int role = 1);
@@ -48,12 +48,12 @@ public :
     Q_INVOKABLE void setUserQualification(QString quali);
 
 private:
-    SenderPageHandler *newSenderPage;
-    RegulatorPageHandler *newRegulatorPage;
-    TranslatorPageHandler *newTranslatorPage;
-    SupervisorPageHandler *newSupervisorPage;
+    SenderPageHandler* mSenderPage;
+    RegulatorPageHandler* mRegulatorPage;
+    TranslatorPageHandler* mTranslatorPage;
+    SupervisorPageHandler* mSupervisorPage;
 
-    MyUserObj* newSignupUser;
+    MyUserObj* mSignupUser;
 
 
 public slots:

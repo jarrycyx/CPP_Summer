@@ -33,14 +33,10 @@ Component {
         }
 
         MouseArea {
-
             cursorShape: Qt.IBeamCursor
             id: dragArea
-
             height: parent.height
             width: parent.width
-
-
             onPressed: {
                 editBox.changeStatus(1);
                 view.currentIndex=indexOfThisDelegate;

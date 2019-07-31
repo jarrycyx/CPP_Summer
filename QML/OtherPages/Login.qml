@@ -9,11 +9,14 @@ import "../MyWidgets"
 
 ApplicationWindow {
     id: loginWindow
-    objectName: "loginWindow"
     visible: true
     width: 532
     height: 360
-    title: qsTr("Stack")
+    title: qsTr(" ")
+    minimumWidth: 532
+    minimumHeight: 360
+    maximumWidth: 532
+    maximumHeight: 360
 
     ComboBox {
         id: selectRoleBox
@@ -142,6 +145,7 @@ ApplicationWindow {
         color: Universal.accent
         text: qsTr("Forget Password?")
         font{
+            underline: true;
             family: "DengXian";
             pixelSize: 14
         }
@@ -167,7 +171,7 @@ ApplicationWindow {
         horizontalAlignment: Text.AlignRight
         font.family: "DengXian"
     }
-
+/*
     RoundButton {
         id: roundButton1
         x: 378
@@ -203,7 +207,7 @@ ApplicationWindow {
             selectRoleBox.currentIndex=2;
         }
     }
-
+*/
 
 
 

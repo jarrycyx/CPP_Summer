@@ -24,7 +24,7 @@ class UserInfoPageHandler : public AbstractPage
 Q_OBJECT
 
 public:
-    explicit UserInfoPageHandler(MyUserObj* thisUser, QObject *parent = nullptr);
+    explicit UserInfoPageHandler(MyUserObj* thisUser);
     Q_INVOKABLE QString getUsername();
     Q_INVOKABLE int getMoney();
     Q_INVOKABLE int getCredit();
@@ -41,9 +41,9 @@ public slots:
     void startPage(QQmlApplicationEngine *engine);
 
 private:
-    MyUserObj* user;
+    MyUserObj* mUser;
     //消息盒子中的消息列表
-    MessageList messageList;
+    MessageList mMessageList;
 };
 
 #endif // USERINFOPAGEHANDLER_H

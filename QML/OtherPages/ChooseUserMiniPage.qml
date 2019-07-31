@@ -12,11 +12,26 @@ FramlessWindow {
     height: 500 + 40
     x: 700
     y: 500
-    title: qsTr("选择负责人")
+    title: qsTr("选择用户")
 
     Strings{
         id: stringsPool
     }
+
+    Text {
+        id: hintTextNobody
+        visible: true
+        x: (chooseRegulatorWindow.width - width )/2
+        y: (chooseRegulatorWindow.height - height )/2
+        color: stringsPool.textGray1
+        text: qsTr("还没有人报名")
+        font{
+            family: "DengXian";
+            pixelSize: 14
+        }
+    }
+
+
     onActiveChanged: {
         if (!active) {
             chooseRegulatorWindow.close();
@@ -34,7 +49,6 @@ FramlessWindow {
                 id: chooseUserDelegate
             }
 
-            //childCont.children:
             ListView {
                 id: chooseRegulatorList
                 anchors.fill: parent

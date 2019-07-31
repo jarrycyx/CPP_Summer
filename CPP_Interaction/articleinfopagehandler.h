@@ -17,7 +17,7 @@ class ArticleInfoPageHandler: public AbstractPage
 {
 Q_OBJECT
 public:
-    explicit ArticleInfoPageHandler(MyArticleObj* thisArticle, QObject *parent = nullptr);
+    explicit ArticleInfoPageHandler(MyArticleObj* thisArticle);
     //QML界面获取信息
     Q_INVOKABLE QString getSenderName();
     Q_INVOKABLE QString getRegulatorName();
@@ -30,10 +30,10 @@ public slots:
     void startPage(QQmlApplicationEngine *engine);
 
 private:
-    MyArticleObj* article;
-    MyUserObj* sender;
-    MyUserObj* regulator;
-    MyUserObj* translator;
+    MyArticleObj* mArticle;
+    MyUserObj* mSender;
+    MyUserObj* mRegulator;
+    MyUserObj* mTranslator;
 };
 
 #endif // ARTICLEINFOPAGEHANDLER_H

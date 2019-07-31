@@ -43,7 +43,7 @@ Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
      * 负责人选取列表的数据 */
 
 public :
-    explicit RegulatorPageHandler(int regulatorId, QObject *parent = nullptr);
+    explicit RegulatorPageHandler(int regulatorId);
     ~RegulatorPageHandler();
 
     void startLoadingRegulatorArticleList(int userId);
@@ -72,7 +72,7 @@ public :
     //标记子文章审核通过
     Q_INVOKABLE void acceptSubarticle(int idx);
     //合并后的文章提交给发布者
-    Q_INVOKABLE void submitToSender(int idx);
+    Q_INVOKABLE void submitToSender(int index);
     //向Storage层级查询人物列表
     void loadArticleTranslatorData(int originArticleId);
 

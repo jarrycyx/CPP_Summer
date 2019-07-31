@@ -13,6 +13,7 @@ FramlessWindow {
     objectName: "chooseRegulatorWindow"
     width: 300 + 40
     height: 200 + 40
+    title: "提示"
     x: 550
     y: 800
 

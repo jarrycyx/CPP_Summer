@@ -59,8 +59,6 @@ Component {
             id: warningBox
             visible: false
             titleOfDialog: "警告"
-            x: 1400
-            y: 400
             contentOfDialog: "确定要删除吗？"
             cancelButtonVisible: true
             function onAccept() {

@@ -24,9 +24,9 @@
 参数：     parent，可以为空
 日期：     20190712
 *************************************************************************/
-TranslatorPageHandler::TranslatorPageHandler(int translatorId, QObject *parent)
-    : AbstractPage(translatorId), translatorSubarticleList(1),
-      allSeekingTranslatorArticle(2)
+TranslatorPageHandler::TranslatorPageHandler(int translatorId)
+    : AbstractPage(translatorId), mTranslatorSubarticleList(1),
+      mAllSeekingTranslatorArticleList(2)
 {
     startLoadingTranslatorArticleList(translatorId);
 }
@@ -63,11 +63,11 @@ void TranslatorPageHandler::startLoadingTranslatorArticleList(int userId)
         {
             if (selectedArticle->statusCodeOfArticle() / 100 == 2)
                 if (selectedArticle->statusCodeOfArticle() != 240)
-                    translatorSubarticleList.addAnArticle(selectedArticle);
+                    mTranslatorSubarticleList.addAnArticle(selectedArticle);
         }
 
         if (selectedArticle->statusCodeOfArticle() == 120)
-            allSeekingTranslatorArticle.addAnArticle(selectedArticle);
+            mAllSeekingTranslatorArticleList.addAnArticle(selectedArticle);
     }
 }
 
@@ -82,14 +82,14 @@ void TranslatorPageHandler::startLoadingTranslatorArticleList(int userId)
 Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString tTitle, QString tContent)
 {
     qDebug() << "save" << index;
-    translatorSubarticleList.getArticle(index)->setTranslatedTitle(tTitle);
-    translatorSubarticleList.getArticle(index)->setStatusCodeOfArticle(215);
+    mTranslatorSubarticleList.getArticle(index)->setTranslatedTitle(tTitle);
+    mTranslatorSubarticleList.getArticle(index)->setStatusCodeOfArticle(215);
     storage->sendMessageToRelatedUser(
                 QString("%1").arg(storage->decodeStatusCode(215)),
-                translatorSubarticleList.getArticle(index));
+                mTranslatorSubarticleList.getArticle(index));
 
-    translatorSubarticleList.getArticle(index)->setTranslatedContent(tContent);
-    translatorSubarticleList.editAnArticle(index);
+    mTranslatorSubarticleList.getArticle(index)->setTranslatedContent(tContent);
+    mTranslatorSubarticleList.editAnArticle(index);
     //发送信号，通知QML显示成功信息
     emit sendSuccessMessage("译文已保存");
 }
@@ -104,16 +104,16 @@ Q_INVOKABLE void TranslatorPageHandler::editTranslatedArticle(int index, QString
 *************************************************************************/
 Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
 {
-    int thisUserCredit = storage->searchUserById(thisUserId)->credit();
+    int thisUserCredit = storage->searchUserById(mThisUserId)->credit();
     if (thisUserCredit >= 25){                                  //检查积分
         int alreadySigned = false;                              //检查是否已报名
         int len = storage->getRequestsLength();
         for (int i=0;i<len;i++){
             MyRequestObj* selected = storage->getRequest(i);
-            if (selected->getUserId() == thisUserId             //是否存在该用户发送的，文章Id相同的，申请成为译者的请求
+            if (selected->getUserId() == mThisUserId             //是否存在该用户发送的，文章Id相同的，申请成为译者的请求
                     && selected->getType() == 2
                     && selected->getArticleId() ==
-                    allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle())
+                    mAllSeekingTranslatorArticleList.getArticle(index)->articleIdOfArticle())
             {
                 alreadySigned = true;                           //标记暂存
             }
@@ -123,8 +123,8 @@ Q_INVOKABLE void TranslatorPageHandler::signForTranslatorArticle(int index)
             qDebug() << "sign up for" << index;
             MyRequestObj *sendNewRequest = new MyRequestObj(
                         storage->getARequestId(),
-                        thisUserId,
-                        allSeekingTranslatorArticle.getArticle(index)->articleIdOfArticle(),
+                        mThisUserId,
+                        mAllSeekingTranslatorArticleList.getArticle(index)->articleIdOfArticle(),
                         2);                                     //2表示成为译者的请求
             sendNewRequest->setModifyStatus(StorageUnit::New);
             storage->addARequest(sendNewRequest);
@@ -152,7 +152,7 @@ Q_INVOKABLE QString TranslatorPageHandler::getRegulatorComment(int index)
     for (int i = 0; i < numOfRequest; i++)
     {
         MyRequestObj *getRequest = storage->getRequest(i);
-        if (getRequest->getArticleId() == translatorSubarticleList.getArticle(index)->articleIdOfArticle()
+        if (getRequest->getArticleId() == mTranslatorSubarticleList.getArticle(index)->articleIdOfArticle()
                 && getRequest->getType() == 3)                  //type为3表示反馈信息
         {
             commentStr += getRequest->getContent() + "\n\n";    //增加换行，调整显示格式
@@ -170,11 +170,11 @@ Q_INVOKABLE QString TranslatorPageHandler::getRegulatorComment(int index)
 *************************************************************************/
 void TranslatorPageHandler::startPage(QQmlApplicationEngine *engine)
 {
-    thisEngine = engine;
+    mThisEngine = engine;
     QQmlContext *thisContext = engine->rootContext();
     thisContext->setContextProperty("translatorPageHandler", this);
-    thisContext->setContextProperty("translatorSubarticleList", &translatorSubarticleList);
-    thisContext->setContextProperty("allSeekingTranslatorArticle", &allSeekingTranslatorArticle);
+    thisContext->setContextProperty("translatorSubarticleList", &mTranslatorSubarticleList);
+    thisContext->setContextProperty("allSeekingTranslatorArticleList", &mAllSeekingTranslatorArticleList);
     const QUrl url1(QStringLiteral("qrc:/QML/MainPages/TranslatorPage.qml"));
     engine->load(url1);
 }

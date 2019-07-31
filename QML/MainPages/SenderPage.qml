@@ -13,8 +13,10 @@ ApplicationWindow {
     objectName: "mainWindow"
     visible: true
     visibility: Window.Maximized
-    title: qsTr("Stack")
+    title: qsTr("译林")
     Strings{id: stringsPool}
+    minimumHeight: 800
+    minimumWidth: 1280
 
 
     function foldList(){

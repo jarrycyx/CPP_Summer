@@ -2,10 +2,11 @@
 //所处层级：     Storage-Data
 /************************************************************************************************************************
 类名：     GlobalStorageComponents，通用存储封装类
-功能：     封装数据库存取操作，也是所有数据实体的存储地
-备注：     根据需求对数据库进行整存整取，程序开始时和结束时分别调用构造和析构函数进行下载上传操作
+功能：     封装数据库存取操作，也是所有数据实体的存储地，并包含一些工具函数
+备注：     根据需求对数据库进行整存整取，程序开始时构造函数进行下载操作，并通过后台线程实时刷新上传
 日期：     20190718 初步实现Sender和Regulator
           20190721 进一步完善，增加Translator和Request
+          20190729 增加多线程，实时刷新
 ************************************************************************************************************************/
 
 #ifndef GLOBALCOMPONENTS_H
@@ -31,10 +32,10 @@ public:
     void sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange);
     //返回状态值对应的含义
     QString decodeStatusCode(int code);
-
+    //新线程中刷新数据，每200ms刷新一次
     void refreshDataInNewThread();
-
-    void downloadAllData();
+    //下载服务器数据
+    int downloadAllData();
     //程序结束前，析构函数调用以上传所有更改数据
     void uploadAllData();
     //自动生成一个文章ID，比所有其他ID都大
@@ -63,10 +64,8 @@ public:
     inline void addAUser(MyUserObj *newUser) { allUsers.push_front(newUser); }
     //通过id查找user，性能较低
     MyUserObj* searchUserById(int thisUserId);
-
     //通过id查找article，性能较低
     MyArticleObj* searchArticleById(int thisUserId);
-
     //自动生成一个请求id
     inline int getARequestId()
     {
@@ -91,10 +90,16 @@ private:
     //最大的ID，用于生成新的ID
     int biggestArticleId = 0, biggestUserId = 0, biggestRequestId = 0;
     int ifEndingApp = false;
+    //数据库查询对象
+    QSqlDatabase db;
 
     QFuture<void> f;
 
 signals:
+    //错误信息信号，向QML发送，使其在界面上显示
+    void sendErrorMessage(QString errStr);
+    //成功信息信号，向QML发送，使其在界面上显示
+    void sendSuccessMessage(QString successStr);
 
 public slots:
 };

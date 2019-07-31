@@ -42,6 +42,11 @@ Component{
             width: 200
             height: 20
             text: nameOfUser
+            Component.onCompleted: {
+                if (text !== "")
+                    hintTextNobody.visible = false;
+            }
+
             font{
                 family: "DengXian";
                 pixelSize: 20

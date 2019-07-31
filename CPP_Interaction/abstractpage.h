@@ -40,9 +40,9 @@ public slots:
 
 protected:
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
-    QQmlApplicationEngine* thisEngine;
+    QQmlApplicationEngine* mThisEngine;
     //当前身份标识，默认为-1（空）
-    int thisUserId;
+    int mThisUserId;
 };
 
 #endif // ABSTRACTPAGE_H

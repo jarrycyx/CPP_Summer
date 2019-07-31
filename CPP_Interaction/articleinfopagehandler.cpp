@@ -18,18 +18,18 @@
 返回：     无
 日期：     20190727
 *************************************************************************/
-ArticleInfoPageHandler::ArticleInfoPageHandler(MyArticleObj* thisArticle, QObject *parent) :
-    AbstractPage(-1), article(thisArticle)
+ArticleInfoPageHandler::ArticleInfoPageHandler(MyArticleObj* thisArticle) :
+    AbstractPage(-1), mArticle(thisArticle)
 {
-    qDebug() << "load article info";
-    int senderId = article->senderIdOfArticle();
-    int regulatorId = article->regulatorIdOfArticle();
-    int translatorId = article->translatorIdOfArticle();
+    qDebug() << "load mArticle info";
+    int mSenderId = mArticle->senderIdOfArticle();
+    int mRegulatorId = mArticle->regulatorIdOfArticle();
+    int mTranslatorId = mArticle->translatorIdOfArticle();
 
     //获得用户id后，需要向Storage查询
-    sender = storage->searchUserById(senderId);
-    regulator = storage->searchUserById(regulatorId);
-    translator = storage->searchUserById(translatorId);
+    mSender = storage->searchUserById(mSenderId);
+    mRegulator = storage->searchUserById(mRegulatorId);
+    mTranslator = storage->searchUserById(mTranslatorId);
 
 }
 
@@ -54,24 +54,24 @@ void ArticleInfoPageHandler::startPage(QQmlApplicationEngine *engine)
 *************************************************************************/
 Q_INVOKABLE QString ArticleInfoPageHandler::getSenderName()
 {
-    if (sender != nullptr)
-        return sender->username();
+    if (mSender != nullptr)
+        return mSender->username();
     else return QString("无信息");
 }
 Q_INVOKABLE QString ArticleInfoPageHandler::getRegulatorName()
 {
-    if (regulator != nullptr)
-        return regulator->username();
+    if (mRegulator != nullptr)
+        return mRegulator->username();
     else return QString("无信息");
 }
 Q_INVOKABLE QString ArticleInfoPageHandler::getTranslatorName()
 {
-    if (translator != nullptr)
-        return translator->username();
+    if (mTranslator != nullptr)
+        return mTranslator->username();
     else return QString("无信息");
 }
 
 Q_INVOKABLE int ArticleInfoPageHandler::getMoney()
 {
-    return article->fee();
+    return mArticle->fee();
 }

@@ -11,6 +11,7 @@ import "../../Resources"
 FramlessWindow {
     id: userInfoWindow
     objectName: "userInfoWindow"
+    title: "用户信息"
     width: 700 * 1.2 + 40
     height: 500 * 1.2 + 40
     x: 1920 - 15 - width

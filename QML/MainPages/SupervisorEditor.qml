@@ -1,3 +1,13 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     View
+/************************************************************************************************************************
+名称：     SupervisorEditor
+功能：     上层控件，审核人页面查看、修改文章状态的组件
+日期：     20190728 实现基本功能
+************************************************************************************************************************/
+
+
+
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
@@ -38,6 +48,7 @@ Rectangle {
         indexInList=index;
         typeOfThis=typeOfArticle;
 
+        //不同的文章状态，按钮和文本显示不同
         switch (regulatorEditorRect.articleStatus){
         case 215:
         case 220://三种状态相同处理
@@ -179,7 +190,11 @@ Rectangle {
             wrapMode: TextEdit.Wrap
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
             selectByMouse: true
-            font{family: "DengXian";pixelSize: 17}
+            font{
+                family: "DengXian";
+                pixelSize: 17;
+                wordSpacing: 4
+            }
             property string placeholderText: "在此输入内容"
 
 
@@ -237,6 +252,7 @@ Rectangle {
         text: qsTr("选择负责人")
         font.family: "DengXian"
         onClicked: {
+            //不同的文章状态，按钮点击动作显示不同
             switch (regulatorEditorRect.articleStatus){
             case 215:
             case 220:

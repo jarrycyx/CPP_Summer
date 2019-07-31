@@ -233,7 +233,11 @@ Rectangle {
             wrapMode: TextEdit.Wrap
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
             selectByMouse: true
-            font{family: "DengXian";pixelSize: 17}
+            font{
+                family: "DengXian";
+                pixelSize: 17;
+                wordSpacing: 4
+            }
             property string placeholderText: "在此输入内容"
 
 
@@ -275,7 +279,8 @@ Rectangle {
             case 210:
             case 215:
             case 220://三种状态相同操作
-                translatorPageHandler.editTranslatedArticle(indexInList, titleEdit.text, contentEdit.text);
+                if (button3.text === "查看原文")//当前显示的是译文
+                    translatorPageHandler.editTranslatedArticle(indexInList, titleEdit.text, contentEdit.text);
                 break;
             }
         }

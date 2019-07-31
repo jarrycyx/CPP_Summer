@@ -4,9 +4,10 @@
 类名：     SenderPageHandler
 功能：     发送者页面的后台处理类，通过信号槽和直接唤起函数与QML紧密联动
 日期：     20190710 初步实现发送文章功能
-                 20190712 实现修改文章状态
-                 20190718 实现选取负责人
-                 20190720 主要功能完成
+          20190712 实现修改文章状态
+          20190718 实现选取负责人
+          20190720 主要功能完成
+          20190727 增加拒绝接受功能
 ************************************************************************************************************************/
 
 
@@ -41,7 +42,7 @@ Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
      * 负责人选取列表的数据 */
 
 public :
-    explicit SenderPageHandler(int senderId, QObject *parent = nullptr);
+    explicit SenderPageHandler(int senderId);
     ~SenderPageHandler();
 
     //从QML唤起的选择负责人函数
@@ -59,12 +60,14 @@ public :
     Q_INVOKABLE void deleteSenderArticle(int index);
     //确定任务完成并分配酬金
     Q_INVOKABLE void confirmAcceptArticle(int index);
+    //拒绝接收，交给负责人重新翻译
+    Q_INVOKABLE void reTranslate(int index);
     //根据当前正在查看的文章，加载报名的负责人列表
     void loadArticleRegulatorData(int articleId);
 
 private:
     //分别为我发布的文章列表，其他用户的文章列表
-    ArticlesList senderArticleList, allUserArticleList;
+    ArticlesList mSenderArticleList, allUserArticleList;
     RequestUserList requestUserList;
 
     //当前需要发送的文章身份标识，没有要发送的文章则为-1

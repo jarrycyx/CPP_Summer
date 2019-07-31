@@ -12,10 +12,10 @@
 /*************************************************************************
 名称：     RegulatorPageHandler
 功能：     构造函数
-参数：     parent，可以为空
+参数：     用户id
 日期：     20190712
 *************************************************************************/
-RegulatorPageHandler::RegulatorPageHandler(int regulatorId, QObject *parent)
+RegulatorPageHandler::RegulatorPageHandler(int regulatorId)
     : AbstractPage(regulatorId), regulatorSubarticleList(1),
       regulatorArticleList(1), allSeekingRegulatorArticle(2)
 {
@@ -41,7 +41,7 @@ RegulatorPageHandler::~RegulatorPageHandler()
 *************************************************************************/
 void RegulatorPageHandler::startPage(QQmlApplicationEngine *engine)
 {
-    thisEngine = engine;
+    mThisEngine = engine;
     QQmlContext *thisContext = engine->rootContext();
     thisContext->setContextProperty("regulatorPageHandler", this);
     thisContext->setContextProperty("regulatorArticleList", &regulatorArticleList);
@@ -95,6 +95,7 @@ void RegulatorPageHandler::startLoadingRegulatorArticleList(int userId)
 *************************************************************************/
 void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QString content)
 {
+    editArticle(index, title, content);                 //先保存更改
     qDebug() << "split" << index;
     MyArticleObj* articleToSplit = regulatorArticleList.getArticle(index);
 
@@ -106,7 +107,7 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
     articleToSplit->setFee(articleToSplit->fee());      //20%金额分配给负责人
 
     regulatorArticleList.editAnArticle(index);          //刷新文章状态
-    QStringList subContents = content.split("\n");      //在提行处拆分文章
+    QStringList subContents = content.split("\n\n");      //在空行处拆分文章
     qDebug() << subContents << index;
     for (int i = 0; i < subContents.length(); i++)
         if (subContents[i].length() == 0)
@@ -123,7 +124,7 @@ void RegulatorPageHandler::splitRegulatorArticle(int index, QString title, QStri
         storage->sendMessageToRelatedUser(              //发送通知给相关用户
                     QString("%1").arg(storage->decodeStatusCode(200)),
                     newSubArticle);
-        newSubArticle->setRegulatorIdOfArticle(thisUserId);
+        newSubArticle->setRegulatorIdOfArticle(mThisUserId);
         newSubArticle->setOriginArticleIdOfArticle(articleToSplit->articleIdOfArticle());
         float remainFee=float((articleToSplit->fee())*0.8);
                                                         //80%款项平均分给翻译者
@@ -232,7 +233,7 @@ Q_INVOKABLE void RegulatorPageHandler::chooseTranslator(int index)
     loadArticleTranslatorData(regulatorSubarticleList.getArticle(index)->originArticleIdOfArticle());
     currentInViewIndex = index;
     const QUrl url(QStringLiteral("qrc:/QML/OtherPages/ChooseUserMiniPage.qml"));
-    thisEngine->load(url);
+    mThisEngine->load(url);
 }
 
 /*************************************************************************
@@ -248,7 +249,7 @@ Q_INVOKABLE void RegulatorPageHandler::viewTranslator(int index)
     loadArticleTranslatorData(regulatorArticleList.getArticle(index)->articleIdOfArticle());
     currentInViewIndex = -1;
     const QUrl url(QStringLiteral("qrc:/QML/OtherPages/ChooseUserMiniPage.qml"));
-    thisEngine->load(url);
+    mThisEngine->load(url);
 }
 
 /*************************************************************************
@@ -306,13 +307,13 @@ Q_INVOKABLE void RegulatorPageHandler::translatorChosen(int idx){
 *************************************************************************/
 Q_INVOKABLE void RegulatorPageHandler::signForRegulatorArticle(int index)
 {
-    int thisUserCredit = storage->searchUserById(thisUserId)->credit();
+    int thisUserCredit = storage->searchUserById(mThisUserId)->credit();
     if (thisUserCredit >= 45){                              //45积分以上可以报名做负责人
         int alreadySigned = false;                          //检查是否已报名
         int len = storage->getRequestsLength();
         for (int i=0;i<len;i++){
             MyRequestObj* selected = storage->getRequest(i);
-            if (selected->getUserId() == thisUserId         //该文章的所有“报名为负责人”的请求中
+            if (selected->getUserId() == mThisUserId         //该文章的所有“报名为负责人”的请求中
                     && selected->getType() == 1             //有无与当前用户ID相同的项
                     && selected->getArticleId() ==
                     allSeekingRegulatorArticle.getArticle(index)->articleIdOfArticle())
@@ -325,7 +326,7 @@ Q_INVOKABLE void RegulatorPageHandler::signForRegulatorArticle(int index)
             qDebug() << "sign up for" << index;
             MyRequestObj *sendNewRequest = new MyRequestObj(
                         storage->getARequestId(),
-                        thisUserId,
+                        mThisUserId,
                         allSeekingRegulatorArticle.getArticle(index)->articleIdOfArticle(),
                         1);                                 //1表示成为负责人的请求
             sendNewRequest->setModifyStatus(StorageUnit::New);
@@ -385,7 +386,7 @@ Q_INVOKABLE void RegulatorPageHandler::stopRecruitingTranslatorForArticle(int in
 Q_INVOKABLE void RegulatorPageHandler::commentToTranslator(int idx, QString comment){
     qDebug() << idx << " " << comment;
     MyRequestObj* newRequest = new MyRequestObj(storage->getARequestId(),
-                                                thisUserId,
+                                                mThisUserId,
                                                 regulatorSubarticleList.getArticle(idx)->articleIdOfArticle(),
                                                 3);
     regulatorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(220);
@@ -452,11 +453,11 @@ Q_INVOKABLE void RegulatorPageHandler::acceptSubarticle(int idx)
 返回：     无
 日期：     20190722
 *************************************************************************/
-Q_INVOKABLE void RegulatorPageHandler::submitToSender(int idx)
+Q_INVOKABLE void RegulatorPageHandler::submitToSender(int index)
 {
-    regulatorArticleList.getArticle(idx)->setStatusCodeOfArticle(310);
+    regulatorArticleList.getArticle(index)->setStatusCodeOfArticle(310);
     storage->sendMessageToRelatedUser(
                 QString("%1").arg(storage->decodeStatusCode(310)),
-                regulatorArticleList.getArticle(idx));
-    regulatorArticleList.editAnArticle(idx);
+                regulatorArticleList.getArticle(index));
+    regulatorArticleList.editAnArticle(index);
 }

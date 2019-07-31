@@ -1,3 +1,14 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     View
+/************************************************************************************************************************
+名称：     SenderEditor
+功能：     上层控件，发布者页面查看、修改文章状态的组件
+日期：     20190708 实现基本功能
+          2019071X 扩充功能
+          20190721 增加悬浮按钮和提示框
+************************************************************************************************************************/
+
+
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
@@ -5,6 +16,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls.Universal 2.12
 
 import "../MyWidgets"
+import "../OtherPages"
 import "../../Resources"
 
 Rectangle {
@@ -68,6 +80,7 @@ Rectangle {
         case 130:
             statusText.text="招募译者结束";
             button.enabled=false;
+            button2.visible=false;
             break;
         case 140:
             statusText.text="已拆分，译者紧张工作中";
@@ -83,7 +96,8 @@ Rectangle {
             statusText.text="翻译内容已提交";
             button.text="确认完成";
             button.enabled=true;
-            button2.visible=false;
+            button2.visible=true;
+            button2.text="重新翻译";
             element.text="我负责的任务";
             break;
         }
@@ -225,7 +239,11 @@ Rectangle {
             wrapMode: TextEdit.Wrap
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
             selectByMouse: true
-            font{family: "DengXian";pixelSize: 17}
+            font{
+                family: "DengXian";
+                pixelSize: 17;
+                wordSpacing: 4
+            }
             property string placeholderText: "在此输入内容"
 
 
@@ -291,6 +309,24 @@ Rectangle {
         Universal.foreground: "#ffffff"
     }
 
+    HintDialog {
+        id: warningReTranslateBox
+        visible: false
+        titleOfDialog: "对翻译不满意？"
+        x: 700
+        y: 500
+        contentOfDialog: "将要交回负责人重新进行翻译，当前译稿作废。"
+        cancelButtonVisible: true
+        function onAccept() {
+            senderPageHandler.reTranslate(indexInList);
+            close();
+        }
+        function onCancel() {
+            close();
+        }
+    }
+
+
     Button {
         id: button2
         x: 136
@@ -305,6 +341,8 @@ Rectangle {
             case 100:
                 senderPageHandler.chooseRegulator(indexInList);
                 break;
+            case 310:
+                warningReTranslateBox.visible = true;
             }
         }
     }

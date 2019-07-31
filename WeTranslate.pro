@@ -38,7 +38,7 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
-RC_ICONS = Resources/pen.ico
+RC_ICONS = Resources/WeTranslate.ico
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

@@ -13,8 +13,10 @@ ApplicationWindow {
     objectName: "mainWindow"
     visible: true
     visibility: Window.Maximized
-    title: qsTr("Stack")
+    title: qsTr("译林")
     Strings{id: stringsPool}
+    minimumHeight: 800
+    minimumWidth: 1280
 
 
     function foldList(){
@@ -281,15 +283,5 @@ ApplicationWindow {
             sourceSize.width: 16
             source: "../../Resources/moreuserinfo.svg"
         }
-    }
-
-    DropShadow {
-        anchors.fill: dragTargetImage
-        radius: 20
-        samples: 17
-        visible: dragTargetImage.visible
-        z: 50
-        color: "#88999999"
-        source: dragTargetImage
     }
 }

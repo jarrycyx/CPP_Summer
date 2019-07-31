@@ -6,8 +6,6 @@
         <file>Resources/Strings.qml</file>
         <file>Resources/add.svg</file>
         <file>Resources/logintext.svg</file>
-        <file>Resources/pen.ico</file>
-        <file>Resources/pen.png</file>
         <file>Resources/user-default.svg</file>
         <file>Resources/refresh.svg</file>
         <file>Resources/unfold.svg</file>
@@ -57,5 +55,6 @@
         <file>QML/MainPages/SupervisorEditor.qml</file>
         <file>Resources/allocate.svg</file>
         <file>Resources/allocatedrag.svg</file>
+        <file>Resources/WeTranslate.ico</file>
     </qresource>
 </RCC>

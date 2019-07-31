@@ -11,6 +11,7 @@ import "../../Resources"
 FramlessWindow {
     id: commentWindow
     objectName: "chooseRegulatorWindow"
+    title: "反馈"
     width: childRect.width + 40
     height: childRect.height + 40
 

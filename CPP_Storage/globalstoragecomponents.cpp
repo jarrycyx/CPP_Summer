@@ -8,6 +8,7 @@
 #include "../CPP_Data/myuserobj.h"
 #include "../CPP_Data/myrequestobj.h"
 #include <QtConcurrent/QtConcurrent>
+#include <QSqlError>
 
 GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(parent)
 {
@@ -16,43 +17,96 @@ GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(pare
     //f.waitForFinished();
 }
 
+
+/*************************************************************************
+名称：     ~GlobalStorageComponents
+功能：     析构函数，释放内存，等待线程执行结束
+参数：     无
+返回：     无
+日期：     20190707 初步实现
+          20190711 实现释放对象列表的内存
+*************************************************************************/
 GlobalStorageComponents::~GlobalStorageComponents()
 {
+    //标志位通知线程结束
     ifEndingApp = true;
-    //uploadAllData();
+    //阻塞等待线程结束
     f.waitForFinished();
+
+    //逐个释放内存空间
+    int lenOfArticles = getArticlesLength();
+    for (int i=0;i<lenOfArticles;i++)
+        delete allArticles[i];
+    int lenOfRequests = getRequestsLength();
+    for (int i=0;i<lenOfRequests;i++)
+        delete allRequests[i];
+    int lenOfUsers = getUsersLength();
+    for (int i=0;i<lenOfUsers;i++)
+        delete allUsers[i];
 }
 
+
+/*************************************************************************
+名称：     refreshDataInNewThread
+功能：     在后台线程中运行的函数，用于下载，刷新并上传数据
+参数：     无
+返回：     无
+日期：     20190728
+          20190729 增加自动重连功能
+          20190730 增加连接失败提示功能
+*************************************************************************/
 void GlobalStorageComponents::refreshDataInNewThread(){
-    downloadAllData();
+    while (!downloadAllData()){ //尝试连接直到连接成功
+        QThread::msleep(200);
+        emit sendErrorMessage("正在连接服务器");
+    }
+    emit sendSuccessMessage("连接服务器成功");
+    QThread::msleep(500);
+    emit sendSuccessMessage("");
+    //每次查询是否结束程序
     while (!ifEndingApp){
         QThread::msleep(200);
         uploadAllData();
     }
+    delete query;
 }
 
-void GlobalStorageComponents::downloadAllData()
+/*************************************************************************
+名称：     downloadAllData
+功能：     从服务器下载数据
+参数：     无
+返回：     无
+日期：     20190707 初步实现
+          20190711 封装到该类
+          2019071X 逐步增加Request等功能
+          20190729 增加自动重连功能
+*************************************************************************/
+int GlobalStorageComponents::downloadAllData()
 {
-    QMutex mutex;
+    QMutex mutex;                                                   //线程锁，确保一次刷新不会被破坏
     mutex.lock();
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("39.106.107.241");
+    db = QSqlDatabase::addDatabase("QMYSQL");
+    db.setHostName("39.106.107.241");                               //远程服务器地址
     db.setDatabaseName("cyxcpp");
     db.setUserName("root");
     db.setPassword("cyxserver-2019");
-    if (!db.open())
+    db.setConnectOptions("MYSQL_OPT_RECONNECT=1;MYSQL_OPT_READ_TIMEOUT=5;MYSQL_OPT_WRITE_TIMEOUT=8");
+    if (!db.open()){
         qDebug() << "Failed to connect to root mysql admin";
+        mutex.unlock();
+        return 0;
+    }
     else
     {
+        db.setConnectOptions();
         qDebug() << "open";
         query = new QSqlQuery(db);
-
         query->exec(QString("SELECT article_id,title,content,create_time,sender,"
                             "regulator,translator,curr_status,origin,t_title,t_content,fee "
                             "from articles"));
         while (query->next())
         {
-            MyArticleObj *articleFromDB = new MyArticleObj();
+            MyArticleObj *articleFromDB = new MyArticleObj();       //新分配内存，析构函数中释放
             articleFromDB->setArticleInfo(query->value(0).toInt(),
                                           query->value(1).toString(),
                                           query->value(2).toString());
@@ -65,7 +119,7 @@ void GlobalStorageComponents::downloadAllData()
             articleFromDB->setTranslatedContent(query->value(10).toString());
             articleFromDB->setFee(query->value(11).toInt());
 
-            articleFromDB->setModifyStatus(StorageUnit::Unchanged);
+            articleFromDB->setModifyStatus(StorageUnit::Unchanged); //从服务器下载的数据标记为未更改
 
             if (query->value(0).toInt() > biggestUserId)
                 biggestArticleId = query->value(0).toInt();
@@ -107,18 +161,32 @@ void GlobalStorageComponents::downloadAllData()
         }
     }
     mutex.unlock();
+    return 1;
 }
 
+/*************************************************************************
+名称：     uploadAllData
+功能：     检测更改并上传数据
+参数：     无
+返回：     无
+日期：     20190707 初步实现
+          20190711 封装到该类
+          2019071X 逐步增加Request等功能
+          20190728 增加多线程后台刷新
+          20190730 增加错误检查机制
+          20190730 增加自动重连功能
+*************************************************************************/
 void GlobalStorageComponents::uploadAllData()
 {
     QMutex mutex;
     mutex.lock();
-    //qDebug() << "uploading";
+    //qDebug() << "uploading" << db.isOpen() << query->isActive();
+
     int artiLen = allArticles.length();
     for (int i = 0; i < artiLen; i++)
     {
         int modifyStat = allArticles[i]->getModifyStatus();
-        if (modifyStat == StorageUnit::New)
+        if (modifyStat == StorageUnit::New)                             //新增的数据对象
         {
             qDebug() << "added article";
             query->exec(QString("insert into articles "
@@ -138,7 +206,7 @@ void GlobalStorageComponents::uploadAllData()
                         .arg(allArticles[i]->translatedContent())
                         .arg(allArticles[i]->fee()));
         }
-        else if (modifyStat == StorageUnit::Changed)
+        else if (modifyStat == StorageUnit::Changed)                    //修改的数据对象
         {
             qDebug() << "modified article";
             query->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, "
@@ -157,12 +225,20 @@ void GlobalStorageComponents::uploadAllData()
                         .arg(allArticles[i]->fee())
                         .arg(allArticles[i]->articleIdOfArticle()));
         }
-        else if (modifyStat == StorageUnit::Deleted)
+        else if (modifyStat == StorageUnit::Deleted)                    //删除的数据对象
         {
             qDebug() << "deleted article";
             query->exec(QString("DELETE FROM articles WHERE article_id=%1").arg(allArticles[i]->articleIdOfArticle()));
         }
-        allArticles[i]->setModifyStatus(StorageUnit::Unchanged);
+        //检查是否出错
+        QSqlError error=query->lastError();
+        if (!error.isValid())                                           //若上传成功则清除“更改”或“新增”标记
+            allArticles[i]->setModifyStatus(StorageUnit::Unchanged);
+        else {
+            qDebug() << error.text();
+            qDebug() << "网络断开，正在重新连接";
+            emit sendErrorMessage("服务器无响应");
+        }
     }
 
     int userLen = allUsers.length();
@@ -194,7 +270,14 @@ void GlobalStorageComponents::uploadAllData()
                         .arg(allUsers[i]->credit())
                         .arg(allUsers[i]->qualification()));
         }
-        allUsers[i]->setModifyStatus(StorageUnit::Unchanged);
+        QSqlError error=query->lastError();
+        if (!error.isValid())
+            allUsers[i]->setModifyStatus(StorageUnit::Unchanged);
+        else {
+            qDebug() << error.text();
+            qDebug() << "网络断开，正在重新连接";
+            emit sendErrorMessage("服务器无响应");
+        }
     }
 
     int requestLen = allRequests.length();
@@ -214,12 +297,26 @@ void GlobalStorageComponents::uploadAllData()
                         .arg(allRequests[i]->getContent())
                         .arg(allRequests[i]->getType()));
         }
-
-        allRequests[i]->setModifyStatus(StorageUnit::Unchanged);
+        QSqlError error=query->lastError();
+        if (!error.isValid())
+            allRequests[i]->setModifyStatus(StorageUnit::Unchanged);
+        else {
+            qDebug() << error.text();
+            qDebug() << "网络断开，正在重新连接";
+            emit sendErrorMessage("服务器无响应");
+        }
     }
     mutex.unlock();
 }
 
+
+/*************************************************************************
+名称：     searchUserById
+功能：     通过用户Id查找文章指针，性能较低
+参数：     用户id
+返回：     用户对象指针
+日期：     20190722
+*************************************************************************/
 MyUserObj *GlobalStorageComponents::searchUserById(int thisUserId)
 {
     int len = allUsers.length();
@@ -229,6 +326,14 @@ MyUserObj *GlobalStorageComponents::searchUserById(int thisUserId)
     return nullptr;
 }
 
+
+/*************************************************************************
+名称：     searchArticleById
+功能：     通过文章Id查找文章指针，性能较低
+参数：     文章id
+返回：     文章对象指针
+日期：     20190722
+*************************************************************************/
 MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
 {
     int len = allArticles.length();
@@ -240,7 +345,13 @@ MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
 
 
 
-
+/*************************************************************************
+名称：     sendMessageToRelatedUser
+功能：     向一篇文章相关的用户发送消息
+参数：     消息字符串，对应文章
+返回：     无
+日期：     20190727
+*************************************************************************/
 void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)
 {
     QString titleStr=articleInChange->titleOfArticle();
@@ -288,6 +399,13 @@ void GlobalStorageComponents::sendUserModifiedMessage(int userId ,QString conten
 }
 
 
+/*************************************************************************
+名称：     decodeStatusCode
+功能：     工具函数，根据状态号，解析对应的含义
+参数：     状态号
+返回：     中文含义字符串
+日期：     20190728
+*************************************************************************/
 QString GlobalStorageComponents::decodeStatusCode(int code){
     switch (code) {
     case (100): return "已上传，招募负责人开始";

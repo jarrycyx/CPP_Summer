@@ -29,7 +29,7 @@ class TranslatorPageHandler : public AbstractPage
 Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
 public :
-    explicit TranslatorPageHandler(int translatorId, QObject *parent = nullptr);
+    explicit TranslatorPageHandler(int translatorId);
     ~TranslatorPageHandler();
     //开始加载文章列表
     void startLoadingTranslatorArticleList(int userId);
@@ -42,23 +42,8 @@ public :
 
 private:
     //分别为我负责的子任务和其他正在招募翻译者的任务
-    ArticlesList translatorSubarticleList, allSeekingTranslatorArticle;
+    ArticlesList mTranslatorSubarticleList, mAllSeekingTranslatorArticleList;
 
-    //当前正在浏览的文章身份标识，没有文章则为-1
-    int articleSendingId = -1;
-    //当前正在编辑/查看的文章
-    int currentInViewIndex = 0;
-
-signals:
-    //以下四项为各model向QML暴露的信号接口
-    void thisModelChanged(const QVariant &);
-    void otherModelChanged(const QVariant &);
-    void translatorListModelChanged(const QVariant &);
-    void loadArticlesComplete(int article_id, QString title, QString content);
-
-    //向QML发送刷新ListView界面信号
-    void startRefreshQml();
-    void refreshQmlComplete();
 
 public slots:
     //开始渲染页面

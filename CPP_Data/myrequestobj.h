@@ -3,7 +3,7 @@
 /************************************************************************************************************************
 类名：     MyArticleObj
 功能：     本地存储请求内容，实现对请求的增添、状态更改等操作方法
-备注：     type各状态意义如下
+备注：     mType各状态意义如下
             1	报名为负责人
             2	报名为译者
             3   负责人对译者的反馈
@@ -30,27 +30,38 @@ public:
     MyRequestObj(const int &newRequestId, const int &newUserId,
                  const int &newArticleId, const int &newType);
     //请求id
-    inline int getRequestId() { return requestId; }
+    inline int getRequestId() const{ return mRequestId; }
     //发出请求的用户id
-    inline int getUserId() { return userId; }
+    inline int getUserId() const { return mUserId; }
     //对应文章id
-    inline int getArticleId() { return articleId; }
+    inline int getArticleId() const { return mArticleId; }
     //请求类型
-    inline int getType() { return type; }
-    //请求内容，尽在type为3时有效
-    inline QString getContent() { return content ;}
+    inline int getType() const { return mType; }
+    //请求内容，尽在mType为3时有效
+    inline QString getContent() const { return mContent ;}
     void setContent(QString str);
     //请求上传时间
-    inline QDateTime getTime(){return time;}
+    inline QDateTime getTime() const{return mTime;}
     void setTime(QDateTime newTime);
 
+    MyRequestObj& operator=(const MyRequestObj &newObj)
+    {
+        mRequestId = newObj.getRequestId();
+        mArticleId = newObj.getArticleId();
+        mUserId = newObj.getUserId();
+        mType = newObj.getType();
+        mContent = newObj.getContent();
+        mTime = newObj.getTime();
+        return *this;
+    }
+
 private:
-    int requestId;
-    int articleId;
-    int userId;
-    int type;
-    QString content;
-    QDateTime time;
+    int mRequestId;
+    int mArticleId;
+    int mUserId;
+    int mType;
+    QString mContent;
+    QDateTime mTime;
 };
 
 #endif // MYREQUESTOBJ_H

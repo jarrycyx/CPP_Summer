@@ -1,3 +1,18 @@
+//总体框架：     Storage - Data - Model - Interaction - View
+//所处层级：     View
+/************************************************************************************************************************
+名称：     SenderEditor
+功能：     上层控件，负责人页面查看、修改文章状态的组件
+日期：     20190710 实现基本功能
+          2019071X 扩充功能
+          20190721 增加悬浮按钮和提示框
+************************************************************************************************************************/
+
+//绑定C++流程类：regulatorPageHandler
+//绑定C++ Model：regulatorSubarticleList, regulatorArticleList, allSeekingRegulatorArticle
+
+//SenderPage, SupervisorPage, translatorPage的控件结构相似，集中在此处注释
+
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
@@ -38,6 +53,7 @@ Rectangle {
         indexInList=index;
         typeOfThis=typeOfArticle;
 
+        //各按钮和文本，为不同的文章状态显示不同
         switch (regulatorEditorRect.articleStatus){
         case 100:
             statusText.text="已上传，招募负责人开始";
@@ -119,7 +135,7 @@ Rectangle {
             break;
         case 300:
             statusText.text="翻译内容已合并";
-            button.text="提交给用户";
+            button.text="提交";
             button.enabled=true;
             button2.visible=false;
             element.text="我负责的任务";
@@ -233,6 +249,8 @@ Rectangle {
     }
 
 
+    //QML不提供可以自由滚动的编辑框
+    //故自己实现
     Flickable {
         id: flick
         x: 5
@@ -242,6 +260,12 @@ Rectangle {
         contentWidth: contentEdit.paintedWidth
         contentHeight: contentEdit.paintedHeight
         clip: true
+
+/***********************************************************************/
+//声明：以下几行照搬了Qt官方示例的源码
+//来源网址：http://nickguthrie.com/embedd_gui/src/qt-everywhere-opensource-src-4.8.4/
+//        examples/tutorials/gettingStarted/gsQml/parts/part3/TextArea.qml
+
 
         function ensureVisible(r)
         {
@@ -255,6 +279,9 @@ Rectangle {
                 contentY = r.y+r.height-height;
         }
 
+
+/***********************************************************************/
+
         TextEdit {
             id: contentEdit
             width: flick.width
@@ -263,10 +290,12 @@ Rectangle {
             wrapMode: TextEdit.Wrap
             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
             selectByMouse: true
-            font{family: "DengXian";pixelSize: 17}
+            font{
+                family: "DengXian";
+                pixelSize: 17;
+                wordSpacing: 4
+            }
             property string placeholderText: "在此输入内容"
-
-
             Text {
                 text: contentEdit.placeholderText
                 color: stringsPool.textGray3
@@ -289,6 +318,7 @@ Rectangle {
         height: 1
     }
 
+    //为不同的状态分配不同的功能
     Button {
         id: button
         x: 5

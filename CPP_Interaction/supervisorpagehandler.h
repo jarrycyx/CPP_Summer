@@ -38,7 +38,7 @@ Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
      * 负责人选取列表的数据 */
 
 public :
-    explicit SupervisorPageHandler(int supervisorId, QObject *parent = nullptr);
+    explicit SupervisorPageHandler(int supervisorId);
     ~SupervisorPageHandler();
 
     void startLoadingSupervisorArticleList(int userId);
@@ -50,7 +50,7 @@ public :
 
 private:
     //分别为子任务列表，任务列表，其他正在招募负责人的任务列表
-    ArticlesList supervisorSubarticleList;
+    ArticlesList mSupervisorSubarticleList;
 
 public slots:
     //开始渲染页面

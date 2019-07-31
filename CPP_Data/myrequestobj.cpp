@@ -3,7 +3,7 @@
 /************************************************************************************************************************
 类名：     MyArticleObj
 功能：     本地存储请求内容，实现对请求的增添、状态更改等操作方法
-备注：     type各状态意义如下
+备注：     mType各状态意义如下
             1	报名为负责人
             2	报名为译者
             3   负责人对译者的反馈
@@ -21,7 +21,7 @@
 *************************************************************************/
 MyRequestObj::MyRequestObj(const int &newRequestId, const int &newUserId,
                            const int &newArticleId, const int &newType)
-    : StorageUnit(StorageUnit::Unchanged), requestId(newRequestId), articleId(newArticleId), userId(newUserId), type(newType)
+    : StorageUnit(StorageUnit::Unchanged), mRequestId(newRequestId), mArticleId(newArticleId), mUserId(newUserId), mType(newType)
     //初始更改状态为0：未更改
 {
 }
@@ -29,9 +29,9 @@ MyRequestObj::MyRequestObj(const int &newRequestId, const int &newUserId,
 
 void MyRequestObj::setContent(QString str)
 {
-    if (str != content)
+    if (str != mContent)
     {
-        content = str;
+        mContent = str;
         if (getModifyStatus() == StorageUnit::Unchanged)
             setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
     }
@@ -40,6 +40,6 @@ void MyRequestObj::setContent(QString str)
 
 
 void MyRequestObj::setTime(QDateTime newTime){
-    time = newTime;
+    mTime = newTime;
 
 }

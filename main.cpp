@@ -1,17 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QtDebug>
-#include <QObject>
-#include <QQuickView>
-#include <QQmlContext>
-#include <QTimer>
-#include "CPP_Storage/globalstoragecomponents.h"
 #include "CPP_Interaction/loginpagehandler.h"
 #include <QtDebug>
-#include <QFile>
-#include <QTextStream>
 
 
+//主函数，创建应用程序对象，以及QML渲染引擎对象
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);

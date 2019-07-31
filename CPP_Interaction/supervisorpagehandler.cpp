@@ -21,11 +21,11 @@
 /*************************************************************************
 名称：     SupervisorPageHandler
 功能：     构造函数
-参数：     parent，可以为空
+参数：     用户Id
 日期：     20190712
 *************************************************************************/
-SupervisorPageHandler::SupervisorPageHandler(int supervisorId, QObject *parent)
-    : AbstractPage(supervisorId), supervisorSubarticleList(1)
+SupervisorPageHandler::SupervisorPageHandler(int supervisorId)
+    : AbstractPage(supervisorId), mSupervisorSubarticleList(1)
 {
     startLoadingSupervisorArticleList(supervisorId);
 }
@@ -49,10 +49,10 @@ SupervisorPageHandler::~SupervisorPageHandler()
 *************************************************************************/
 void SupervisorPageHandler::startPage(QQmlApplicationEngine *engine)
 {
-    thisEngine = engine;
+    mThisEngine = engine;
     QQmlContext *thisContext = engine->rootContext();
     thisContext->setContextProperty("supervisorPageHandler", this);
-    thisContext->setContextProperty("supervisorSubarticleList", &supervisorSubarticleList);
+    thisContext->setContextProperty("supervisorSubarticleList", &mSupervisorSubarticleList);
     const QUrl url1(QStringLiteral("qrc:/QML/MainPages/SupervisorPage.qml"));
     engine->load(url1);
 }
@@ -74,7 +74,7 @@ void SupervisorPageHandler::startLoadingSupervisorArticleList(int userId)
         MyArticleObj* selectedArticle = storage->getArticleToEdit(i);
         if (selectedArticle->statusCodeOfArticle() == 215
                 || selectedArticle->statusCodeOfArticle() == 220){
-            supervisorSubarticleList.addAnArticle(selectedArticle);
+            mSupervisorSubarticleList.addAnArticle(selectedArticle);
             qDebug() << "subarticle " << selectedArticle->articleIdOfArticle();
         }
     }
@@ -90,14 +90,14 @@ void SupervisorPageHandler::startLoadingSupervisorArticleList(int userId)
 *************************************************************************/
 Q_INVOKABLE void SupervisorPageHandler::acceptSubarticle(int idx)
 {
-    if (storage->searchUserById(thisUserId)->credit() >= 65){
+    if (storage->searchUserById(mThisUserId)->credit() >= 65){
 
-        supervisorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(230);
+        mSupervisorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(230);
         storage->sendMessageToRelatedUser(
                     QString("%1").arg(storage->decodeStatusCode(230)),
-                    supervisorSubarticleList.getArticle(idx));
-        supervisorSubarticleList.editAnArticle(idx);
-        int translatorId = supervisorSubarticleList.getArticle(idx)->translatorIdOfArticle();
+                    mSupervisorSubarticleList.getArticle(idx));
+        mSupervisorSubarticleList.editAnArticle(idx);
+        int translatorId = mSupervisorSubarticleList.getArticle(idx)->translatorIdOfArticle();
         storage->searchUserById(translatorId)->addCredit(1);
         emit sendSuccessMessage("已审核通过，译者积分+1");
         storage->sendUserModifiedMessage(translatorId, QString("您的账户余额已改变，请注意"));
@@ -115,14 +115,14 @@ Q_INVOKABLE void SupervisorPageHandler::acceptSubarticle(int idx)
 Q_INVOKABLE void SupervisorPageHandler::commentToTranslator(int idx, QString comment){
     qDebug() << idx << " " << comment;
     MyRequestObj* newRequest = new MyRequestObj(storage->getARequestId(),
-                                                thisUserId,
-                                                supervisorSubarticleList.getArticle(idx)->articleIdOfArticle(),
+                                                mThisUserId,
+                                                mSupervisorSubarticleList.getArticle(idx)->articleIdOfArticle(),
                                                 3);
-    supervisorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(220);
+    mSupervisorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(220);
     storage->sendMessageToRelatedUser(                              //发送状态更新消息
                 QString("%1").arg(storage->decodeStatusCode(220)),
-                supervisorSubarticleList.getArticle(idx));
-    supervisorSubarticleList.editAnArticle(idx);
+                mSupervisorSubarticleList.getArticle(idx));
+    mSupervisorSubarticleList.editAnArticle(idx);
     newRequest->setContent(comment);
     newRequest->setModifyStatus(StorageUnit::New);
     storage->addARequest(newRequest);

@@ -16,39 +16,28 @@
 #include <QSqlQuery>
 #include <QThread>
 
-/*************************************************************************
-【类名】        LoginPageHandler
-【功能】        登陆/注册界面的后台数据处理类，与Login.qml联动
-【接口说明】     startPage函数从外部调用，表示开始渲染界面
-【开发者及日期】  jarrycyx 20190713
-【更改记录】     20190714: 修改为异步查询数据
-*************************************************************************/
-
-/* 登陆界面的后台处理类
- * 使用异步线程请求登录数据
- */
 
 /*************************************************************************
-【函数名称】  LoginPageHandler
-【函数功能】  构造函数，同时创建数据库连接
-【参数】    parent，可以为空
-【开发者及日期】    jarrycyx 20190709
+名称：     LoginPageHandler
+功能：     构造函数
+参数：     无
+日期：     20190707
 *************************************************************************/
-LoginPageHandler::LoginPageHandler(QObject *parent)
+LoginPageHandler::LoginPageHandler()
     : AbstractPage(-1)
 {
 }
 
 /*************************************************************************
-【函数名称】  ~LoginPageHandler
-【函数功能】  析构函数，同时释放内存
-【开发者及日期】    jarrycyx 20190718
+名称：     ~LoginPageHandler
+功能：     析构函数，删除动态分配的内存
+日期：     20190718
 *************************************************************************/
 LoginPageHandler::~LoginPageHandler()
 {
     qDebug() << "登陆页面析构";
-    //delete newSenderPage;
-    //newSenderPage=NULL;
+    //delete mSenderPage;
+    //mSenderPage=NULL;
 }
 
 /*************************************************************************
@@ -62,7 +51,7 @@ void LoginPageHandler::startPage(QQmlApplicationEngine *engine)
 {
     QQmlContext *thisContext = engine->rootContext();
     thisContext->setContextProperty("loginPageHandler", this);
-    thisEngine = engine;
+    mThisEngine = engine;
     engine->load(QUrl(QStringLiteral("qrc:/QML/OtherPages/Login.qml")));
 }
 
@@ -85,23 +74,23 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
         if (role == 1)
         {
             //翻译者，则加载翻译者界面
-            newSenderPage = new SenderPageHandler(searchUser(name), storage);
-            newSenderPage->startPage(thisEngine);
+            mSenderPage = new SenderPageHandler(searchUser(name));
+            mSenderPage->startPage(mThisEngine);
         }
         else if (role == 2)
         {
-            newRegulatorPage = new RegulatorPageHandler(searchUser(name), storage);
-            newRegulatorPage->startPage(thisEngine);
+            mRegulatorPage = new RegulatorPageHandler(searchUser(name));
+            mRegulatorPage->startPage(mThisEngine);
         }
         else if (role == 3)
         {
-            newTranslatorPage = new TranslatorPageHandler(searchUser(name), storage);
-            newTranslatorPage->startPage(thisEngine);
+            mTranslatorPage = new TranslatorPageHandler(searchUser(name));
+            mTranslatorPage->startPage(mThisEngine);
         }
         else if (role == 4)
         {
-            newSupervisorPage = new SupervisorPageHandler(searchUser(name), storage);
-            newSupervisorPage->startPage(thisEngine);
+            mSupervisorPage = new SupervisorPageHandler(searchUser(name));
+            mSupervisorPage->startPage(mThisEngine);
         }
         break;
     }
@@ -145,24 +134,24 @@ Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd)
     else {
         emit sendSuccessMessage("注册成功");
         const QUrl url1(QStringLiteral("qrc:/QML/OtherPages/UserQualifyDialog.qml"));
-        thisEngine->load(url1);
-        newSignupUser = newUser;
+        mThisEngine->load(url1);
+        mSignupUser = newUser;
     }
 }
 
 
 Q_INVOKABLE void LoginPageHandler::setUserQualification(QString quali){
-    newSignupUser->setQualification(quali);
+    mSignupUser->setQualification(quali);
     if (quali == "TOFEL 90分")
-        newSignupUser->setCredit(10);
+        mSignupUser->setCredit(10);
     else if (quali == "TOFEL 100分")
-        newSignupUser->setCredit(20);
+        mSignupUser->setCredit(20);
     else if (quali == "TOFEL 110分")
-        newSignupUser->setCredit(30);
+        mSignupUser->setCredit(30);
     else if (quali == "英语六级")
-        newSignupUser->setCredit(8);
+        mSignupUser->setCredit(8);
     else if (quali == "英语专业八级")
-        newSignupUser->setCredit(40);
+        mSignupUser->setCredit(40);
 }
 
 int LoginPageHandler::userLogin(QString name, QString pswd, int role)
