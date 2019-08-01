@@ -116,7 +116,7 @@ Component {
         onHeldChanged: {
             if (!held) {
                 content.layer.enabled = false;
-                dragTargetImage.visible = false;
+                dragTargetImage.visualStatus = false;
             }
         }
 
@@ -127,7 +127,7 @@ Component {
                     content.layer.enabled = true;
                     if (typeof dragTargetImage!=='undefined')
                         if (typeof senderPageHandler!=='undefined'){
-                            dragTargetImage.visible = true;
+                            dragTargetImage.visualStatus = true;
                             if (mouseX > 1600)
                                 dragTargetImage.imageSource = "../../Resources/deletedrag.svg";
                             else
@@ -136,7 +136,7 @@ Component {
                 }
             }else {
                 if (typeof dragTargetImage!=='undefined')
-                    dragTargetImage.visible = false;
+                    dragTargetImage.visualStatus = false;
                 content.layer.enabled = false;
             }
             lastX = mouseX;

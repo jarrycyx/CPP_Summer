@@ -153,7 +153,7 @@ void ArticlesList::editAnArticle(int index)
 void ArticlesList::addAnArticle(MyArticleObj *newArticle)
 {
     beginInsertRows(QModelIndex(), 0, 0);               //开始刷新
-    articles.push_front(newArticle);
+    articles.push_back(newArticle);
     endInsertRows();                                    //结束刷新
 }
 

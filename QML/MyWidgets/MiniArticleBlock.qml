@@ -108,7 +108,7 @@ Component {
         onHeldChanged: {
             if (!held) {
                 content.layer.enabled = false;
-                dragTargetImage.visible = false;
+                dragTargetImage.visualStatus = false;
             }
         }
 
@@ -121,7 +121,7 @@ Component {
                     //添加阴影，体现“拿起”效果
                     content.layer.enabled = true;
                     if (typeof dragTargetImage!=='undefined'){
-                        dragTargetImage.visible = true;
+                        dragTargetImage.visualStatus = true;
                         //拖放到位
                         if (mouseX > 1600){
                             if (typeof senderPageHandler!=='undefined')
@@ -139,7 +139,7 @@ Component {
                 }
             }else {
                 if (typeof dragTargetImage!=='undefined')
-                    dragTargetImage.visible = false;
+                    dragTargetImage.visualStatus = false;
                 content.layer.enabled = false;
             }
             lastX = mouseX;

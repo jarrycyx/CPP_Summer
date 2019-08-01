@@ -126,7 +126,12 @@ ApplicationWindow {
                     model: senderArticleList
                     delegate: dragDelegate1
                     currentIndex: -1
-
+                    add: Transition {
+                        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 200 }
+                    }
+                    displaced: Transition {
+                        NumberAnimation { properties: "x,y"; duration: 200 }
+                    }
                     cellWidth: 350
                     cellHeight: 227
                     cacheBuffer: 50
@@ -350,15 +355,38 @@ ApplicationWindow {
 
     Rectangle{
         id: dragTargetImage
-        x: mainWindow.width - 120 - 40
+        x: mainWindow.width - 120 - 40 + 300
         y: (mainWindow.height - 120) / 2
         z: 50
         color: "#00000000"
-        visible: false
         height: 120
         width: 120
         property string imageSource: "../../Resources/delete.svg"
-
+        property int visualStatus: 0
+        onVisualStatusChanged: {
+            if (visualStatus) visibleTrueAnimation.start();
+            else visibleFalseAnimation.start();
+        }
+        SequentialAnimation{
+            id: visibleTrueAnimation
+            NumberAnimation {
+                target: dragTargetImage
+                property: "x"
+                duration: 100
+                from: mainWindow.width - 120 - 40 + 300
+                to: mainWindow.width - 120 - 40
+            }
+        }
+        SequentialAnimation{
+            id: visibleFalseAnimation
+            NumberAnimation {
+                target: dragTargetImage
+                property: "x"
+                duration: 100
+                to: mainWindow.width - 120 - 40 + 300
+                from: mainWindow.width - 120 - 40
+            }
+        }
         Image {
             height: 120
             width: 120

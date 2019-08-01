@@ -15,11 +15,26 @@ FramlessWindow {
     width: childRect.width + 40
     height: childRect.height + 40
 
+    onVisibleChanged: {
+        if (visible) startAnimation.start();
+    }
+
+    SequentialAnimation{
+        id: startAnimation
+        NumberAnimation {
+            target: commentWindow
+            property: "opacity"
+            duration: 100
+            from: 0
+            to: 1
+        }
+    }
+
     property string titleOfDialog
     property string contentOfDialog
     property bool cancelButtonVisible
 
-    function onAccept(){}
+    function onAccept(){}//用于调用时重写
     function onCancel(){}
 
     //用户点击窗口外则关闭窗口

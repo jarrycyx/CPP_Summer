@@ -18,7 +18,6 @@ ApplicationWindow {
     minimumHeight: 800
     minimumWidth: 1280
 
-
     function foldList(){
         editorCover.color="#00000000"
         articlesRect.columnNum=1;
@@ -111,6 +110,12 @@ ApplicationWindow {
                     cellHeight: 92
                     cacheBuffer: 50
                     currentIndex: -1
+                    add: Transition {
+                        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 200 }
+                    }
+                    displaced: Transition {
+                        NumberAnimation { properties: "x,y"; duration: 200 }
+                    }
                 }
 
                 Text {

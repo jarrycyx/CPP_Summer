@@ -25,7 +25,6 @@ Rectangle {
     property int indexInList: -1
     id: senderEditorRect
 
-
     property string thisTitle
     property string thisContent
     property string thisTrTitle
@@ -35,6 +34,7 @@ Rectangle {
 
    function refreshEdit(id, title, content, translatedTitle,
                          translatedContent, statusCode, index, typeOfArticle){
+
         idOfThis=id;
         //type: 1,自己的需求 2,别人的需求
         mode=1;
