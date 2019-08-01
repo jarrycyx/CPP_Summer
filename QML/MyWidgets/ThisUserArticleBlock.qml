@@ -125,13 +125,14 @@ Component {
             if (held) {
                 if (lastX != -1 && (mouseX - lastX > 1 || mouseX - lastX < -1)){
                     content.layer.enabled = true;
-                    if (typeof dragTargetImage!=='undefined'){
-                        dragTargetImage.visible = true;
-                        if (mouseX > 1600)
-                            dragTargetImage.imageSource = "../../Resources/deletedrag.svg";
-                        else
-                            dragTargetImage.imageSource = "../../Resources/delete.svg";
-                    }
+                    if (typeof dragTargetImage!=='undefined')
+                        if (typeof senderPageHandler!=='undefined'){
+                            dragTargetImage.visible = true;
+                            if (mouseX > 1600)
+                                dragTargetImage.imageSource = "../../Resources/deletedrag.svg";
+                            else
+                                dragTargetImage.imageSource = "../../Resources/delete.svg";
+                        }
                 }
             }else {
                 if (typeof dragTargetImage!=='undefined')

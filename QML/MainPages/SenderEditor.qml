@@ -347,15 +347,6 @@ Rectangle {
         }
     }
 
-    CheckBox {
-        id: checkBox
-        x: parent.width-5-width
-        y: parent.height-17-height
-        height:40
-        text: qsTr("可被拆分")
-        font{family: "DengXian"}
-    }
-
     Text {
         x: button2.visible ? 275 : 142
         y: senderEditorRect.height - 25 - 16
