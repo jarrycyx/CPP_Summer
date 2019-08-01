@@ -1,4 +1,4 @@
-//总体框架：     Storage - Data - Model - Interaction - View
+﻿//总体框架：     Storage - Data - Model - Interaction - View
 //所处层级：     Model-Interaction
 /************************************************************************************************************************
 类名：     UserInfoPageHandler
@@ -7,7 +7,6 @@
 日期：     20190725 实现用户信息界面
           20190726 实现消息盒子
 ************************************************************************************************************************/
-
 
 #include "userinfopagehandler.h"
 #include <QDebug>
@@ -19,10 +18,8 @@
 参数：     parent，可以为空
 日期：     20190712
 *************************************************************************/
-UserInfoPageHandler::UserInfoPageHandler(MyUserObj* thisUser) :
-    AbstractPage(-1), mUser(thisUser)
+UserInfoPageHandler::UserInfoPageHandler(MyUserObj *thisUser) : AbstractPage(-1), mUser(thisUser)
 {
-
 }
 
 /*************************************************************************
@@ -41,12 +38,12 @@ void UserInfoPageHandler::startPage(QQmlApplicationEngine *engine)
     for (int i = 0; i < len; i++)
     {
         if (storage->getRequest(i)->getUserId() == mUser->userId()
-                && storage->getRequest(i)->getType() == 4){
+                && storage->getRequest(i)->getType() == 4)
+        {
             mMessageList.addAMessage(storage->getRequest(i));
         }
     }
 }
-
 
 /*************************************************************************
 名称：     getUsername等
@@ -81,9 +78,12 @@ Q_INVOKABLE QString UserInfoPageHandler::getMultiuserStatus()
 {
     //一共四位，分别表示发布者、负责人、翻译者、监管者
     //0为无权限，1为有权限
-    if (mUser->credit()>=65) return QString("1111");
-    if (mUser->credit()>=45) return QString("1110");
-    if (mUser->credit()>=25) return QString("1010");
+    if (mUser->credit() >= 65)
+        return QString("1111");
+    if (mUser->credit() >= 45)
+        return QString("1110");
+    if (mUser->credit() >= 25)
+        return QString("1010");
     return QString("1000");
 }
 
@@ -94,13 +94,14 @@ Q_INVOKABLE QString UserInfoPageHandler::getMultiuserStatus()
 返回：     无
 日期：     20190726
 *************************************************************************/
-Q_INVOKABLE void UserInfoPageHandler::updateUser(QString name, QString pswd){
+Q_INVOKABLE void UserInfoPageHandler::updateUser(QString name, QString pswd)
+{
     mUser->setUsername(name);
     mUser->setPassword(pswd);
     //发送状态更新提醒
     storage->sendUserModifiedMessage(mUser->userId(), QString("您的账户名或密码已改变，请牢记"));
 
-    qDebug() << "set" << name << " " <<pswd;
+    qDebug() << "set" << name << " " << pswd;
 }
 
 /*************************************************************************
@@ -110,8 +111,10 @@ Q_INVOKABLE void UserInfoPageHandler::updateUser(QString name, QString pswd){
 返回：     无
 日期：     20190726
 *************************************************************************/
-Q_INVOKABLE void UserInfoPageHandler::addMoney(int addedMoney){
-    if (addedMoney<0 || addedMoney>1000) return;
-    mUser->setMoney(mUser->money()+addedMoney);
+Q_INVOKABLE void UserInfoPageHandler::addMoney(int addedMoney)
+{
+    if (addedMoney < 0 || addedMoney > 1000)
+        return;
+    mUser->setMoney(mUser->money() + addedMoney);
     qDebug() << "add money " << addedMoney << " to " << mUser->money();
 }

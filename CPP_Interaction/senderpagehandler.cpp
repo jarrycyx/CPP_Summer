@@ -1,4 +1,4 @@
-#include "senderpagehandler.h"
+﻿#include "senderpagehandler.h"
 #include "../CPP_Data/myarticleobj.h"
 #include "../CPP_Data/myuserobj.h"
 #include <QVariant>
@@ -29,7 +29,6 @@ SenderPageHandler::~SenderPageHandler()
 {
 }
 
-
 /*************************************************************************
 名称：     startLoadingSenderArticleList
 功能：     加载所需显示的数据，根据需求将Data组合为Model
@@ -47,7 +46,8 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId)
     int len = storage->getArticlesLength();
     for (int i = 0; i < len; i++)
     {
-        if (storage->getArticleToEdit(i)->statusCodeOfArticle() != 400){
+        if (storage->getArticleToEdit(i)->statusCodeOfArticle() != 400)
+        {
             qDebug() << "sender article";
             if (storage->getArticleToEdit(i)->senderIdOfArticle() == userId
                     && storage->getArticleToEdit(i)->statusCodeOfArticle() / 100 != 2)
@@ -57,7 +57,6 @@ void SenderPageHandler::startLoadingSenderArticleList(int userId)
         }
     }
 }
-
 
 /*************************************************************************
 名称：     addSenderArticle
@@ -75,8 +74,8 @@ void SenderPageHandler::addSenderArticle(QString title, QString content, int mon
     newSenderArticle->setFee(money);
 
     storage->sendMessageToRelatedUser(
-                QString("%1").arg(storage->decodeStatusCode(100)),
-                newSenderArticle);
+        QString("%1").arg(storage->decodeStatusCode(100)),
+        newSenderArticle);
 
     newSenderArticle->setModifyStatus(StorageUnit::New);
     //由于需要显示两处，保存一处，故需要增加三处
@@ -86,7 +85,6 @@ void SenderPageHandler::addSenderArticle(QString title, QString content, int mon
     allUserArticleList.addAnArticle(newSenderArticle);
     emit sendSuccessMessage(QString("文章已上传，酬金为%1元").arg(money));
 }
-
 
 /*************************************************************************
 名称：     editAnArticle
@@ -102,7 +100,6 @@ void SenderPageHandler::editSenderArticle(int index, QString title, QString cont
 
     emit sendSuccessMessage("已保存");
 }
-
 
 /*************************************************************************
 名称：     deleteSenderArticle
@@ -154,7 +151,6 @@ Q_INVOKABLE void SenderPageHandler::chooseRegulator(int index)
     mThisEngine->load(url);
 }
 
-
 /*************************************************************************
 名称：     loadArticleRegulatorData
 功能：     根据选中的文章，加载报名的负责人列表
@@ -171,8 +167,7 @@ void SenderPageHandler::loadArticleRegulatorData(int articleId)
     {
         //轮询查找
         MyRequestObj *getRequest = storage->getRequest(i);
-        if (getRequest->getArticleId() == articleId
-                && getRequest->getType() == 1)//Type为1代表是申请做负责人的请求
+        if (getRequest->getArticleId() == articleId && getRequest->getType() == 1) //Type为1代表是申请做负责人的请求
         {
             MyUserObj *requestUser = storage->searchUserById(getRequest->getUserId());
             requestUserList.addARequestUser(requestUser);
@@ -194,14 +189,13 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
     articleToChoose->setStatusCodeOfArticle(110);
 
     storage->sendMessageToRelatedUser(
-                QString("%1").arg(storage->decodeStatusCode(110)),
-                articleToChoose);
+        QString("%1").arg(storage->decodeStatusCode(110)),
+        articleToChoose);
 
     mSenderArticleList.editAnArticle(currentInViewIndex);
     //向QML发送信号，显示成功提示
     emit sendSuccessMessage("已确定负责人");
 }
-
 
 /*************************************************************************
 名称：     confirmAcceptArticle
@@ -212,7 +206,7 @@ Q_INVOKABLE void SenderPageHandler::regulatorChosen(int idx)
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::reTranslate(int index)
 {
-    MyArticleObj* thisArticle = mSenderArticleList.getArticle(index);
+    MyArticleObj *thisArticle = mSenderArticleList.getArticle(index);
     thisArticle->setStatusCodeOfArticle(130);
     mSenderArticleList.editAnArticle(index);
     emit sendSuccessMessage("扣款成功，感谢！");
@@ -227,30 +221,30 @@ Q_INVOKABLE void SenderPageHandler::reTranslate(int index)
 *************************************************************************/
 Q_INVOKABLE void SenderPageHandler::confirmAcceptArticle(int index)
 {
-    MyArticleObj* thisArticle = mSenderArticleList.getArticle(index);
-    int moneyToRegulator = int(thisArticle->fee()*0.2);
+    MyArticleObj *thisArticle = mSenderArticleList.getArticle(index);
+    int moneyToRegulator = int(thisArticle->fee() * 0.2);
     int regulatorId = thisArticle->regulatorIdOfArticle();
     int senderId = thisArticle->senderIdOfArticle();
     storage->searchUserById(regulatorId)->addMoney(moneyToRegulator);
-                                                                        //向发送者、负责人发送金额改变通知
+    //向发送者、负责人发送金额改变通知
     storage->sendUserModifiedMessage(regulatorId, QString("您的账户余额已改变，请注意"));
-    int totalMoney = thisArticle->fee();                                //应扣款总数
-    int len = storage->getArticlesLength();                             //搜索对应的子文章
-    for (int i=0;i<len;i++){
-        MyArticleObj* selectedArticle = storage->getArticleToEdit(i);
+    int totalMoney = thisArticle->fee();    //应扣款总数
+    int len = storage->getArticlesLength(); //搜索对应的子文章
+    for (int i = 0; i < len; i++)
+    {
+        MyArticleObj *selectedArticle = storage->getArticleToEdit(i);
         if (selectedArticle->originArticleIdOfArticle() == thisArticle->articleIdOfArticle())
         {
             int translatorId = selectedArticle->translatorIdOfArticle();
             storage->searchUserById(translatorId)
-                    ->addMoney(selectedArticle->fee());
-            selectedArticle->setStatusCodeOfArticle(400);
-                                                                        //向翻译者发送金额改变通知
+                ->addMoney(selectedArticle->fee());
+            selectedArticle->setStatusCodeOfArticle(400); //向翻译者发送金额改变通知
             storage->sendUserModifiedMessage(translatorId, QString("您的账户余额已改变，请注意"));
         }
     }
-    storage->searchUserById(senderId)->addMoney(-totalMoney);
-                                                                        //向发送者、负责人发送金额改变通知
+    storage->searchUserById(senderId)->addMoney(-totalMoney); //向发送者、负责人发送金额改变通知
     storage->sendUserModifiedMessage(senderId, QString("您的账户余额已改变，请注意"));
     mSenderArticleList.getArticle(index)->setStatusCodeOfArticle(400);
+    mSenderArticleList.editAnArticle(index);
     emit sendSuccessMessage("扣款成功，感谢！");
 }

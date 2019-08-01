@@ -15,7 +15,6 @@
 //TO-DO: 重载[]运算符
 //TO-DO: 将decodeStatuscode封装在内
 
-
 #ifndef ARTICLESLIST_H
 #define ARTICLESLIST_H
 

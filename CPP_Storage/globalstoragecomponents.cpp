@@ -1,4 +1,4 @@
-#include "globalstoragecomponents.h"
+﻿#include "globalstoragecomponents.h"
 #include "../CPP_Model/articleslist.h"
 #include "../CPP_Data/MyArticleObj.h"
 #include <QQmlContext>
@@ -17,7 +17,6 @@ GlobalStorageComponents::GlobalStorageComponents(QObject *parent) : QObject(pare
     //f.waitForFinished();
 }
 
-
 /*************************************************************************
 名称：     ~GlobalStorageComponents
 功能：     析构函数，释放内存，等待线程执行结束
@@ -35,16 +34,15 @@ GlobalStorageComponents::~GlobalStorageComponents()
 
     //逐个释放内存空间
     int lenOfArticles = getArticlesLength();
-    for (int i=0;i<lenOfArticles;i++)
+    for (int i = 0; i < lenOfArticles; i++)
         delete allArticles[i];
     int lenOfRequests = getRequestsLength();
-    for (int i=0;i<lenOfRequests;i++)
+    for (int i = 0; i < lenOfRequests; i++)
         delete allRequests[i];
     int lenOfUsers = getUsersLength();
-    for (int i=0;i<lenOfUsers;i++)
+    for (int i = 0; i < lenOfUsers; i++)
         delete allUsers[i];
 }
-
 
 /*************************************************************************
 名称：     refreshDataInNewThread
@@ -55,8 +53,10 @@ GlobalStorageComponents::~GlobalStorageComponents()
           20190729 增加自动重连功能
           20190730 增加连接失败提示功能
 *************************************************************************/
-void GlobalStorageComponents::refreshDataInNewThread(){
-    while (!downloadAllData()){ //尝试连接直到连接成功
+void GlobalStorageComponents::refreshDataInNewThread()
+{
+    while (!downloadAllData())
+    { //尝试连接直到连接成功
         QThread::msleep(200);
         emit sendErrorMessage("正在连接服务器");
     }
@@ -64,7 +64,8 @@ void GlobalStorageComponents::refreshDataInNewThread(){
     QThread::msleep(500);
     emit sendSuccessMessage("");
     //每次查询是否结束程序
-    while (!ifEndingApp){
+    while (!ifEndingApp)
+    {
         QThread::msleep(200);
         uploadAllData();
     }
@@ -83,15 +84,16 @@ void GlobalStorageComponents::refreshDataInNewThread(){
 *************************************************************************/
 int GlobalStorageComponents::downloadAllData()
 {
-    QMutex mutex;                                                   //线程锁，确保一次刷新不会被破坏
+    QMutex mutex; //线程锁，确保一次刷新不会被破坏
     mutex.lock();
     db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("39.106.107.241");                               //远程服务器地址
+    db.setHostName("39.106.107.241"); //远程服务器地址
     db.setDatabaseName("cyxcpp");
     db.setUserName("root");
     db.setPassword("cyxserver-2019");
     db.setConnectOptions("MYSQL_OPT_RECONNECT=1;MYSQL_OPT_READ_TIMEOUT=5;MYSQL_OPT_WRITE_TIMEOUT=8");
-    if (!db.open()){
+    if (!db.open())
+    {
         qDebug() << "Failed to connect to root mysql admin";
         mutex.unlock();
         return 0;
@@ -106,7 +108,7 @@ int GlobalStorageComponents::downloadAllData()
                             "from articles"));
         while (query->next())
         {
-            MyArticleObj *articleFromDB = new MyArticleObj();       //新分配内存，析构函数中释放
+            MyArticleObj *articleFromDB = new MyArticleObj(); //新分配内存，析构函数中释放
             articleFromDB->setArticleInfo(query->value(0).toInt(),
                                           query->value(1).toString(),
                                           query->value(2).toString());
@@ -131,9 +133,9 @@ int GlobalStorageComponents::downloadAllData()
         while (query->next())
         {
             MyUserObj *userFromDB = new MyUserObj(
-                        query->value(0).toInt(),
-                        query->value(1).toString(),
-                        query->value(3).toString());
+                query->value(0).toInt(),
+                query->value(1).toString(),
+                query->value(3).toString());
             userFromDB->setMoney(query->value(4).toInt());
             userFromDB->setCredit(query->value(5).toInt());
             userFromDB->setQualification(query->value(6).toString());
@@ -148,10 +150,10 @@ int GlobalStorageComponents::downloadAllData()
         while (query->next())
         {
             MyRequestObj *requestFromDB = new MyRequestObj(
-                        query->value(0).toInt(),
-                        query->value(1).toInt(),
-                        query->value(2).toInt(),
-                        query->value(4).toInt());
+                query->value(0).toInt(),
+                query->value(1).toInt(),
+                query->value(2).toInt(),
+                query->value(4).toInt());
             requestFromDB->setTime(query->value(5).toDateTime());
             requestFromDB->setContent(query->value(3).toString());
             allRequests.append(requestFromDB);
@@ -186,7 +188,7 @@ void GlobalStorageComponents::uploadAllData()
     for (int i = 0; i < artiLen; i++)
     {
         int modifyStat = allArticles[i]->getModifyStatus();
-        if (modifyStat == StorageUnit::New)                             //新增的数据对象
+        if (modifyStat == StorageUnit::New) //新增的数据对象
         {
             qDebug() << "added article";
             query->exec(QString("insert into articles "
@@ -194,47 +196,49 @@ void GlobalStorageComponents::uploadAllData()
                                 "curr_status,article_id,origin,t_title,t_content,fee) "
                                 "values "
                                 "(\"%1\", \"%2\", NOW(), %3, %4, %5, %6, %7, %8, \"%9\", \"%10\", %11)")
-                        .arg(allArticles[i]->titleOfArticle())
-                        .arg(allArticles[i]->contentOfArticle())
-                        .arg(allArticles[i]->senderIdOfArticle())
-                        .arg(allArticles[i]->regulatorIdOfArticle())
-                        .arg(allArticles[i]->translatorIdOfArticle())
-                        .arg(allArticles[i]->statusCodeOfArticle())
-                        .arg(allArticles[i]->articleIdOfArticle())
-                        .arg(allArticles[i]->originArticleIdOfArticle())
-                        .arg(allArticles[i]->translatedTitle())
-                        .arg(allArticles[i]->translatedContent())
-                        .arg(allArticles[i]->fee()));
+                            .arg(allArticles[i]->titleOfArticle())
+                            .arg(allArticles[i]->contentOfArticle())
+                            .arg(allArticles[i]->senderIdOfArticle())
+                            .arg(allArticles[i]->regulatorIdOfArticle())
+                            .arg(allArticles[i]->translatorIdOfArticle())
+                            .arg(allArticles[i]->statusCodeOfArticle())
+                            .arg(allArticles[i]->articleIdOfArticle())
+                            .arg(allArticles[i]->originArticleIdOfArticle())
+                            .arg(allArticles[i]->translatedTitle())
+                            .arg(allArticles[i]->translatedContent())
+                            .arg(allArticles[i]->fee()));
         }
-        else if (modifyStat == StorageUnit::Changed)                    //修改的数据对象
+        else if (modifyStat == StorageUnit::Changed) //修改的数据对象
         {
             qDebug() << "modified article";
             query->exec(QString("UPDATE articles SET title=\"%1\", content=\"%2\" ,sender=%3, "
                                 "regulator=%4, translator=%5, curr_status=%6, origin=%7, t_title=\"%8\", "
                                 "t_content=\"%9\", fee=%10 "
                                 "WHERE article_id=%11")
-                        .arg(allArticles[i]->titleOfArticle())
-                        .arg(allArticles[i]->contentOfArticle())
-                        .arg(allArticles[i]->senderIdOfArticle())
-                        .arg(allArticles[i]->regulatorIdOfArticle())
-                        .arg(allArticles[i]->translatorIdOfArticle())
-                        .arg(allArticles[i]->statusCodeOfArticle())
-                        .arg(allArticles[i]->originArticleIdOfArticle())
-                        .arg(allArticles[i]->translatedTitle())
-                        .arg(allArticles[i]->translatedContent())
-                        .arg(allArticles[i]->fee())
-                        .arg(allArticles[i]->articleIdOfArticle()));
+                            .arg(allArticles[i]->titleOfArticle())
+                            .arg(allArticles[i]->contentOfArticle())
+                            .arg(allArticles[i]->senderIdOfArticle())
+                            .arg(allArticles[i]->regulatorIdOfArticle())
+                            .arg(allArticles[i]->translatorIdOfArticle())
+                            .arg(allArticles[i]->statusCodeOfArticle())
+                            .arg(allArticles[i]->originArticleIdOfArticle())
+                            .arg(allArticles[i]->translatedTitle())
+                            .arg(allArticles[i]->translatedContent())
+                            .arg(allArticles[i]->fee())
+                            .arg(allArticles[i]->articleIdOfArticle()));
         }
-        else if (modifyStat == StorageUnit::Deleted)                    //删除的数据对象
+        else if (modifyStat == StorageUnit::Deleted) //删除的数据对象
         {
             qDebug() << "deleted article";
-            query->exec(QString("DELETE FROM articles WHERE article_id=%1").arg(allArticles[i]->articleIdOfArticle()));
+            query->exec(QString("DELETE FROM articles WHERE article_id=%1")
+                        .arg(allArticles[i]->articleIdOfArticle()));
         }
         //检查是否出错
-        QSqlError error=query->lastError();
-        if (!error.isValid())                                           //若上传成功则清除“更改”或“新增”标记
+        QSqlError error = query->lastError();
+        if (!error.isValid()) //若上传成功则清除“更改”或“新增”标记
             allArticles[i]->setModifyStatus(StorageUnit::Unchanged);
-        else {
+        else
+        {
             qDebug() << error.text();
             qDebug() << "网络断开，正在重新连接";
             emit sendErrorMessage("服务器无响应");
@@ -251,29 +255,30 @@ void GlobalStorageComponents::uploadAllData()
             query->exec(QString("insert into users "
                                 "(user_id,user_name,create_time,password,money,credit,quali) values "
                                 "(%1, \"%2\", NOW(), \"%3\", %4, %5, \"%6\")")
-                        .arg(allUsers[i]->userId())
-                        .arg(allUsers[i]->username())
-                        .arg(allUsers[i]->password())
-                        .arg(allUsers[i]->money())
-                        .arg(allUsers[i]->credit())
-                        .arg(allUsers[i]->qualification()));
+                            .arg(allUsers[i]->userId())
+                            .arg(allUsers[i]->username())
+                            .arg(allUsers[i]->password())
+                            .arg(allUsers[i]->money())
+                            .arg(allUsers[i]->credit())
+                            .arg(allUsers[i]->qualification()));
         }
         else if (modifyStat == StorageUnit::Changed)
         {
             qDebug() << "modified user";
             query->exec(QString("UPDATE users SET user_name=\"%2\" ,password=\"%3\", "
                                 "money=%4, credit=%5, quali=\"%6\" WHERE user_id=%1")
-                        .arg(allUsers[i]->userId())
-                        .arg(allUsers[i]->username())
-                        .arg(allUsers[i]->password())
-                        .arg(allUsers[i]->money())
-                        .arg(allUsers[i]->credit())
-                        .arg(allUsers[i]->qualification()));
+                            .arg(allUsers[i]->userId())
+                            .arg(allUsers[i]->username())
+                            .arg(allUsers[i]->password())
+                            .arg(allUsers[i]->money())
+                            .arg(allUsers[i]->credit())
+                            .arg(allUsers[i]->qualification()));
         }
-        QSqlError error=query->lastError();
+        QSqlError error = query->lastError();
         if (!error.isValid())
             allUsers[i]->setModifyStatus(StorageUnit::Unchanged);
-        else {
+        else
+        {
             qDebug() << error.text();
             qDebug() << "网络断开，正在重新连接";
             emit sendErrorMessage("服务器无响应");
@@ -291,16 +296,17 @@ void GlobalStorageComponents::uploadAllData()
                                 "(request_id, user_id, article_id, time, content, type) "
                                 "values "
                                 "(%1, %2, %3, NOW(), \"%4\", %5)")
-                        .arg(allRequests[i]->getRequestId())
-                        .arg(allRequests[i]->getUserId())
-                        .arg(allRequests[i]->getArticleId())
-                        .arg(allRequests[i]->getContent())
-                        .arg(allRequests[i]->getType()));
+                            .arg(allRequests[i]->getRequestId())
+                            .arg(allRequests[i]->getUserId())
+                            .arg(allRequests[i]->getArticleId())
+                            .arg(allRequests[i]->getContent())
+                            .arg(allRequests[i]->getType()));
         }
-        QSqlError error=query->lastError();
+        QSqlError error = query->lastError();
         if (!error.isValid())
             allRequests[i]->setModifyStatus(StorageUnit::Unchanged);
-        else {
+        else
+        {
             qDebug() << error.text();
             qDebug() << "网络断开，正在重新连接";
             emit sendErrorMessage("服务器无响应");
@@ -308,7 +314,6 @@ void GlobalStorageComponents::uploadAllData()
     }
     mutex.unlock();
 }
-
 
 /*************************************************************************
 名称：     searchUserById
@@ -326,7 +331,6 @@ MyUserObj *GlobalStorageComponents::searchUserById(int thisUserId)
     return nullptr;
 }
 
-
 /*************************************************************************
 名称：     searchArticleById
 功能：     通过文章Id查找文章指针，性能较低
@@ -343,8 +347,6 @@ MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
     return nullptr;
 }
 
-
-
 /*************************************************************************
 名称：     sendMessageToRelatedUser
 功能：     向一篇文章相关的用户发送消息
@@ -352,52 +354,55 @@ MyArticleObj *GlobalStorageComponents::searchArticleById(int thisArticleId)
 返回：     无
 日期：     20190727
 *************************************************************************/
-void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange)
+void GlobalStorageComponents::sendMessageToRelatedUser(QString str, MyArticleObj *articleInChange)
 {
-    QString titleStr=articleInChange->titleOfArticle();
-    if (titleStr.length()>12) titleStr=titleStr.mid(0,12)+"...";
+    QString titleStr = articleInChange->titleOfArticle();
+    if (titleStr.length() > 12)
+        titleStr = titleStr.mid(0, 12) + "...";
     qDebug() << "Send message " << str;
-    if (articleInChange->senderIdOfArticle()>0){
-        MyRequestObj* newRequest = new MyRequestObj(getARequestId(),
+    if (articleInChange->senderIdOfArticle() > 0)
+    {
+        MyRequestObj *newRequest = new MyRequestObj(getARequestId(),
                                                     articleInChange->senderIdOfArticle(),
                                                     articleInChange->articleIdOfArticle(),
                                                     4);
-        newRequest->setContent(QString("您发布的文章 %1 状态：").arg(titleStr)+str);
+        newRequest->setContent(QString("您发布的文章 %1 状态：").arg(titleStr) + str);
         newRequest->setModifyStatus(StorageUnit::New);
         addARequest(newRequest);
     }
-    if (articleInChange->regulatorIdOfArticle()>0){
-        MyRequestObj* newRequest = new MyRequestObj(getARequestId(),
+    if (articleInChange->regulatorIdOfArticle() > 0)
+    {
+        MyRequestObj *newRequest = new MyRequestObj(getARequestId(),
                                                     articleInChange->regulatorIdOfArticle(),
                                                     articleInChange->articleIdOfArticle(),
                                                     4);
-        newRequest->setContent(QString("您负责的文章 %1 状态：").arg(titleStr)+str);
+        newRequest->setContent(QString("您负责的文章 %1 状态：").arg(titleStr) + str);
         newRequest->setModifyStatus(StorageUnit::New);
         addARequest(newRequest);
     }
-    if (articleInChange->translatorIdOfArticle()>0){
-        MyRequestObj* newRequest = new MyRequestObj(getARequestId(),
+    if (articleInChange->translatorIdOfArticle() > 0)
+    {
+        MyRequestObj *newRequest = new MyRequestObj(getARequestId(),
                                                     articleInChange->translatorIdOfArticle(),
                                                     articleInChange->articleIdOfArticle(),
                                                     4);
-        newRequest->setContent(QString("您翻译的文章 %1 状态：").arg(titleStr)+str);
+        newRequest->setContent(QString("您翻译的文章 %1 状态：").arg(titleStr) + str);
         newRequest->setModifyStatus(StorageUnit::New);
         addARequest(newRequest);
     }
 }
 
-
-void GlobalStorageComponents::sendUserModifiedMessage(int userId ,QString content){
-    MyRequestObj* newRequest = new MyRequestObj(
-                getARequestId(),
-                userId,
-                -1,
-                4);
+void GlobalStorageComponents::sendUserModifiedMessage(int userId, QString content)
+{
+    MyRequestObj *newRequest = new MyRequestObj(
+        getARequestId(),
+        userId,
+        -1,
+        4);
     newRequest->setContent(content);
     newRequest->setModifyStatus(StorageUnit::New);
     addARequest(newRequest);
 }
-
 
 /*************************************************************************
 名称：     decodeStatusCode
@@ -406,24 +411,42 @@ void GlobalStorageComponents::sendUserModifiedMessage(int userId ,QString conten
 返回：     中文含义字符串
 日期：     20190728
 *************************************************************************/
-QString GlobalStorageComponents::decodeStatusCode(int code){
-    switch (code) {
-    case (100): return "已上传，招募负责人开始";
-    case (110): return "已标记负责人，招募负责人结束";
-    case (120): return "开始招募译者";
-    case (130): return "招募译者结束，即将分配任务";
-    case (140): return "已拆分";
-    case (200): return "子文章已创建";
-    case (210): return "已标记翻译者";
-    case (215): return "译者开始翻译";
-    case (220): return "译者正在根据负责人意见修改";
-    case (230): return "子文章译文评审通过";
-    case (240): return "子文章生命周期完成";
-    case (300): return "子文章合并完成";
-    case (310): return "负责人提交";
-    case (320): return "发送者已收取";
-    case (330): return "发送者已付款，款项成功分配";
-    case (400): return "生命周期完成";
+QString GlobalStorageComponents::decodeStatusCode(int code)
+{
+    switch (code)
+    {
+    case (100):
+        return "已上传，招募负责人开始";
+    case (110):
+        return "已标记负责人，招募负责人结束";
+    case (120):
+        return "开始招募译者";
+    case (130):
+        return "招募译者结束，即将分配任务";
+    case (140):
+        return "已拆分";
+    case (200):
+        return "子文章已创建";
+    case (210):
+        return "已标记翻译者";
+    case (215):
+        return "译者开始翻译";
+    case (220):
+        return "译者正在根据负责人意见修改";
+    case (230):
+        return "子文章译文评审通过";
+    case (240):
+        return "子文章生命周期完成";
+    case (300):
+        return "子文章合并完成";
+    case (310):
+        return "负责人提交";
+    case (320):
+        return "发送者已收取";
+    case (330):
+        return "发送者已付款，款项成功分配";
+    case (400):
+        return "生命周期完成";
     }
     return "";
 }

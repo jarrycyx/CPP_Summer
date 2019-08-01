@@ -15,7 +15,6 @@
           20190728 增加消息盒子功能
 ************************************************************************************************************************/
 
-
 #ifndef MYREQUESTOBJ_H
 #define MYREQUESTOBJ_H
 
@@ -30,7 +29,7 @@ public:
     MyRequestObj(const int &newRequestId, const int &newUserId,
                  const int &newArticleId, const int &newType);
     //请求id
-    inline int getRequestId() const{ return mRequestId; }
+    inline int getRequestId() const { return mRequestId; }
     //发出请求的用户id
     inline int getUserId() const { return mUserId; }
     //对应文章id
@@ -38,13 +37,13 @@ public:
     //请求类型
     inline int getType() const { return mType; }
     //请求内容，尽在mType为3时有效
-    inline QString getContent() const { return mContent ;}
+    inline QString getContent() const { return mContent; }
     void setContent(QString str);
     //请求上传时间
-    inline QDateTime getTime() const{return mTime;}
+    inline QDateTime getTime() const { return mTime; }
     void setTime(QDateTime newTime);
 
-    MyRequestObj& operator=(const MyRequestObj &newObj)
+    MyRequestObj &operator=(const MyRequestObj &newObj)
     {
         mRequestId = newObj.getRequestId();
         mArticleId = newObj.getArticleId();

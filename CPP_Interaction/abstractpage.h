@@ -16,7 +16,7 @@
 
 class AbstractPage : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     //需要指定当前使用页面的用户Id，若为不需要指定则为-1
     explicit AbstractPage(int newUserId, QObject *parent = nullptr);
@@ -26,7 +26,7 @@ public:
     //所有页面共有，点击“显示文章信息”按钮所调用的方法
     Q_INVOKABLE void showArticleInfo(int articleId);
 
-    static GlobalStorageComponents* storage;
+    static GlobalStorageComponents *storage;
 
 signals:
     //错误信息信号，向QML发送，使其在界面上显示
@@ -36,11 +36,11 @@ signals:
 
 public slots:
     //开始渲染主页面
-    virtual void startPage(QQmlApplicationEngine *engine)=0;
+    virtual void startPage(QQmlApplicationEngine *engine) = 0;
 
 protected:
     //从主函数传来的engine指针，用于启动其他页面，也可传向其他页面
-    QQmlApplicationEngine* mThisEngine;
+    QQmlApplicationEngine *mThisEngine;
     //当前身份标识，默认为-1（空）
     int mThisUserId;
 };

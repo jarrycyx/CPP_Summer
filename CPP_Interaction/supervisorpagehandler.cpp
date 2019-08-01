@@ -6,7 +6,6 @@
 日期：     20190727 初步实现
 ************************************************************************************************************************/
 
-
 #include "supervisorpagehandler.h"
 #include "../CPP_Data/myarticleobj.h"
 #include "../CPP_Data/myuserobj.h"
@@ -71,9 +70,10 @@ void SupervisorPageHandler::startLoadingSupervisorArticleList(int userId)
     int len = storage->getArticlesLength();
     for (int i = 0; i < len; i++)
     {
-        MyArticleObj* selectedArticle = storage->getArticleToEdit(i);
-        if (selectedArticle->statusCodeOfArticle() == 215
-                || selectedArticle->statusCodeOfArticle() == 220){
+        MyArticleObj *selectedArticle = storage->getArticleToEdit(i);
+        if (selectedArticle->statusCodeOfArticle() == 215 
+            || selectedArticle->statusCodeOfArticle() == 220)
+        {
             mSupervisorSubarticleList.addAnArticle(selectedArticle);
             qDebug() << "subarticle " << selectedArticle->articleIdOfArticle();
         }
@@ -90,19 +90,21 @@ void SupervisorPageHandler::startLoadingSupervisorArticleList(int userId)
 *************************************************************************/
 Q_INVOKABLE void SupervisorPageHandler::acceptSubarticle(int idx)
 {
-    if (storage->searchUserById(mThisUserId)->credit() >= 65){
+    if (storage->searchUserById(mThisUserId)->credit() >= 65)
+    {
 
         mSupervisorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(230);
         storage->sendMessageToRelatedUser(
-                    QString("%1").arg(storage->decodeStatusCode(230)),
-                    mSupervisorSubarticleList.getArticle(idx));
+            QString("%1").arg(storage->decodeStatusCode(230)),
+            mSupervisorSubarticleList.getArticle(idx));
         mSupervisorSubarticleList.editAnArticle(idx);
         int translatorId = mSupervisorSubarticleList.getArticle(idx)->translatorIdOfArticle();
         storage->searchUserById(translatorId)->addCredit(1);
         emit sendSuccessMessage("已审核通过，译者积分+1");
         storage->sendUserModifiedMessage(translatorId, QString("您的账户余额已改变，请注意"));
     }
-    else emit sendErrorMessage("抱歉，积分65分以上才能履行监管者职能");
+    else
+        emit sendErrorMessage("抱歉，积分65分以上才能履行监管者职能");
 }
 
 /*************************************************************************
@@ -112,16 +114,17 @@ Q_INVOKABLE void SupervisorPageHandler::acceptSubarticle(int idx)
 返回：     无
 日期：     20190722
 *************************************************************************/
-Q_INVOKABLE void SupervisorPageHandler::commentToTranslator(int idx, QString comment){
+Q_INVOKABLE void SupervisorPageHandler::commentToTranslator(int idx, QString comment)
+{
     qDebug() << idx << " " << comment;
-    MyRequestObj* newRequest = new MyRequestObj(storage->getARequestId(),
+    MyRequestObj *newRequest = new MyRequestObj(storage->getARequestId(),
                                                 mThisUserId,
                                                 mSupervisorSubarticleList.getArticle(idx)->articleIdOfArticle(),
                                                 3);
     mSupervisorSubarticleList.getArticle(idx)->setStatusCodeOfArticle(220);
-    storage->sendMessageToRelatedUser(                              //发送状态更新消息
-                QString("%1").arg(storage->decodeStatusCode(220)),
-                mSupervisorSubarticleList.getArticle(idx));
+    storage->sendMessageToRelatedUser( //发送状态更新消息
+        QString("%1").arg(storage->decodeStatusCode(220)),
+        mSupervisorSubarticleList.getArticle(idx));
     mSupervisorSubarticleList.editAnArticle(idx);
     newRequest->setContent(comment);
     newRequest->setModifyStatus(StorageUnit::New);

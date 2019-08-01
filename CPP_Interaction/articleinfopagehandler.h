@@ -6,18 +6,17 @@
 日期：     20190726 实现查看文章信息
 ************************************************************************************************************************/
 
-
 #ifndef ARTICLEINFOPAGEHANDLER_H
 #define ARTICLEINFOPAGEHANDLER_H
 
 #include <QObject>
 #include "abstractpage.h"
 
-class ArticleInfoPageHandler: public AbstractPage
+class ArticleInfoPageHandler : public AbstractPage
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit ArticleInfoPageHandler(MyArticleObj* thisArticle);
+    explicit ArticleInfoPageHandler(MyArticleObj *thisArticle);
     //QML界面获取信息
     Q_INVOKABLE QString getSenderName();
     Q_INVOKABLE QString getRegulatorName();
@@ -30,10 +29,10 @@ public slots:
     void startPage(QQmlApplicationEngine *engine);
 
 private:
-    MyArticleObj* mArticle;
-    MyUserObj* mSender;
-    MyUserObj* mRegulator;
-    MyUserObj* mTranslator;
+    MyArticleObj *mArticle;
+    MyUserObj *mSender;
+    MyUserObj *mRegulator;
+    MyUserObj *mTranslator;
 };
 
 #endif // ARTICLEINFOPAGEHANDLER_H

@@ -11,10 +11,8 @@
           20190721 进一步完善，调整界面
 ************************************************************************************************************************/
 
-
 #ifndef MESSAGELIST_H
 #define MESSAGELIST_H
-
 
 #include <QObject>
 #include <QAbstractListModel>
@@ -35,7 +33,7 @@ public:
     inline void removeAllRequestUsers() { messages.clear(); }
 
 protected:
-    QVector<MyRequestObj*> messages;
+    QVector<MyRequestObj *> messages;
     QHash<int, QByteArray> roleNames() const override;
 };
 #endif // MESSAGELIST_H

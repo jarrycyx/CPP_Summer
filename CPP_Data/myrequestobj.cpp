@@ -1,4 +1,4 @@
-//总体框架：     Storage - Data - Model - Interaction - View
+﻿//总体框架：     Storage - Data - Model - Interaction - View
 //所处层级：     Data
 /************************************************************************************************************************
 类名：     MyArticleObj
@@ -21,11 +21,11 @@
 *************************************************************************/
 MyRequestObj::MyRequestObj(const int &newRequestId, const int &newUserId,
                            const int &newArticleId, const int &newType)
-    : StorageUnit(StorageUnit::Unchanged), mRequestId(newRequestId), mArticleId(newArticleId), mUserId(newUserId), mType(newType)
-    //初始更改状态为0：未更改
+    : StorageUnit(StorageUnit::Unchanged), mRequestId(newRequestId),
+      mArticleId(newArticleId), mUserId(newUserId), mType(newType)
+//初始更改状态为0：未更改
 {
 }
-
 
 void MyRequestObj::setContent(QString str)
 {
@@ -37,9 +37,7 @@ void MyRequestObj::setContent(QString str)
     }
 }
 
-
-
-void MyRequestObj::setTime(QDateTime newTime){
+void MyRequestObj::setTime(QDateTime newTime)
+{
     mTime = newTime;
-
 }

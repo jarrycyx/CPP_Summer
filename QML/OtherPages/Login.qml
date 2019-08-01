@@ -1,4 +1,4 @@
-import QtQuick 2.12
+﻿import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.2
@@ -27,7 +27,6 @@ ApplicationWindow {
         width: 121
         model: ["发布者", "负责人", "翻译者", "监管者"]
         font.family: "DengXian"
-        currentIndex: 1
     }
 
 
@@ -39,11 +38,11 @@ ApplicationWindow {
         id: loginModel
         objectName: "loginModel"
         ListElement {
-            textInEdit: "regulator1"
+            textInEdit: ""
             placeHolderText: "请输入用户名"
         }
         ListElement {
-            textInEdit: "regulator1pswd"
+            textInEdit: ""
             placeHolderText: "请输入密码"
         }
     }

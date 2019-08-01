@@ -11,9 +11,6 @@
           20190721 进一步完善，增加全部删除等方法
 ************************************************************************************************************************/
 
-//TO-DO: 使用类模板进行优化
-//TO-DO: 重载[]运算符
-
 #ifndef REQUESTUSERLIST_H
 #define REQUESTUSERLIST_H
 
@@ -33,7 +30,6 @@ public:
     void addARequestUser(MyUserObj *newRequestUser);
     inline MyUserObj *getRequestUser(int idx) { return requestUsers[idx]; }
     inline void removeAllRequestUsers() { requestUsers.clear(); }
-
 
 protected:
     QVector<MyUserObj *> requestUsers;

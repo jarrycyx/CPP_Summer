@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="windows-1252"?>
 <>
-  <InputFile>D:\11ACademia\C++Summer\Project\NewProj\deploytest\H1.exe</InputFile>
-  <OutputFile>D:\11ACademia\C++Summer\Project\NewProj\deploytest\H1_boxed.exe</OutputFile>
+  <InputFile>D:\11ACademia\C++Summer\Project\NewProj\deploytest\WeTranslate.exe</InputFile>
+  <OutputFile>D:\11ACademia\C++Summer\Project\NewProj\WeTranslate_boxed.exe</OutputFile>
   <Files>
     <Enabled>True</Enabled>
     <DeleteExtractedOnExit>False</DeleteExtractedOnExit>

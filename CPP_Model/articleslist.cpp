@@ -7,9 +7,6 @@
                  20190721 进一步完善，增加全部删除等方法
 *************************************************************************/
 
-//TO-DO: 使用类模板进行优化
-//TO-DO: 重载[]运算符
-
 
 #include "articleslist.h"
 
@@ -23,7 +20,6 @@
 ArticlesList::ArticlesList(int type) : QAbstractListModel(), typeOfThisList(type)
 {
 }
-
 
 /*************************************************************************
 名称：     rowCount
@@ -123,11 +119,11 @@ MyArticleObj *ArticlesList::getArticle(int idx)
 日期：     20190712
 *************************************************************************/
 void ArticlesList::editAnArticle(int index, QString title, QString content)
-{                                                       //虽然不建议在此类中直接编辑，但仍保留该函数接口
+{ //虽然不建议在此类中直接编辑，但仍保留该函数接口
     articles[index]->setTitleOfArticle(title);
     articles[index]->setContentOfArticle(content);
-    QModelIndex idx = createIndex(index, index);        //调用Qt接口生成所需Index
-    emit dataChanged(idx, idx);                         //发送视图刷新信号
+    QModelIndex idx = createIndex(index, index); //调用Qt接口生成所需Index
+    emit dataChanged(idx, idx);                  //发送视图刷新信号
 }
 
 /*************************************************************************
@@ -138,9 +134,9 @@ void ArticlesList::editAnArticle(int index, QString title, QString content)
 日期：     20190715
 *************************************************************************/
 void ArticlesList::editAnArticle(int index)
-{                                                       //实际用于通知视图刷新一项
+{ //实际用于通知视图刷新一项
     QModelIndex idx = createIndex(index, index);
-    emit dataChanged(idx, idx);                         //发送视图刷新信号
+    emit dataChanged(idx, idx); //发送视图刷新信号
 }
 
 /*************************************************************************
@@ -152,9 +148,9 @@ void ArticlesList::editAnArticle(int index)
 *************************************************************************/
 void ArticlesList::addAnArticle(MyArticleObj *newArticle)
 {
-    beginInsertRows(QModelIndex(), 0, 0);               //开始刷新
-    articles.push_back(newArticle);
-    endInsertRows();                                    //结束刷新
+    beginInsertRows(QModelIndex(), 0, 0); //开始刷新
+    articles.push_front(newArticle);
+    endInsertRows(); //结束刷新
 }
 
 /*************************************************************************
@@ -166,10 +162,10 @@ void ArticlesList::addAnArticle(MyArticleObj *newArticle)
 *************************************************************************/
 void ArticlesList::deleteAnArticle(int index)
 {
-    beginRemoveRows(QModelIndex(), index, index);       //通知视图刷新信号，由基类完成
+    beginRemoveRows(QModelIndex(), index, index); //通知视图刷新信号，由基类完成
     articles[index]->setModifyStatus(StorageUnit::Deleted);
     articles.remove(index);
-    endRemoveRows();                                    //结束刷新
+    endRemoveRows(); //结束刷新
 }
 
 /*************************************************************************
@@ -179,7 +175,7 @@ void ArticlesList::deleteAnArticle(int index)
 返回：     无
 日期：     20190713
 *************************************************************************/
-void ArticlesList::refreshAll(){
-    emit dataChanged(createIndex(0, 0), createIndex(articles.length()-1, 0));
+void ArticlesList::refreshAll()
+{
+    emit dataChanged(createIndex(0, 0), createIndex(articles.length() - 1, 0));
 }
-

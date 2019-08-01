@@ -1,4 +1,4 @@
-//总体框架：     Storage - Data - Model - Interaction - View
+﻿//总体框架：     Storage - Data - Model - Interaction - View
 //所处层级：     Interaction
 /************************************************************************************************************************
 类名：     ArticleInfoPageHandler
@@ -6,10 +6,8 @@
 日期：     20190726 实现查看文章信息
 ************************************************************************************************************************/
 
-
 #include "articleinfopagehandler.h"
 #include <QDebug>
-
 
 /*************************************************************************
 名称：     ArticleInfoPageHandler
@@ -18,8 +16,8 @@
 返回：     无
 日期：     20190727
 *************************************************************************/
-ArticleInfoPageHandler::ArticleInfoPageHandler(MyArticleObj* thisArticle) :
-    AbstractPage(-1), mArticle(thisArticle)
+ArticleInfoPageHandler::ArticleInfoPageHandler(MyArticleObj *thisArticle)
+    : AbstractPage(-1), mArticle(thisArticle)
 {
     qDebug() << "load mArticle info";
     int mSenderId = mArticle->senderIdOfArticle();
@@ -30,7 +28,6 @@ ArticleInfoPageHandler::ArticleInfoPageHandler(MyArticleObj* thisArticle) :
     mSender = storage->searchUserById(mSenderId);
     mRegulator = storage->searchUserById(mRegulatorId);
     mTranslator = storage->searchUserById(mTranslatorId);
-
 }
 
 /*************************************************************************
@@ -56,19 +53,22 @@ Q_INVOKABLE QString ArticleInfoPageHandler::getSenderName()
 {
     if (mSender != nullptr)
         return mSender->username();
-    else return QString("无信息");
+    else
+        return QString("无信息");
 }
 Q_INVOKABLE QString ArticleInfoPageHandler::getRegulatorName()
 {
     if (mRegulator != nullptr)
         return mRegulator->username();
-    else return QString("无信息");
+    else
+        return QString("无信息");
 }
 Q_INVOKABLE QString ArticleInfoPageHandler::getTranslatorName()
 {
     if (mTranslator != nullptr)
         return mTranslator->username();
-    else return QString("无信息");
+    else
+        return QString("无信息");
 }
 
 Q_INVOKABLE int ArticleInfoPageHandler::getMoney()

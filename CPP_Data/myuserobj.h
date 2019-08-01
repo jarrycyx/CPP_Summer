@@ -49,8 +49,7 @@ public:
     void setCredit(int newCredit);
     void addCredit(int added);
 
-
-    MyUserObj& operator=(const MyUserObj& newObj)
+    MyUserObj &operator=(const MyUserObj &newObj)
     {
         mUsername = newObj.username();
         mPassword = newObj.password();

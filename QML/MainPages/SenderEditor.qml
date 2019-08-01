@@ -57,6 +57,7 @@ Rectangle {
             button.text="发送";
             button.enabled=true;
             button2.visible=true;
+            element.text="我发布的任务";
             break;
         case 100:
             statusText.text="已上传，招募负责人开始";
@@ -64,33 +65,39 @@ Rectangle {
             button.enabled=true;
             button2.visible=true;
             button2.text="报名状态";
+            element.text="我发布的任务";
             break;
         case 110:
             statusText.text="已标记负责人，招募负责人结束";
             button.text="修改";
             button.enabled=true;
             button2.visible=false;
+            element.text="我发布的任务";
             break;
         case 120:
             statusText.text="开始招募译者";
             button.text="修改";
             button.enabled=true;
             button2.visible=false;
+            element.text="我发布的任务";
             break;
         case 130:
             statusText.text="招募译者结束";
             button.enabled=false;
             button2.visible=false;
+            element.text="我发布的任务";
             break;
         case 140:
             statusText.text="已拆分，译者紧张工作中";
             button.enabled=false;
             button2.visible=false;
+            element.text="我发布的任务";
             break;
         case 300:
             statusText.text="翻译工作完成，负责人审核中";
             button.enabled=false;
             button2.visible=false;
+            element.text="我发布的任务";
             break;
         case 310:
             statusText.text="翻译内容已提交";
@@ -98,7 +105,14 @@ Rectangle {
             button.enabled=true;
             button2.visible=true;
             button2.text="重新翻译";
-            element.text="我负责的任务";
+            element.text="我发布的任务";
+            break;
+        case 400:
+            statusText.text="确认完成，即将删除";
+            button.text="确认完成";
+            button.enabled=false;
+            button2.visible=false;
+            element.text="我发布的任务";
             break;
         }
 

@@ -84,7 +84,7 @@ public:
     int fee() const;
     void setFee(int newFee);
 
-    MyArticleObj& operator=(const MyArticleObj &newObj)
+    MyArticleObj &operator=(const MyArticleObj &newObj)
     {
         mTitleOfArticle = newObj.titleOfArticle();
         mTranslatedTitle = newObj.translatedTitle();

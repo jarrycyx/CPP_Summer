@@ -29,7 +29,7 @@ public:
     virtual ~GlobalStorageComponents();
 
     //文章状态改变，通知给相关用户
-    void sendMessageToRelatedUser(QString str, MyArticleObj* articleInChange);
+    void sendMessageToRelatedUser(QString str, MyArticleObj *articleInChange);
     //返回状态值对应的含义
     QString decodeStatusCode(int code);
     //新线程中刷新数据，每200ms刷新一次
@@ -47,7 +47,7 @@ public:
     //获取总文章数量，用于遍历
     inline int getArticlesLength() { return allArticles.length(); }
     //返回对应文章对象指针
-    inline MyArticleObj* getArticleToEdit(int index) { return allArticles[index]; }
+    inline MyArticleObj *getArticleToEdit(int index) { return allArticles[index]; }
     //新增一篇文章，注意这里只是在后台存储中增加了一篇文章，不代表视图会显示
     inline void addAnArticle(MyArticleObj *newArticle) { allArticles.push_front(newArticle); }
     //自动生成一个用户ID
@@ -63,9 +63,9 @@ public:
     //增加一个用户到list中，注意这里只是在后台存储中增加，不代表视图会显示
     inline void addAUser(MyUserObj *newUser) { allUsers.push_front(newUser); }
     //通过id查找user，性能较低
-    MyUserObj* searchUserById(int thisUserId);
+    MyUserObj *searchUserById(int thisUserId);
     //通过id查找article，性能较低
-    MyArticleObj* searchArticleById(int thisUserId);
+    MyArticleObj *searchArticleById(int thisUserId);
     //自动生成一个请求id
     inline int getARequestId()
     {
@@ -78,13 +78,13 @@ public:
     inline MyRequestObj *getRequest(int index) { return allRequests[index]; }
     //增加一个请求实体，注意这里只是在后台存储中增加，不代表视图会显示
     inline void addARequest(MyRequestObj *newRequest) { allRequests.push_back(newRequest); }
-    void sendUserModifiedMessage(int userId ,QString content);
+    void sendUserModifiedMessage(int userId, QString content);
 
 private:
     //实际存储所有数据
-    QVector<MyArticleObj*> allArticles;
-    QVector<MyUserObj*> allUsers;
-    QVector<MyRequestObj*> allRequests;
+    QVector<MyArticleObj *> allArticles;
+    QVector<MyUserObj *> allUsers;
+    QVector<MyRequestObj *> allRequests;
     //数据库请求
     QSqlQuery *query;
     //最大的ID，用于生成新的ID

@@ -1,4 +1,4 @@
-//总体框架：     Storage - Data - Model - Interaction - View
+﻿//总体框架：     Storage - Data - Model - Interaction - View
 //所处层级：     Data
 /************************************************************************************************************************
 类名：     MyArticleObj
@@ -46,7 +46,7 @@
 /* 备注：本类中article_id不能改变，只能为未设置状态或已设置状态 */
 
 MyArticleObj::MyArticleObj() : StorageUnit(StorageUnit::Unchanged)
-  //初始更改状态为0：未更改
+//初始更改状态为0：未更改
 {
 }
 
@@ -57,10 +57,11 @@ MyArticleObj::MyArticleObj() : StorageUnit(StorageUnit::Unchanged)
 日期：     20190715 实现构造函数
           20190717 删除在构造函数中传入文章数据
 *************************************************************************/
-MyArticleObj::MyArticleObj(const int &sender) : StorageUnit(StorageUnit::Unchanged), mSenderId(sender)
-  //初始更改状态为0：未更改
+MyArticleObj::MyArticleObj(const int &sender) :
+    StorageUnit(StorageUnit::Unchanged), mSenderId(sender)
+//初始更改状态为0：未更改
 {
-    mFee = 500;//酬金默认为500
+    mFee = 500; //酬金默认为500
 }
 
 /*************************************************************************
@@ -132,7 +133,6 @@ void MyArticleObj::setStatusCodeOfArticle(int code)
     mStatusCode = code;
     if (getModifyStatus() == StorageUnit::Unchanged)
         setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
-
 }
 
 int MyArticleObj::regulatorIdOfArticle() const
@@ -173,8 +173,6 @@ void MyArticleObj::setOriginArticleIdOfArticle(const int &articleId)
         setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
 }
 
-
-
 int MyArticleObj::translatorIdOfArticle() const
 {
     return mTranslatorId;
@@ -185,8 +183,6 @@ void MyArticleObj::setTranslatorIdOfArticle(int id)
     if (getModifyStatus() == StorageUnit::Unchanged)
         setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
 }
-
-
 
 QString MyArticleObj::translatedTitle() const
 {
@@ -209,7 +205,6 @@ void MyArticleObj::setTranslatedContent(QString newContent)
     if (getModifyStatus() == StorageUnit::Unchanged)
         setModifyStatus(StorageUnit::Changed); //标记为已修改，若本身状态为“新增”，则无需修改为“已修改”状态
 }
-
 
 int MyArticleObj::fee() const
 {

@@ -8,7 +8,6 @@
           20190726 实现消息盒子
 ************************************************************************************************************************/
 
-
 #ifndef USERINFOPAGEHANDLER_H
 #define USERINFOPAGEHANDLER_H
 
@@ -21,10 +20,10 @@
 
 class UserInfoPageHandler : public AbstractPage
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit UserInfoPageHandler(MyUserObj* thisUser);
+    explicit UserInfoPageHandler(MyUserObj *thisUser);
     Q_INVOKABLE QString getUsername();
     Q_INVOKABLE int getMoney();
     Q_INVOKABLE int getCredit();
@@ -41,7 +40,7 @@ public slots:
     void startPage(QQmlApplicationEngine *engine);
 
 private:
-    MyUserObj* mUser;
+    MyUserObj *mUser;
     //消息盒子中的消息列表
     MessageList mMessageList;
 };

@@ -33,16 +33,11 @@
  * 其功能与MyArticleObject紧密相关
  */
 
-
 class RegulatorPageHandler : public AbstractPage
 {
-Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-    /* 以上三个model分别存储
-     * 该用户的文章列表
-     * 所有用户的文章列表
-     * 负责人选取列表的数据 */
+    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
-public :
+public : 
     explicit RegulatorPageHandler(int regulatorId);
     ~RegulatorPageHandler();
 

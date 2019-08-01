@@ -7,7 +7,6 @@
           20190723 实现保存翻译功能
 ************************************************************************************************************************/
 
-
 #ifndef TranslatorPageHandler_H
 #define TranslatorPageHandler_H
 
@@ -26,10 +25,9 @@
 
 class TranslatorPageHandler : public AbstractPage
 {
-Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
+    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
-public :
-    explicit TranslatorPageHandler(int translatorId);
+        public : explicit TranslatorPageHandler(int translatorId);
     ~TranslatorPageHandler();
     //开始加载文章列表
     void startLoadingTranslatorArticleList(int userId);
@@ -43,7 +41,6 @@ public :
 private:
     //分别为我负责的子任务和其他正在招募翻译者的任务
     ArticlesList mTranslatorSubarticleList, mAllSeekingTranslatorArticleList;
-
 
 public slots:
     //开始渲染页面

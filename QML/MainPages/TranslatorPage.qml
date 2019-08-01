@@ -137,7 +137,7 @@ ApplicationWindow {
                     x:41-15
                     y: senderSubarticlesList.height + 32 + 19
                     height: contentHeight+40
-                    model: allSeekingTranslatorArticle
+                    model: allSeekingTranslatorArticleList
                     delegate: dragDelegate2
                     currentIndex: -1
 

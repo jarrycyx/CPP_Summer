@@ -16,7 +16,6 @@
 #include <QSqlQuery>
 #include <QThread>
 
-
 /*************************************************************************
 名称：     LoginPageHandler
 功能：     构造函数
@@ -68,7 +67,7 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
     int loginResult = userLogin(name, pswd, role);
     switch (loginResult)
     {
-    case 1://登陆成功
+    case 1: //登陆成功
     {
         emit sendSuccessMessage("登陆成功");
         if (role == 1)
@@ -128,10 +127,11 @@ Q_INVOKABLE void LoginPageHandler::loginInit(QString name, QString pswd, int rol
 *************************************************************************/
 Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd)
 {
-    MyUserObj* newUser = addUser(name, pswd);
+    MyUserObj *newUser = addUser(name, pswd);
     if (newUser == nullptr)
         emit sendErrorMessage("用户已存在");
-    else {
+    else
+    {
         emit sendSuccessMessage("注册成功");
         const QUrl url1(QStringLiteral("qrc:/QML/OtherPages/UserQualifyDialog.qml"));
         mThisEngine->load(url1);
@@ -139,8 +139,8 @@ Q_INVOKABLE void LoginPageHandler::signUp(QString name, QString pswd)
     }
 }
 
-
-Q_INVOKABLE void LoginPageHandler::setUserQualification(QString quali){
+Q_INVOKABLE void LoginPageHandler::setUserQualification(QString quali)
+{
     mSignupUser->setQualification(quali);
     if (quali == "TOFEL 90分")
         mSignupUser->setCredit(10);
@@ -179,7 +179,6 @@ int LoginPageHandler::userLogin(QString name, QString pswd, int role)
     return 0;
 }
 
-
 /*************************************************************************
 名称：     searchUser
 功能：     通过用户名查找用户，用于检查用户名是否可以注册或查找用户的ID
@@ -205,7 +204,7 @@ int LoginPageHandler::searchUser(QString name)
 返回：     用户对象指针，未找到则是空指针
 日期：     20190710
 *************************************************************************/
-MyUserObj* LoginPageHandler::addUser(QString name, QString pswd)
+MyUserObj *LoginPageHandler::addUser(QString name, QString pswd)
 {
     int len = storage->getUsersLength();
     for (int i = 0; i < len; i++)

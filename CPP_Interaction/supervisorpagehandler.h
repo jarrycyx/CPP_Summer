@@ -6,8 +6,6 @@
 日期：     20190727 初步实现
 ************************************************************************************************************************/
 
-
-
 #ifndef SUPERVISORPAGEHANDLER_H
 #define SUPERVISORPAGEHANDLER_H
 
@@ -31,13 +29,9 @@
  */
 class SupervisorPageHandler : public AbstractPage
 {
-Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-    /* 以上三个model分别存储
-     * 该用户的文章列表
-     * 所有用户的文章列表
-     * 负责人选取列表的数据 */
+    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
-public :
+public : 
     explicit SupervisorPageHandler(int supervisorId);
     ~SupervisorPageHandler();
 
@@ -56,6 +50,5 @@ public slots:
     //开始渲染页面
     void startPage(QQmlApplicationEngine *engine);
 };
-
 
 #endif // SUPERVISORPAGEHANDLER_H

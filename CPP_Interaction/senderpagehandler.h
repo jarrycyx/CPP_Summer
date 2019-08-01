@@ -10,7 +10,6 @@
           20190727 增加拒绝接受功能
 ************************************************************************************************************************/
 
-
 #ifndef SENDERPAGEHANDLER_H
 #define SENDERPAGEHANDLER_H
 
@@ -35,13 +34,13 @@
 
 class SenderPageHandler : public AbstractPage
 {
-Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
-    /* 以上三个model分别存储
+    Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
+        /* 以上三个model分别存储
      * 该用户的文章列表
      * 所有用户的文章列表
      * 负责人选取列表的数据 */
 
-public :
+public : 
     explicit SenderPageHandler(int senderId);
     ~SenderPageHandler();
 

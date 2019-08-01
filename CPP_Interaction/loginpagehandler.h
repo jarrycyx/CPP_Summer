@@ -31,7 +31,7 @@ class LoginPageHandler : public AbstractPage
 {
     Q_OBJECT //需要注册到QML，添加Q_OBJECT标志
 
-public :
+public : 
     explicit LoginPageHandler();
     ~LoginPageHandler();
     //登录
@@ -39,7 +39,7 @@ public :
     //注册
     Q_INVOKABLE void signUp(QString name, QString pswd);
     //增加用户，调用Model
-    Q_INVOKABLE MyUserObj* addUser(QString name, QString pswd);
+    Q_INVOKABLE MyUserObj *addUser(QString name, QString pswd);
     //调用Storage查找用户
     Q_INVOKABLE int searchUser(QString name);
     //用户登录
@@ -48,13 +48,12 @@ public :
     Q_INVOKABLE void setUserQualification(QString quali);
 
 private:
-    SenderPageHandler* mSenderPage;
-    RegulatorPageHandler* mRegulatorPage;
-    TranslatorPageHandler* mTranslatorPage;
-    SupervisorPageHandler* mSupervisorPage;
+    SenderPageHandler *mSenderPage;
+    RegulatorPageHandler *mRegulatorPage;
+    TranslatorPageHandler *mTranslatorPage;
+    SupervisorPageHandler *mSupervisorPage;
 
-    MyUserObj* mSignupUser;
-
+    MyUserObj *mSignupUser;
 
 public slots:
     //开始渲染主页面
